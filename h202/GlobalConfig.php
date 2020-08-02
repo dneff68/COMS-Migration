@@ -1,11 +1,20 @@
-<?
-include_once "chtFunctions.php";
+<?php
+include_once "../lib/chtFunctions.php";
 	
+if (david())
+{
+	$hostname="127.0.0.1";
+	$dbuser = 'root';
+	$dbpass = 'smap0tCfl';
+	$database = 'h202';
+}
+else
+{
 	$hostname='localhost';
 	$dbuser = 'phpuser';
 	$dbpass = 'fog9stOol';
 	$database = 'h202';
-
+}
 
 if (david())
 {
