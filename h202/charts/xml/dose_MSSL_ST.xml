@@ -1,0 +1,81 @@
+
+			<chart>
+			<license>JTAJ-9N1PLHO.945CWK-2XOI1X0-7L</license>
+			<chart_value prefix='' 
+					  suffix='' 
+					  decimals='0' 
+					  decimal_char='.'
+					  separator=''
+					  position='cursor'
+					  hide_zero='false' 
+					  as_percentage='false'
+					  font='arial' 
+					  bold='true' 
+					  size='10' 
+					  color='000000' 
+					  alpha='90'
+					  />
+			
+			
+			  <series_color>
+				<color>009933</color>
+				<color>cccccc</color>
+			  </series_color>
+			  <chart_data>
+				
+<row><null/>
+<string>30</string>
+<string>31</string>
+<string>01</string>
+<string>02</string>
+<string>03</string>
+<string>04</string>
+<string>05</string>
+<string>06</string>
+<string>07</string>
+<string>08</string>
+<string>09</string>
+<string>10</string></row>
+				<row><string>Normalized Dose</string>
+<number tooltip='135'>135</number>
+<number tooltip='52'>52</number>
+<number tooltip='29'>29</number>
+<number tooltip='59'>59</number>
+<number tooltip='59'>59</number>
+<number tooltip='65'>65</number>
+<number tooltip='7'>7</number>
+<number tooltip='61'>61</number>
+<number tooltip='59'>59</number>
+<number tooltip='44'>44</number>
+<number tooltip='44'>44</number>
+<number tooltip='30'>30</number></row>
+				<row><string>Target Dose (not set)</string><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number><number>0</number></row>
+			  </chart_data>
+			  <chart_type>
+				<string>line</string>
+				<string>area</string>
+			  </chart_type>
+			   <chart_guide horizontal='true'
+							vertical='false'
+							thickness='1' 
+							color='ff4400' 
+							alpha='75' 
+							type='dashed' 
+							
+							 
+							radius='8'
+							fill_alpha='0'
+							line_color='ff4400'
+							line_alpha='75'
+							line_thickness='4'
+						 
+							size='10'
+							text_color='ffffff'
+							background_color='ff4400'
+							text_h_alpha='90'
+							text_v_alpha='90' 
+							/>
+			
+			   <!-- use chart_label in combination with chart_guide -->
+			   <chart_label position='cursor' />
+			</chart>

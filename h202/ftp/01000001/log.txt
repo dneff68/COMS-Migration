@@ -1,0 +1,48 @@
+<1353409264>
+Serial Number:01000001
+Odalog Firmware Version:535
+Last Gas Calibration Time:1345075200
+Time Zone:10
+Signal Strength:75
+Logging Interval:120
+Transmission Interval:43200
+Status Report Interval:0
+Gas Unit:0
+Temperature Unit:1
+Low Alarm Level:0
+High Alarm Level:0
+Average Alarm Level:0
+Ftp Server:72.32.58.203
+Ftp Port:21
+Alarm Trigger Delay:300
+Mobile Number:
+Site Name:
+<!;1353409264>
+2012-11-20 11:01:06
+Received Signal Strength[0-100] is 75;
+Location Area code is 791d;
+Cell ID is 1218.
+<1353411666>
+Serial Number:01000001
+Odalog Firmware Version:535
+Last Gas Calibration Time:1345075200
+Time Zone:10
+Signal Strength:63
+Logging Interval:120
+Transmission Interval:43200
+Status Report Interval:0
+Gas Unit:0
+Temperature Unit:1
+Low Alarm Level:0
+High Alarm Level:0
+Average Alarm Level:0
+Ftp Server:72.32.58.203
+Ftp Port:21
+Alarm Trigger Delay:300
+Mobile Number:
+Site Name:
+<!;1353411666>
+2012-11-20 11:41:07
+Received Signal Strength[0-100] is 63;
+Location Area code is 791d;
+Cell ID is 1218.

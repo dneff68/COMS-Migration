@@ -1,0 +1,338 @@
+.banner1 {
+	font-size: 36px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+.banner2 {
+	font-size: 36px;
+	color: #FFFFFF;
+}
+.banner3 {
+	font-size: 18px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+img {
+	border: 0;
+}
+
+themetable {
+	margin: 0;
+	border-collapse: collapse;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 100%;
+	color: #333333;
+}
+
+themetd {
+	padding: 0;
+	border-width: 0;
+	vertical-align: top;
+}
+
+div {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+
+p
+{
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+
+/*
+body {
+	margin:0px 0px; padding:0px;
+	text-align:center;
+
+}
+*/
+
+#content
+{
+width:760px;
+margin:0px auto;
+text-align:left;
+}
+
+normal
+{
+
+}
+
+.top_left_nav
+{
+	background-image: url(../images/bg_top_nav_left.gif);
+	
+}
+
+
+
+
+
+
+.header_1
+{
+	font-size: 12px;
+	text-align: center;
+	font-weight: bold;
+}
+
+
+.header_2
+{
+	font-weight: bold;
+	color: #339933;
+	text-align: center;
+	font-size: 13px;
+	padding: 4px;
+}
+
+.header_3
+{
+	font-size: 11px;
+}
+
+.spinGreen
+{
+	font-size: 11px; 
+	color:#336600;
+}
+
+.spinNormalText
+
+{
+
+	FONT-WEIGHT: normal;
+
+	FONT-SIZE: 13px;
+
+	COLOR: #000000;
+
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+
+}
+
+
+
+
+.spinMedTitle
+
+{
+
+	FONT-SIZE: 16px;
+
+	COLOR: #333333;
+
+	FONT-FAMILY: Arial;
+
+	font-weight: bold;
+
+}
+
+
+
+.spinLargeTitle
+
+{
+
+	FONT-SIZE: 18px;
+
+	COLOR: #666666;
+
+	FONT-FAMILY: Arial;
+
+	font-weight: bold;
+
+}
+
+
+
+.spinSmallTitle
+
+{
+
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #333333; FONT-FAMILY: Arial
+
+}
+
+
+
+.spinTableBarOdd {
+
+	COLOR: #000000;
+
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+
+	BACKGROUND-COLOR: #E4E4E4;
+
+	font-size: 13px;
+
+}
+
+.spinTableBarEven {
+
+	COLOR: #000000;
+
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+
+	BACKGROUND-COLOR: #CCCCCC;
+
+	font-size: 13px;
+
+	
+
+}
+
+
+
+.spinTableTitle {
+
+	FONT-WEIGHT: bolder;
+
+	FONT-SIZE: 14px;
+
+	COLOR: #FFFFFF;
+
+	BORDER-TOP-STYLE: none;
+
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+
+	BORDER-RIGHT-STYLE: none;
+
+	BORDER-LEFT-STYLE: none;
+
+	BACKGROUND-COLOR: #759cbb;
+
+	BORDER-BOTTOM-STYLE: none;
+
+}
+
+
+
+.spinBoxedNormal
+
+{
+
+	font-family: Arial, Helvetica, sans-serif;
+
+	font-size: medium;
+
+	color: #333333;
+
+	background-color: #CCCCCC;
+
+	border: #000000;
+
+}
+
+
+
+.spinAlert
+
+{
+
+	COLOR: #CC0000;
+
+	font-size: 9pt;
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+
+}
+
+
+
+.spinToolBarTitle
+
+{
+
+	FONT-SIZE: 16px;
+
+	COLOR: #ffffff;
+
+	FONT-FAMILY: Tahoma;
+
+	font-weight: bold;
+
+}
+
+
+
+p
+
+{
+
+	margin-top: 0px;
+
+	margin-right: 0px;
+
+	margin-bottom: 0px;
+
+	margin-left: 0px;
+
+	padding-top: 0px;
+
+	padding-right: 0px;
+
+	padding-bottom: 0px;
+
+	padding-left: 0px;
+
+}
+.faintOutline {
+
+	border: 4px double #CCCCCC;
+
+}
+
+
+
+.faintOutlineSm {
+
+	border: 2px dotted #CCCCCC;
+
+}
+
+
+.tab1 {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 14px;
+	text-align:center;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #993333;
+	width: 1px;
+}
+
+.tab2 {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight:200;
+	line-height: 20px;
+	color: #000000;
+	background-color: #ADD1F5;
+	text-align: center;
+	vertical-align: middle;
+	border-style:solid;
+	border-width:thin;
+}
+
+
+.tab2_selected {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	font-weight:bold;
+	line-height: 20px;
+	color: #000000;
+	background-color: #ADD1F5;
+	text-align: center;
+	vertical-align: middle;
+	border-style:inset;
+	border-width:thin;
+}
+
+div.ui-datepicker
+{
+ font-size:10px;
+}
+

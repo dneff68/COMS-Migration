@@ -1,0 +1,57 @@
+
+		<chart>
+		<license>JTAJ-9N1PLHO.945CWK-2XOI1X0-7L</license>
+		<chart_value prefix=''
+			suffix='' 
+					  decimals='0' 
+					  decimal_char='.'
+					  separator=''
+					  position='top_above'
+					  hide_zero='false' 
+					  as_percentage='false'
+					  font='arial' 
+					  bold='true' 
+					  size='10' 
+					  color='FFFFFF' 
+					  alpha='90'
+					  />
+			
+			
+			  <series_color>
+				<color>009933</color>
+			  </series_color>
+			  <chart_data>
+			
+<row><null/>
+<string>13</string>
+<string>14</string>
+<string>15</string>
+<string>16</string>
+<string>17</string>
+<string>18</string>
+<string>19</string>
+<string>20</string>
+<string>21</string>
+<string>22</string>
+<string>23</string>
+<string>24</string></row>
+			<row><string>Tank Level Gallons</string>
+<number tooltip='2030.21'>2030.21</number>
+<number tooltip='2027.42'>2027.42</number>
+<number tooltip='2021.15'>2021.15</number>
+<number tooltip='2019.06'>2019.06</number>
+<number tooltip='2006.51'>2006.51</number>
+<number tooltip='2000.94'>2000.94</number>
+<number tooltip='1990.48'>1990.48</number>
+<number tooltip='1983.51'>1983.51</number>
+<number tooltip='1981.42'>1981.42</number>
+<number tooltip='1973.76'>1973.76</number>
+<number tooltip='1980.03'>1980.03</number>
+<number tooltip='1997.45'>1997.45</number></row>
+			  </chart_data>
+			  <chart_type>
+				  <string>column</string>
+			   </chart_type>
+				<chart_label shadow='low' color='ffffff' alpha='90' size='10' position='top' prefix='' suffix='' decimals='0' separator='' as_percentage='false' />
+			   
+			</chart>

@@ -1,0 +1,93 @@
+
+			<chart>
+			<license>JTAJ-9N1PLHO.945CWK-2XOI1X0-7L</license>
+			<chart_value prefix='' 
+					  suffix='' 
+					  decimals='0' 
+					  decimal_char='.'
+					  separator=''
+					  position='cursor'
+					  hide_zero='false' 
+					  as_percentage='false'
+					  font='arial' 
+					  bold='true' 
+					  size='10' 
+					  color='000000' 
+					  alpha='90'
+					  />
+			
+			
+			  <series_color>
+				<color>009933</color>
+				<color>cccccc</color>
+			  </series_color>
+			  <chart_data>
+				
+<row><null/>
+<string>21</string>
+<string>22</string>
+<string>23</string>
+<string>24</string>
+<string>25</string>
+<string>26</string>
+<string>27</string>
+<string>28</string>
+<string>29</string>
+<string>30</string>
+<string>31</string>
+<string>01</string></row>
+				<row><string>Normalized Dose</string>
+<number tooltip='90'>90</number>
+<number tooltip='95'>95</number>
+<number tooltip='98'>98</number>
+<number tooltip='98'>98</number>
+<number tooltip='96'>96</number>
+<number tooltip='93'>93</number>
+<number tooltip='96'>96</number>
+<number tooltip='101'>101</number>
+<number tooltip='100'>100</number>
+<number tooltip='97'>97</number>
+<number tooltip='98'>98</number>
+<number tooltip='93'>93</number></row>
+				<row><string>Target Dose (94 gallons)</string>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number>
+<number>105</number></row>
+			  </chart_data>
+			  <chart_type>
+				<string>line</string>
+				<string>area</string>
+			  </chart_type>
+			   <chart_guide horizontal='true'
+							vertical='false'
+							thickness='1' 
+							color='ff4400' 
+							alpha='75' 
+							type='dashed' 
+							
+							 
+							radius='8'
+							fill_alpha='0'
+							line_color='ff4400'
+							line_alpha='75'
+							line_thickness='4'
+						 
+							size='10'
+							text_color='ffffff'
+							background_color='ff4400'
+							text_h_alpha='90'
+							text_v_alpha='90' 
+							/>
+			
+			   <!-- use chart_label in combination with chart_guide -->
+			   <chart_label position='cursor' />
+			</chart>

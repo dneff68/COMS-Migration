@@ -1,0 +1,44 @@
+76: From dneff@spinsite.com Fri Jun  1 15:13:11 2007
+Received: from fed1rmmtao101.cox.net (fed1rmmtao101.cox.net [68.230.241.45])
+	by delta.customhostingtools.com (8.13.1/8.13.1) with ESMTP id l51MDABp012057
+	for <readings@customhostingtools.com>; Fri, 1 Jun 2007 15:13:11 -0700
+Received: from fed1rmimpo02.cox.net ([70.169.32.72])
+          by fed1rmmtao101.cox.net
+          (InterMail vM.7.05.02.00 201-2174-114-20060621) with ESMTP
+          id <20070601221220.HSZL22318.fed1rmmtao101.cox.net@fed1rmimpo02.cox.net>
+          for <readings@customhostingtools.com>;
+          Fri, 1 Jun 2007 18:12:20 -0400
+Received: from [10.0.1.12] ([68.4.234.15])
+	by fed1rmimpo02.cox.net with bizsmtp
+	id 6NCL1X00Y0Lc5Cc0000000; Fri, 01 Jun 2007 18:12:20 -0400
+Mime-Version: 1.0 (Apple Message framework v752.3)
+To: readings@customhostingtools.com
+Message-Id: <E21F55A1-E5C7-4703-88F1-301F4AA7B426@spinsite.com>
+Content-Type: multipart/mixed; boundary=Apple-Mail-50-565257107
+References: <1180712225.10748@delta.customhostingtools.com>
+From: David Neff <dneff@spinsite.com>
+Subject: Inventory Reads
+Date: Fri, 1 Jun 2007 15:11:59 -0700
+X-Mailer: Apple Mail (2.752.3)
+
+
+--Apple-Mail-50-565257107
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=US-ASCII;
+	format=flowed
+
+Here are your current inventory reads!
+
+
+--Apple-Mail-50-565257107
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	x-unix-mode=0666;
+	name=IMCSReads.txt
+Content-Disposition: attachment;
+	filename=IMCSReads.txt
+
+ "BayerCS",06/24/2007 09:56:25,0869
+"Agrium_",06/24/2007=20
+

@@ -1,0 +1,57 @@
+
+		<chart>
+		<license>JTAJ-9N1PLHO.945CWK-2XOI1X0-7L</license>
+		<chart_value prefix=''
+			suffix='' 
+					  decimals='0' 
+					  decimal_char='.'
+					  separator=''
+					  position='top_above'
+					  hide_zero='false' 
+					  as_percentage='false'
+					  font='arial' 
+					  bold='true' 
+					  size='10' 
+					  color='FFFFFF' 
+					  alpha='90'
+					  />
+			
+			
+			  <series_color>
+				<color>009933</color>
+			  </series_color>
+			  <chart_data>
+			
+<row><null/>
+<string>30</string>
+<string>31</string>
+<string>01</string>
+<string>02</string>
+<string>03</string>
+<string>04</string>
+<string>05</string>
+<string>06</string>
+<string>07</string>
+<string>08</string>
+<string>09</string>
+<string>10</string></row>
+			<row><string>Tank Level Gallons</string>
+<number tooltip='1283'>1283</number>
+<number tooltip='1223'>1223</number>
+<number tooltip='1176'>1176</number>
+<number tooltip='1131'>1131</number>
+<number tooltip='1087'>1087</number>
+<number tooltip='1030'>1030</number>
+<number tooltip='980'>980</number>
+<number tooltip='931'>931</number>
+<number tooltip='885'>885</number>
+<number tooltip='839'>839</number>
+<number tooltip='793'>793</number>
+<number tooltip='749'>749</number></row>
+			  </chart_data>
+			  <chart_type>
+				  <string>column</string>
+			   </chart_type>
+				<chart_label shadow='low' color='ffffff' alpha='90' size='10' position='top' prefix='' suffix='' decimals='0' separator='' as_percentage='false' />
+			   
+			</chart>

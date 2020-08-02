@@ -1,0 +1,185 @@
+@charset "UTF-8";
+/* CSS Document */
+html {
+	height: 100%
+}
+body {
+	height: 100%;
+	margin: 0px;
+	padding: 0px
+}
+
+a {
+	color:#9d532e; text-decoration:underline;font-size:smaller;
+}
+
+#map_canvas {
+	height: 350px;
+	width:90%
+}
+.middleTitle {
+	FONT-SIZE: 16px;
+	margin:10px 10px 10px 15px;
+	COLOR: #333333;
+	FONT-FAMILY: Arial;
+	font-weight: bold;
+}
+
+div process_graph
+{
+	display:inherit;
+	position:absolute;
+	width:500px;
+	height:90%;
+}
+
+body {
+	padding-top:10px;
+	background-color:#DDD;
+}
+
+.floatLeft {
+	float:left;
+}
+
+.floatRight {
+	float:right;
+}
+
+.planningItemRow {
+	color:#444;
+	text-align:left;
+	vertical-align: middle;
+}
+
+.planningButtonBar {
+	padding-top:20px;
+	padding-left:15px;
+	padding-right:15px;
+}
+
+.planningButtonBarLeft {
+	color:#444;
+	font-size: 24px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.planningButtonBarCenter {
+	color:#444;
+	font-size: 24px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	text-align:center;
+}
+
+
+.planningItemRow_complete {
+	color: #444;
+	text-align:left;
+}
+
+
+.planningItemRow .smallerText {
+	font-size:14px;
+}
+
+
+.planningTitleRow {
+	color:#9d532e; font-size:16px; text-align:center; vertical-align:middle;
+}
+
+.planningTitleRow_complete
+{
+	color: #466289; font-size:16px; text-align:center; vertical-align:middle;
+}
+
+
+#editProjectDiv .planningTitleRow {
+	text-align:right; padding-right:10px; height:30; vertical-align:text-top;
+}
+	
+.planningItemRow a, .category-row a {
+	color:#040; text-decoration:underline;font-size:smaller;
+}
+
+.colorBox {
+	padding-bottom:5px; padding-top:5px; padding-left:5px; padding-right:5px;
+	margin-left:5px; margin-right:5px;
+	font-size:smaller;
+	
+}
+
+.yellowBox
+{
+	background-color:#FF3;
+}		
+
+.redBox
+{
+	background-color:#F33;
+}		
+
+.greenBox
+{
+	background-color:#090;
+}		
+
+.subItem {
+	font-size:smaller;
+	vertical-align: text-top;
+}
+
+.author-date {
+	font-size:smaller; float:right;
+}
+
+	
+.customerBanner {
+	background-color:#4D67A0;
+	height:110px;
+	color:#ffffff;
+	font-size: 36px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.customerBanner_complete {
+	background-color: #a0aec1;
+	height:110px;
+	color:#ffffff;
+	font-size: 36px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.expand-row {
+	color:#555;
+	border: 1px solid #DDD;
+	float:right;
+	}
+	
+.expand-all {
+	color: #FFF;
+	border: 1px solid #DDD;
+	float:left;
+	font-size:14px;
+	padding-left:3px; padding-right:3px;
+	}
+
+.customerBanner a {
+	font-size:14px; 
+	float:right;
+	color:#EEE;
+}
+
+.customerBanner2 {
+	background-color:#A5C0DB;
+	height:50px;
+}
+
+.category-row {
+	font-family: Verdana, Geneva, sans-serif;
+	background-color: #FFCC84;
+}
+
+.category-row_complete {
+	font-family: Verdana, Geneva, sans-serif;
+	background-color: #627894;
+}
