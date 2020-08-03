@@ -252,21 +252,22 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 
   function verifyUser($usr, $pw)
   {
+//  	bigEcho($usr . ", -- " . $pw);
   	global $USERID, $PASSWORD, $USERTYPE, $CUSTOMER_SITES;
-	
 	$query = "select type from users where loginID='$usr' LIMIT 1";
 	$res = getResult($query);
 	if (checkResult($res))
 	{
 		$query = "select type from users where loginID='$usr' and password='$pw' LIMIT 1";
 		$res = getResult($query);
+	 	bigEcho(gettype($res));
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
-			extract($line);
-			$USERID = $usr;
-			$PASSWORD = $pwd;
-			$USERTYPE = $type;
+			$line = $res->fetch_assoc();
+			//bigEcho("Line --> " .  $line[$usr]);
+			$_SESSION["USERID"] = $usr;
+			$_SESSION["PASSWORD"] = $pw;
+			$_SESSION["USERTYPE"] = $line["type"];
 			return 0;
 		}		
 		else

@@ -18,9 +18,21 @@ function executeQuery($query, $type="")
 	global $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
 
 	// connect and execute query
-	$connection = mysqli_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
-	mysql_select_db($database, $connection) or die ("Couldn't select database");
-	$result = mysql_unbuffered_query($query, $connection);
+	$connection = mysqli_connect("127.0.0.1", $dbuser, $dbpass) or die ("Unable to connect!");
+	//mysql_select_db($database, $connection) or die ("Couldn't select database");
+	$database = mysqli_select_db($connection, "h2o2");
+	// $result = mysql_query($query, $connection);
+	$result = $connection->query($query);
+
+
+
+
+
+
+
+//	$connection = mysqli_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
+//	mysql_select_db($database, $connection) or die ("Couldn't select database");
+//	$result = mysql_unbuffered_query($query, $connection);
 	if (!$result)
 	{
 		error_log("Error in query: $query\n$HTTP_HOST$REQUEST_URI", 1, "dneff@CustomHostingTools.com");
@@ -31,7 +43,7 @@ function executeQuery($query, $type="")
 	}
 	if ($type == "INSERT")
 	{
-		$ID = mysql_insert_id($connection);
+		$ID = $result->insert_id;
 		return $ID;
 	}
 }
@@ -92,9 +104,9 @@ function getResult($query, $handleError=false)
 
 function checkResult($result)
 {
+//	var_dump(get_object_vars($result));
 	if ($result)
 	{
-
 		if ($result->num_rows > 0)
 		{
 			return true;

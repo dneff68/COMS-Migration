@@ -3,6 +3,7 @@ include_once "../lib/chtFunctions.php";
 	
 if (david())
 {
+	$david_debug = true;
 	$hostname="127.0.0.1";
 	$dbuser = 'root';
 	$dbpass = 'smap0tCfl';
@@ -10,6 +11,7 @@ if (david())
 }
 else
 {
+	$david_debug = false;
 	$hostname='localhost';
 	$dbuser = 'phpuser';
 	$dbpass = 'fog9stOol';

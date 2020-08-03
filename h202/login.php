@@ -1,19 +1,20 @@
-<?
+<?php
 session_start();
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-include_once 'db_mysql.php';
-
+include_once '../lib/db_mysql.php';
+extract($_SERVER);
 if ($REQUEST_METHOD == 'POST')
 {
+  echo($_POST["userID"].", ".$_POST["password"]);
+ // extract($_POST);
 	if (empty($USERID))
 	{
-		session_register("USERID");
-		session_register("USERTYPE");
+		$_SESSION["USERID"] = "";
+		$_SESSION["USERTYPE"] = "";
 	}
-
-	$res = verifyUser($userID, $password);
-	if ($res !== 0)
+	$res = verifyUser($_POST["userID"], $_POST["password"]);
+ 	if ($res !== 0)
 	{
 		$errorMsg = "<span class='spinAlert'>Please try again: $res</span>";
 	}
