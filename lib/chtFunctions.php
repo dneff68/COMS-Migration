@@ -1,15 +1,18 @@
-<?
+<?php
 // CHT Functions
 
 function david()
 {
 	// return true if David Neff is the client
 	//return false;
-	global $REMOTE_ADDR;
-	$s = $REMOTE_ADDR == "184.179.73.19";
-	$s = $s || $REMOTE_ADDR == '72.219.174.193';
-	$s = $s || $REMOTE_ADDR == '204.102.229.130';
-	$s = $s || $_SESSION['USERID'] == 'dneff';
+	global $REMOTE_ADDR, $debug;
+	$debug = false;
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+
+	$s = $REMOTE_ADDR == "68.5.60.170";
+	$s = $s || "::1";
 	return $s;
 }
 
@@ -77,32 +80,47 @@ function bigEcho($txt)
   */
   function echoResults(&$result, $title='defalut', $width='')
   {
-  	if (mysql_num_rows($result) <= 0)
+  	if ($result->num_rows <= 0)
   	{
   	  return;
   	}
 	if ($title == 'defalut')
 	{
-  		echo "Total Rows: ".mysql_num_rows($result);
+  		echo "Total Rows: ".$result->num_rows;
 	}
 	else
 	{
 		echo "<span class='spinMedTitle'>$title</span>";	
 	}
-  	mysql_data_seek($result, 0);
-  	$fieldCnt = mysql_num_fields($result);
-  	
+	$result->data_seek(0);
+  	$fieldCnt = mysqli_num_fields($result);
+  	//bigEcho($fieldCnt);
 	$width = empty($width) ? '' : "width='$width'";
 	
   	echo "<table border='1' cellspacing='0' cellpadding='6' bordercolor='#cccccc' $width>\n<tr>\n";
-	for ($i = 0; $i < $fieldCnt; $i++)
-	{
-      $fn = mysql_field_name($result, $i);
+
+	$finfo = $result->fetch_fields();   
+    foreach ($finfo as $val) 
+    {
+      $fn = $val->name;
 	  echo "<td align='center' class='spinTableTitle'>$fn</th>";
-	}
+    }
+
+	// for ($i = 0; $i < $fieldCnt; $i++)
+	// {
+	// 	$finfo = $result->fetch_fields();
+
+ //      $fn = mysqli_field_name($result, $i);
+	//   echo "<td align='center' class='spinTableTitle'>$fn</th>";
+	// }
 	echo "</tr>";
 	
-  	while ($line = mysql_fetch_array($result))
+
+
+
+
+
+  	while ($line = $result->fetch_array(MYSQLI_NUM))
   	{
 			echo "<tr class='spinTableBarOdd'>";
 			for ($i = 0; $i < $fieldCnt; $i++)
@@ -112,7 +130,7 @@ function bigEcho($txt)
 	  		echo "</tr>";
   	}
   	echo "</table>";
-  	mysql_data_seek($result, 0);
+  	$result->data_seek(0);
   }
   
 function showPostVars($tofile='no')

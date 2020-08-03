@@ -1,4 +1,4 @@
-<?
+<?php
   	function getRegionFilter()
   	{
 		global $REGION_FILTER;

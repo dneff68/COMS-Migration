@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 db_mysql.php
 
@@ -18,7 +18,7 @@ function executeQuery($query, $type="")
 	global $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
 
 	// connect and execute query
-	$connection = mysql_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
+	$connection = mysqli_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
 	mysql_select_db($database, $connection) or die ("Couldn't select database");
 	$result = mysql_unbuffered_query($query, $connection);
 	if (!$result)
@@ -53,9 +53,11 @@ function getResult($query, $handleError=false)
 	}
 
 	// connect and execute query
-	$connection = mysql_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
-	mysql_select_db($database, $connection) or die ("Couldn't select database");
-	$result = mysql_query($query, $connection);
+	$connection = mysqli_connect("127.0.0.1", $dbuser, $dbpass) or die ("Unable to connect!");
+	//mysql_select_db($database, $connection) or die ("Couldn't select database");
+	$database = mysqli_select_db($connection, "h2o2");
+	// $result = mysql_query($query, $connection);
+	$result = $connection->query($query);
 	if (!$result)
 	{
 		if (!$handleError)
@@ -92,7 +94,8 @@ function checkResult($result)
 {
 	if ($result)
 	{
-		if (mysql_num_rows($result) > 0)
+
+		if ($result->num_rows > 0)
 		{
 			return true;
 		}
