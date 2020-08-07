@@ -57,11 +57,11 @@ result set.
 --------------------------------------*/
 function getResult($query, $handleError=false)
 {
-	global $dbhitcount, $david_debug, $queryArray, $TOTAL_DB_TIME, $REQUEST_URI,$HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
+	global $dbhitcount, $david_debug, $queryArray, $REQUEST_URI,$HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
 	$david_debug = false; //david();
 	if ($david_debug === true)
 	{
-		$stime = getmicrotime();
+		$stime = microtime(true);
 	}
 
 	// connect and execute query
@@ -88,9 +88,10 @@ function getResult($query, $handleError=false)
 	if ($david_debug === true)
 	{
 		$dbhitcount++;
-		$etime = getmicrotime();
-		$ttime = $etime - $stime;
-		$TOTAL_DB_TIME = $TOTAL_DB_TIME + $ttime;
+		$etime = microtime(true);
+		$ttime = microtime_used($stime, $etime);
+		//$ttime = $etime - $stime;
+		$_SESSION['TOTAL_DB_TIME'] = $_SESSION['TOTAL_DB_TIME'] + $ttime;
 		$query .= "<br>Query Time: $ttime"; 
 		//array_push($queryArray, $query);
 		if ($ttime > 0.01)

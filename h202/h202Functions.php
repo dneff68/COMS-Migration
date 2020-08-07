@@ -2808,4 +2808,8 @@ function ddie($text='')
 	}
 }
 
+function microtime_used($before,$after) {
+    return (substr($after,11)-substr($before,11))
+        +(substr($after,0,9)-substr($before,0,9));
+}
 ?>

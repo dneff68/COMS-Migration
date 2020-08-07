@@ -251,6 +251,7 @@ function showSessionVars()
 	
 	foreach ($a as $var=>$val)
 	{
+		if (gettype($a) == 'array') {continue;}
 		echo "<br>$var = $val";
 	}
 }
