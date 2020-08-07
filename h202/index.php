@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 ini_set ('display_errors', 1);  
 ini_set ('display_startup_errors', 1);  
 error_reporting (E_ALL); 
@@ -7,8 +7,8 @@ include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-//	global $USERID, $_SESSION;
-
+//global $USERID;
+if ($_POST['debug'] = 1) showArray($_SESSION);
 
 //if (david()) generateAllStats();
 	$_SESSION['TOTAL_DB_TIME'] 	= 0.0;
@@ -31,7 +31,7 @@ if ($_SESSION['logout'] == 'yes')
 	$_SESSION['USERTYPE'] = '';
 }
 
-if (empty($USERID) || empty($USERTYPE))
+if ($_SESSION["USERID"] == '' || $_SESSION["USERTYPE"] == '')
 {
 	include 'login.php';
 }

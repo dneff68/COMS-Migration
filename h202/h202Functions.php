@@ -260,7 +260,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 	{
 		$query = "select type from users where loginID='$usr' and password='$pw' LIMIT 1";
 		$res = getResult($query);
-	 	bigEcho(gettype($res));
+	 	bigEcho("Result Type: " . gettype($res));
 		if (checkResult($res))
 		{
 			$line = $res->fetch_assoc();
