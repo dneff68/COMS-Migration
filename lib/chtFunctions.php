@@ -45,13 +45,14 @@ function showArray($arr)
 		return;
 	}
 
-
-	ksort($arr);
-	reset($arr);
-	
-	foreach ($arr as $var=>$val)
+	if (gettype($arr) != 'array') return;
+	$vals = array_values($arr);
+	$i = 0;
+	foreach(array_keys($arr) as $key)
 	{
-		echo "<br>$var = $val";
+		if (gettype($vals[$i]) == 'array') {$i++; continue;}
+		echo "<br>". $key . ': ' . $vals[$i];
+		$i++;
 	}
 }
 

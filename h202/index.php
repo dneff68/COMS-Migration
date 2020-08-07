@@ -1,36 +1,33 @@
 <?php
-session_start();
+
+ini_set ('display_errors', 1);  
+ini_set ('display_startup_errors', 1);  
+error_reporting (E_ALL); 
 include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-	global $USERID, $_SESSION;
+//	global $USERID, $_SESSION;
 
-showArray($_SESSION);
 
 //if (david()) generateAllStats();
 if ($david_debug)
 {
-	$time_start = getmicrotime();
-
-	$debugTime = date('s');
-	session_register('time_start');
-	session_register('last_stamp');
-	$last_stamp = $time_start;
-	session_register("TOTAL_DB_TIME");
-	$TOTAL_DB_TIME = 0.0;
-	session_register("debugTime");
-	session_register("dbhitcount");
-	$dbhitcount = 0;
-	session_register("queryArray");
-	$queryArray = array();
+	$_SESSION['time_start'] 	= getmicrotime();
+	$_SESSION['debugTime'] 		= date('s');
+	$_SESSION['last_stamp'] 	= $_SESSION['time_start'];
+	$_SESSION['TOTAL_DB_TIME'] 	= 0.0;
+	$_SESSION['dbhitcount'] 	= 0;
+	$_SESSION['queryArray'] 	= array();
 	timestamp('MAIN', true);
 }
 
-if ($logout == 'yes')
+if (is_null($_SESSION['logout'])) $_SESSION['logout'] = 'no'; 
+//if (typeof($_SESSION['logout']) == '')
+if ($_SESSION['logout'] == 'yes')
 {
-	$USERID = '';
-	$USERTYPE = '';
+	$_SESSION['USERID'] = '';
+	$_SESSION['USERTYPE'] = '';
 }
 
 if (empty($USERID) || empty($USERTYPE))
@@ -58,6 +55,7 @@ else
 					cust.customerID=c.customerID and
 					c.email='$USERID' and cust.siteID IS NOT NULL LIMIT 1";
 		$custres = getResult($query);
+//		bigEcho(gettype($custres));
 		if (checkResult($custres))
 		{
 			session_register('CUSTOMER_EMAIL');
