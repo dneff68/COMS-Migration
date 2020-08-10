@@ -25,14 +25,13 @@ function executeQuery($query, $type="")
 	$result = $connection->query($query);
 
 
-
-
-
-
-
 //	$connection = mysqli_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
 //	mysql_select_db($database, $connection) or die ("Couldn't select database");
 //	$result = mysql_unbuffered_query($query, $connection);
+	if ($type == "CREATE")
+	{
+		return 1;
+	}
 	if (!$result)
 	{
 		error_log("Error in query: $query\n$HTTP_HOST$REQUEST_URI", 1, "dneff@CustomHostingTools.com");
@@ -46,6 +45,7 @@ function executeQuery($query, $type="")
 		$ID = $result->insert_id;
 		return $ID;
 	}
+	return 1;
 }
 
 
@@ -57,7 +57,7 @@ result set.
 --------------------------------------*/
 function getResult($query, $handleError=false)
 {
-	global $dbhitcount, $david_debug, $queryArray, $REQUEST_URI,$HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
+	global $dbhitcount, $david_debug, $queryArray, $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
 	$david_debug = false; //david();
 	if ($david_debug === true)
 	{

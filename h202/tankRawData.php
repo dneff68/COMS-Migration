@@ -7,7 +7,7 @@ include_once 'db_mysql.php';
 
 function echoRawData(&$result, $title='defalut', $width='', $units='Gallons', $diameter=1)
 {
-	global $monitorID, $USERTYPE;
+	global $monitorID, $_SESSION['USERTYPE'];
 	if (mysql_num_rows($result) <= 0)
 	{
 	  return;
@@ -81,7 +81,7 @@ function echoRawData(&$result, $title='defalut', $width='', $units='Gallons', $d
 					// check to see if the date matches the date of a delivery
 
 				  $monitorID = $line[$i-2]; // monitorID should be two positoins to the left
-				  if ( $USERTYPE != 'customer' )
+				  if ( $_SESSION['USERTYPE'] != 'customer' )
 				  {
 				  	$line[$i] = "<a href='javascript:surfDialog(\"changeReading.php?monitorID=$monitorID&datetime=$datetime\", 460, 210, window, true)'>" . $line[$i] . '</a>' . $badReading;
 				  }

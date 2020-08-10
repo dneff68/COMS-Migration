@@ -5,7 +5,7 @@ include_once 'h202Functions.php';
 include_once 'chtFunctions.php';
 include_once 'db_mysql.php';
 
-if (empty($_SESSION['USERID']) || empty($USERTYPE))
+if (empty($_SESSION['USERID']) || empty($_SESSION['USERTYPE']))
 {
 	$js = "alert('Your session has timed out.  Please reload the page and sign in.');\n";
 }

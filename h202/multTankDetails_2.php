@@ -70,7 +70,7 @@ if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
 	$regfilt = getRegionFilter();
 }
 
-if ( $USERTYPE == 'customer' )
+if ( $_SESSION['USERTYPE'] == 'customer' )
 {
 	$custTanks = "and s.deliveryEmailDist LIKE '%$USERID%'";
 }

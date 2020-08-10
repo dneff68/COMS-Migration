@@ -1,8 +1,15 @@
 <?php
 include_once "../lib/chtFunctions.php";
 	
+$_SESSION['ROOT_URL'] = "/";
+$_SESSION['SHOWFACTORIES'] = '';
+$_SESSION['SHOWCARRIERS'] = '';
+$_SESSION['SHOWTERMINALS'] = '';
+//$_SESSION['ROOT_URL'] = "http://h202.customhostingtools.com/";
+
 if (david())
 {
+
 	$david_debug = true;
 	$hostname="127.0.0.1";
 	$dbuser = 'root';

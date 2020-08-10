@@ -22,6 +22,10 @@ if ($_POST["genstat"] == 1)
 }
 
 extract($_POST);
+		// bigEcho("Neff: " . gettype($_SESSION['SHOWFACTORIES']));
+		// bigEcho("Neff: " . gettype($tankAction));
+		// die;
+if (is_null($tankAction)) $tankAction='statusView';
 if ( empty($_SESSION['VIEWMODE']) || $tankAction == 'statusView')
 {
 	
@@ -34,20 +38,19 @@ if ( empty($_SESSION['VIEWMODE']) || $tankAction == 'statusView')
 	$_SESSION['VIEWMODE'] = 'statusView';
 }
 
-
 if (!empty($tankAction))
 {
 	// SHOWTERMINALS
 	if ($tankAction == 'deliveryView')
 	{
-		if ($VIEWMODE == 'statusView')
+		if ($_SESSION['VIEWMODE'] == 'statusView')
 		{
 			// switching, reset filter
 			$ZIPCOLLECTION = 0;
 			$status = 'all';
 		}
 	
-		$VIEWMODE = 'deliveryView';
+		$_SESSION['VIEWMODE'] = 'deliveryView';
 	}
 	elseif ($tankAction == 'showInactive')
 	{
@@ -101,10 +104,12 @@ if (!empty($tankAction))
 	elseif ( strpos($tankAction, 'lead_') !== false)
 	{
 		list($blah, $_SESSION['LEADTIME_OVERRIDE']) = explode('_', $tankAction);
-//		ddie($LEADTIME_OVERRIDE);
+//		ddie($_SESSION['LEADTIME_OVERRIDE']);
 	}
 }
 
+$region = $_POST['region'];
+bigEcho($region . " tanks.php 109");
 
 if (!empty($region))
 {
@@ -130,16 +135,21 @@ if (!empty($region))
 	}
 }		
 
+if (empty($_SESSION['STATUS_FILTER']))
+{
+	$_SESSION['STATUS_FILTER'] = 'all';
+}
+
 if (!empty($status))
 {
-	if (
-		empty($_SESSION['STATUS_FILTER'])
-	    ) $_SESSION['STATUS_FILTER'] = $status == 'all' ? '' : $status;
+	if ( empty($_SESSION['STATUS_FILTER'])) 
+		$_SESSION['STATUS_FILTER'] = $status == 'all' ? '' : $status;
 }		
 
-if ($USERTYPE == 'customer')
+
+if ($_SESSION['USERTYPE'] == 'customer')
 {
-	$VIEWMODE = 'deliveryView';  // this is the only view customers are allowed to see
+	$_SESSION['VIEWMODE'] = 'deliveryView';  // this is the only view customers are allowed to see
 }
 
 // get counts
@@ -160,12 +170,17 @@ $lowCnt = 0;
 $criticalCnt = 0;
 $reorderCnt = 0;
 
-$inactiveFilt = $SHOWINACTIVE 		== 'yes' ? '' : "and m.status != 'Inactive'";
-$tmpshutFilt  = $SHOWTEMPSHUTDOWN 	== 'yes' ? '' : "and m.status != 'Temporary Shutdown'";
-$unmonFilt	  = $SHOWUNMONITORED 	== 'yes' ? '' : "and t.monitorID NOT LIKE 'none%'";
+if ($_SESSION['SHOWINACTIVE'] == empty($_SESSION['SHOWINACTIVE'])) $_SESSION['SHOWINACTIVE'] = 'no';
+if ($_SESSION['SHOWTEMPSHUTDOWN'] == empty($_SESSION['SHOWTEMPSHUTDOWN'])) $_SESSION['SHOWTEMPSHUTDOWN'] = 'no';
+if ($_SESSION['SHOWUNMONITORED'] == empty($_SESSION['SHOWUNMONITORED'])) $_SESSION['SHOWUNMONITORED'] = 'no';
+
+$inactiveFilt = $_SESSION['SHOWINACTIVE'] == 'yes' ? '' : "and m.status != 'Inactive'";
+$tmpshutFilt  = $_SESSION['SHOWTEMPSHUTDOWN'] 	== 'yes' ? '' : "and m.status != 'Temporary Shutdown'";
+$unmonFilt	  = $_SESSION['SHOWUNMONITORED'] 	== 'yes' ? '' : "and t.monitorID NOT LIKE 'none%'";
 
 
-if ($VIEWMODE == 'statusView') 
+if ($_SESSION['VIEWMODE'] == empty($_SESSION['VIEWMODE'])) $_SESSION['VIEWMODE'] = 'statusView';
+if ($_SESSION['VIEWMODE'] == 'statusView') 
 {
 	// Get no reading count
 	$query = "select 
@@ -178,34 +193,37 @@ if ($VIEWMODE == 'statusView')
 		and m.status = 'Active' $unmonFilt";	
 	$res = getResult($query);
 
-	$nrCnt = mysql_num_rows($res);
+	$nrCnt = $res->num_rows;
 	
-	$inac = $SHOWINACTIVE != 'yes' ? " && m.status != 'Inactive'" : '';
-	$tmpshut = $SHOWTEMPSHUTDOWN == 'yes' ? '' : " && m.status != 'Temporary Shutdown'";
+	$inac = $_SESSION['SHOWINACTIVE'] != 'yes' ? " && m.status != 'Inactive'" : '';
+	$tmpshut = $_SESSION['SHOWTEMPSHUTDOWN'] == 'yes' ? '' : " && m.status != 'Temporary Shutdown'";
 	
 	$tmpshut = " && m.status != 'Temporary Shutdown'";
 	
 	
 	$query = "select t.tankID, t.tankName from monitor m, tank t where t.monitorID=m.monitorID and m.monitorID LIKE 'none-%' $inac $tmpshut";
 	$res = getResult($query);
-	$unmonCnt = mysql_num_rows($res);
+	$unmonCnt = $res->num_rows;
 	
 	$tsRes = getResult("SELECT count(monitorID) as tsCnt FROM monitor WHERE status='Temporary Shutdown'");
-	$tsLine = mysql_fetch_assoc($tsRes);
+	$tsLine = $tsRes->fetch_assoc();
 	extract($tsLine);
 	
-	executeQuery("CREATE TEMPORARY TABLE gendate SELECT max(readingDate) as readingDate, monitorID 
-				FROM tankStats GROUP BY monitorID");
+	$sess = session_id();
+	$foo = executeQuery("CREATE TABLE $sess SELECT max(readingDate) as readingDate, monitorID 
+				FROM tankStats GROUP BY monitorID", "CREATE");
+
 	$query = "SELECT sum(ts.high) as HdoseCnt, sum(ts.low) as LdoseCnt, sum(ts.normal) as normalCnt, 
 				sum(ts.unass) as unassCnt, sum(ts.exceedcap) as ecCnt 
-				FROM monitor m, tankStats ts, gendate gd
+				FROM monitor m, tankStats ts, $sess gd
 				where m.monitorID=ts.monitorID and ts.readingDate=gd.readingDate 
 				and ts.monitorID=gd.monitorID $tmpshut $inac";
 				
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
-	
+	$foo = executeQuery("drop table $sess");
+
 	$query = "select DISTINCT m.monitorID 
 			from monitor m, tank t, site s
 			where 
@@ -213,16 +231,16 @@ if ($VIEWMODE == 'statusView')
 			m.status = 'Inactive' and
 			m.siteID = s.siteID";
 	$res = getResult($query);
-	$unassCnt = mysql_num_rows($res);
+	$unassCnt = $res->num_rows;
 	$query = "select DISTINCT data.monitorID from data left join monitor ON data.monitorID=monitor.monitorID 
 	where monitor.monitorID IS NULL and data.date > DATE_ADD(NOW(), INTERVAL -11 DAY)";
 	$res = getResult($query);
-	$unassCnt += mysql_num_rows($res);
+	$unassCnt += $res->num_rows;
 	
 	
 	$query = "SELECT count(monitorID) as noMonitorCnt FROM tank WHERE monitorID LIKE 'none-%'";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 
@@ -246,7 +264,7 @@ else
 $res = getResult($query);
 $allCnt = $res->num_rows;
 
-if ($VIEWMODE != 'statusView')
+if ($_SESSION['VIEWMODE'] != 'statusView')
 {
 	$query = "select distinct m.monitorID 
 	from 
@@ -270,10 +288,10 @@ if ($VIEWMODE != 'statusView')
 			$status = checkTankLevel($monitorID);
 			list($statkey, $status) = explode(',', $status);
 		
-			if ($LEADTIME_OVERRIDE != 'default')
+			if ($_SESSION['LEADTIME_OVERRIDE'] != 'default')
 			{
 				$reorderData = reorderInfo($monitorID);
-				if ($reorderData['daysToDelivery'] <= $LEADTIME_OVERRIDE)
+				if ($reorderData['daysToDelivery'] <= $_SESSION['LEADTIME_OVERRIDE'])
 				{
 					$statkey = 'Reorder';
 				}
@@ -336,12 +354,12 @@ function showMap()
 
 function setRegion(region)
 {
-	window.location = "/index.php?region=" + region.id + '&setOn=' + region.checked;
+	window.location = "index.php?region=" + region.id + '&setOn=' + region.checked;
 }
 
 function setStatusFilter(stat)
 {
-	window.location = "/index.php?status=" + stat;
+	window.location = "index.php?status=" + stat;
 }
 
 function doAction(action)
@@ -424,7 +442,7 @@ function setmapvis()
 		src=''  align='left' allowtransparency='true' marginheight='0' marginwidth='0' ></iframe>
 		</div>
 	
-<? 
+<?php 
 	include 'banner.php'; 
 	
 	if (!empty($msg))
@@ -432,10 +450,10 @@ function setmapvis()
 		echo("<p align='center' class='spinAlert'>$msg</p>\n");
 	}
 
-bigEcho($database);
+//bigEcho($database);
 ?>
 
-<? if ($USERTYPE != 'customer'): ?>
+<? if ($_SESSION['USERTYPE'] != 'customer'): ?>
 <table width="750" border="0" align="center" cellpadding="5" cellspacing="1">
   <tr valign="middle" class="spinSmallTitle">    
     <td width="100%" valign="middle" nowrap="nowrap" colspan="2">
@@ -472,12 +490,12 @@ bigEcho($database);
       <option value="hideMap">Hide Map</option>
       <option value="newCustomerForm">New Customer Form</option>
       <option value="newCustomerList">New Customer List</option>
-      <option value="<?=$SHOWINACTIVE=='yes' ? 'hideInactive' : 'showInactive'?>"><?=$SHOWINACTIVE=='yes' ? 'Hide Inactive Tanks' : 'Show Inactive Tanks'?></option>
-      <option value="<?=$SHOWTEMPSHUTDOWN=='yes' ? 'hideTempShutdown' : 'showTempShutdown'?>"><?=$SHOWTEMPSHUTDOWN=='yes' ? 'Hide Temporary Shutdown' : 'Show Temporary Shutdown'?></option>
-      <option value="<?=$SHOWUNMONITORED=='yes' ? 'hideUnmonitored' : 'showUnmonitored'?>"><?=$SHOWUNMONITORED=='yes' ? 'Hide Unmonitored Sites' : 'Show Unmonitored Sites'?></option>
-      <option value="<?=$SHOWFACTORIES=='yes' ? 'hideFactories' : 'showFactories'?>"><?=$SHOWFACTORIES=='yes' ? 'Hide' : 'Show'?> Suppliers</option>
-      <option value="<?=$SHOWCARRIERS=='yes' ? 'hideCarriers' : 'showCarriers'?>"><?=$SHOWCARRIERS=='yes' ? 'Hide' : 'Show'?> Carriers</option>
-      <option value="<?=$SHOWTERMINALS=='yes' ? 'hideTerminals' : 'showTerminals'?>"><?=$SHOWTERMINALS=='yes' ? 'Hide' : 'Show'?> Terminals</option>
+      <option value="<?=$_SESSION['SHOWINACTIVE']=='yes' ? 'hideInactive' : 'showInactive'?>"><?=$_SESSION['SHOWINACTIVE']=='yes' ? 'Hide Inactive Tanks' : 'Show Inactive Tanks'?></option>
+      <option value="<?=$_SESSION['SHOWTEMPSHUTDOWN']=='yes' ? 'hideTempShutdown' : 'showTempShutdown'?>"><?=$_SESSION['SHOWTEMPSHUTDOWN']=='yes' ? 'Hide Temporary Shutdown' : 'Show Temporary Shutdown'?></option>
+      <option value="<?=$_SESSION['SHOWUNMONITORED']=='yes' ? 'hideUnmonitored' : 'showUnmonitored'?>"><?=$_SESSION['SHOWUNMONITORED']=='yes' ? 'Hide Unmonitored Sites' : 'Show Unmonitored Sites'?></option>
+      <option value="<?=$_SESSION['SHOWFACTORIES']=='yes' ? 'hideFactories' : 'showFactories'?>"><?=$_SESSION['SHOWFACTORIES']=='yes' ? 'Hide' : 'Show'?> Suppliers</option>
+      <option value="<?=$_SESSION['SHOWCARRIERS']=='yes' ? 'hideCarriers' : 'showCarriers'?>"><?=$_SESSION['SHOWCARRIERS']=='yes' ? 'Hide' : 'Show'?> Carriers</option>
+      <option value="<?=$_SESSION['SHOWTERMINALS']=='yes' ? 'hideTerminals' : 'showTerminals'?>"><?=$_SESSION['SHOWTERMINALS']=='yes' ? 'Hide' : 'Show'?> Terminals</option>
       <? 
 		  if ($_SESSION['USERTYPE'] == 'super')
 		  {
@@ -491,47 +509,47 @@ bigEcho($database);
   <tr valign="middle" class="spinSmallTitle">
     <td width="108" valign="middle" nowrap="nowrap">Status Filter: </td>
     <td nowrap="nowrap"><select name="status" class="spinNormalText" id="status" onchange="setStatusFilter(this.value)">
-<? if ($VIEWMODE == 'statusView') : ?>	
-      <option value="all" <?=$STATUS_FILTER=='all' ? 'Selected' : ''?>>All (<?=$allCnt?>)</option>
-      <option value="Normal" <?=$STATUS_FILTER=='Normal' ? 'Selected' : ''?>>Normal (<?=$normalCnt?>)</option>
-      <option value="NoReading" <?=$STATUS_FILTER=='NoReading' ? 'Selected' : ''?>>No Reading (<?=$nrCnt?>)</option>
-      <option value="ExceedCap" <?=$STATUS_FILTER=='ExceedCap' ? 'Selected' : ''?>>Exceed Capacity (<?=$ecCnt?>)</option>
-      <option value="TempShutdown" <?=$STATUS_FILTER=='TempShutdown' ? 'Selected' : ''?>>Temporary Shutdown (<?=$tsCnt?>)</option>
-      <option value="H_Dose" <?=$STATUS_FILTER=='H_Dose' ? 'Selected' : ''?>>High Dose (<?=$HdoseCnt?>)</option>
-      <option value="L_Dose" <?=$STATUS_FILTER=='L_Dose' ? 'Selected' : ''?>>Low Dose (<?=$LdoseCnt?>)</option>
-      <option value="unmon" <?=$STATUS_FILTER=='unmon' ? 'Selected' : ''?>>Unmonitored Tanks (<?=$unmonCnt?>)</option>
-      <option value="unass" <?=$STATUS_FILTER=='unass' ? 'Selected' : ''?>>Unassociated Readings (<?=$unassCnt?>)</option>
+<? if ($_SESSION['VIEWMODE'] == 'statusView') : ?>	
+      <option value="all" <?=$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?=$allCnt?>)</option>
+      <option value="Normal" <?=$_SESSION['STATUS_FILTER']=='Normal' ? 'Selected' : ''?>>Normal (<?=$normalCnt?>)</option>
+      <option value="NoReading" <?=$_SESSION['STATUS_FILTER']=='NoReading' ? 'Selected' : ''?>>No Reading (<?=$nrCnt?>)</option>
+      <option value="ExceedCap" <?=$_SESSION['STATUS_FILTER']=='ExceedCap' ? 'Selected' : ''?>>Exceed Capacity (<?=$ecCnt?>)</option>
+      <option value="TempShutdown" <?=$_SESSION['STATUS_FILTER']=='TempShutdown' ? 'Selected' : ''?>>Temporary Shutdown (<?=$tsCnt?>)</option>
+      <option value="H_Dose" <?=$_SESSION['STATUS_FILTER']=='H_Dose' ? 'Selected' : ''?>>High Dose (<?=$HdoseCnt?>)</option>
+      <option value="L_Dose" <?=$_SESSION['STATUS_FILTER']=='L_Dose' ? 'Selected' : ''?>>Low Dose (<?=$LdoseCnt?>)</option>
+      <option value="unmon" <?=$_SESSION['STATUS_FILTER']=='unmon' ? 'Selected' : ''?>>Unmonitored Tanks (<?=$unmonCnt?>)</option>
+      <option value="unass" <?=$_SESSION['STATUS_FILTER']=='unass' ? 'Selected' : ''?>>Unassociated Readings (<?=$unassCnt?>)</option>
 <? else : ?>
-      <option value="all" <?=$STATUS_FILTER=='all' ? 'Selected' : ''?>>All (<?=$allCnt?>)</option>
-      <option value="Ok" <?=$STATUS_FILTER=='Ok' ? 'Selected' : ''?>>Ok (<?=$okCnt?>)</option>
-      <option value="Reorder" <?=$STATUS_FILTER=='Reorder' ? 'Selected' : ''?>>Reorder (<?=$reorderCnt?>)</option>
-      <option value="Low" <?=$STATUS_FILTER=='Low' ? 'Selected' : ''?>>Low (<?=$lowCnt?>)</option>
-      <option value="Critical" <?=$STATUS_FILTER=='Critical' ? 'Selected' : ''?>>Critical (<?=$criticalCnt?>)</option>
+      <option value="all" <?=$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?=$allCnt?>)</option>
+      <option value="Ok" <?=$_SESSION['STATUS_FILTER']=='Ok' ? 'Selected' : ''?>>Ok (<?=$okCnt?>)</option>
+      <option value="Reorder" <?=$_SESSION['STATUS_FILTER']=='Reorder' ? 'Selected' : ''?>>Reorder (<?=$reorderCnt?>)</option>
+      <option value="Low" <?=$_SESSION['STATUS_FILTER']=='Low' ? 'Selected' : ''?>>Low (<?=$lowCnt?>)</option>
+      <option value="Critical" <?=$_SESSION['STATUS_FILTER']=='Critical' ? 'Selected' : ''?>>Critical (<?=$criticalCnt?>)</option>
 <? endif ; ?>	  
     </select>
-<? if ($STATUS_FILTER == 'Reorder'): ?>
+<? if ($_SESSION['STATUS_FILTER'] == 'Reorder'): ?>
 	<span class="spinNormalText">Lead Time:</span> <select name="leadTimeOverride" id="leadTimeOverride" onchange="doAction(this.value)">
-    <option value="lead_default" <?= $LEADTIME_OVERRIDE == 'default' ? 'Selected' : ''?>>-Default-</option>
-    <option value="lead_1" <?= $LEADTIME_OVERRIDE == '1' ? 'Selected' : ''?>>1</option>
-    <option value="lead_2" <?= $LEADTIME_OVERRIDE == '2' ? 'Selected' : ''?>>2</option>
-    <option value="lead_3" <?= $LEADTIME_OVERRIDE == '3' ? 'Selected' : ''?>>3</option>
-    <option value="lead_4" <?= $LEADTIME_OVERRIDE == '4' ? 'Selected' : ''?>>4</option>
-    <option value="lead_5" <?= $LEADTIME_OVERRIDE == '5' ? 'Selected' : ''?>>5</option>
-    <option value="lead_6" <?= $LEADTIME_OVERRIDE == '6' ? 'Selected' : ''?>>6</option>
-    <option value="lead_7" <?= $LEADTIME_OVERRIDE == '7' ? 'Selected' : ''?>>7</option>
-    <option value="lead_8" <?= $LEADTIME_OVERRIDE == '8' ? 'Selected' : ''?>>8</option>
-    <option value="lead_9" <?= $LEADTIME_OVERRIDE == '9' ? 'Selected' : ''?>>9</option>
-    <option value="lead_10" <?= $LEADTIME_OVERRIDE == '10' ? 'Selected' : ''?>>10</option>
-    <option value="lead_11" <?= $LEADTIME_OVERRIDE == '11' ? 'Selected' : ''?>>11</option>
-    <option value="lead_12" <?= $LEADTIME_OVERRIDE == '12' ? 'Selected' : ''?>>12</option>
-    <option value="lead_13" <?= $LEADTIME_OVERRIDE == '13' ? 'Selected' : ''?>>13</option>
-    <option value="lead_14" <?= $LEADTIME_OVERRIDE == '14' ? 'Selected' : ''?>>14</option>
-    <option value="lead_15" <?= $LEADTIME_OVERRIDE == '15' ? 'Selected' : ''?>>15</option>
-    <option value="lead_16" <?= $LEADTIME_OVERRIDE == '16' ? 'Selected' : ''?>>16</option>
-    <option value="lead_17" <?= $LEADTIME_OVERRIDE == '17' ? 'Selected' : ''?>>17</option>
-    <option value="lead_18" <?= $LEADTIME_OVERRIDE == '18' ? 'Selected' : ''?>>18</option>
-    <option value="lead_19" <?= $LEADTIME_OVERRIDE == '19' ? 'Selected' : ''?>>19</option>
-    <option value="lead_20" <?= $LEADTIME_OVERRIDE == '20' ? 'Selected' : ''?>>20</option>
+    <option value="lead_default" <?= $_SESSION['LEADTIME_OVERRIDE'] == 'default' ? 'Selected' : ''?>>-Default-</option>
+    <option value="lead_1" <?= $_SESSION['LEADTIME_OVERRIDE'] == '1' ? 'Selected' : ''?>>1</option>
+    <option value="lead_2" <?= $_SESSION['LEADTIME_OVERRIDE'] == '2' ? 'Selected' : ''?>>2</option>
+    <option value="lead_3" <?= $_SESSION['LEADTIME_OVERRIDE'] == '3' ? 'Selected' : ''?>>3</option>
+    <option value="lead_4" <?= $_SESSION['LEADTIME_OVERRIDE'] == '4' ? 'Selected' : ''?>>4</option>
+    <option value="lead_5" <?= $_SESSION['LEADTIME_OVERRIDE'] == '5' ? 'Selected' : ''?>>5</option>
+    <option value="lead_6" <?= $_SESSION['LEADTIME_OVERRIDE'] == '6' ? 'Selected' : ''?>>6</option>
+    <option value="lead_7" <?= $_SESSION['LEADTIME_OVERRIDE'] == '7' ? 'Selected' : ''?>>7</option>
+    <option value="lead_8" <?= $_SESSION['LEADTIME_OVERRIDE'] == '8' ? 'Selected' : ''?>>8</option>
+    <option value="lead_9" <?= $_SESSION['LEADTIME_OVERRIDE'] == '9' ? 'Selected' : ''?>>9</option>
+    <option value="lead_10" <?= $_SESSION['LEADTIME_OVERRIDE'] == '10' ? 'Selected' : ''?>>10</option>
+    <option value="lead_11" <?= $_SESSION['LEADTIME_OVERRIDE'] == '11' ? 'Selected' : ''?>>11</option>
+    <option value="lead_12" <?= $_SESSION['LEADTIME_OVERRIDE'] == '12' ? 'Selected' : ''?>>12</option>
+    <option value="lead_13" <?= $_SESSION['LEADTIME_OVERRIDE'] == '13' ? 'Selected' : ''?>>13</option>
+    <option value="lead_14" <?= $_SESSION['LEADTIME_OVERRIDE'] == '14' ? 'Selected' : ''?>>14</option>
+    <option value="lead_15" <?= $_SESSION['LEADTIME_OVERRIDE'] == '15' ? 'Selected' : ''?>>15</option>
+    <option value="lead_16" <?= $_SESSION['LEADTIME_OVERRIDE'] == '16' ? 'Selected' : ''?>>16</option>
+    <option value="lead_17" <?= $_SESSION['LEADTIME_OVERRIDE'] == '17' ? 'Selected' : ''?>>17</option>
+    <option value="lead_18" <?= $_SESSION['LEADTIME_OVERRIDE'] == '18' ? 'Selected' : ''?>>18</option>
+    <option value="lead_19" <?= $_SESSION['LEADTIME_OVERRIDE'] == '19' ? 'Selected' : ''?>>19</option>
+    <option value="lead_20" <?= $_SESSION['LEADTIME_OVERRIDE'] == '20' ? 'Selected' : ''?>>20</option>
     </select>
 <? endif; ?>    
     
@@ -539,26 +557,13 @@ bigEcho($database);
     <td width="94" align="right" valign="middle" nowrap="nowrap" class="spinSmallTitle">View Mode:  </td>
     <td width="240" align="right" valign="middle" nowrap="nowrap" class="spinSmallTitle">
       <div align="left">
-        <input name="rdoStatus" type="radio" value="statusView" <?=$VIEWMODE == 'statusView' ? 'checked' : ''?> onclick="doAction('statusView')" />
-      Status&nbsp;<input name="rdoStatus" type="radio" value="deliveryView" <?=$VIEWMODE == 'deliveryView' ? 'checked' : ''?>  onclick="doAction('deliveryView')"/>
+        <input name="rdoStatus" type="radio" value="statusView" <?=$_SESSION['VIEWMODE'] == 'statusView' ? 'checked' : ''?> onclick="doAction('statusView')" />
+      Status&nbsp;<input name="rdoStatus" type="radio" value="deliveryView" <?=$_SESSION['VIEWMODE'] == 'deliveryView' ? 'checked' : ''?>  onclick="doAction('deliveryView')"/>
         Deliveries </div>
     </div></td>
   </tr>
 </table>
-<? else: ?>
-<!--<table width="750" border="0" align="center" cellpadding="5" cellspacing="1">
-  <tr valign="middle" class="spinSmallTitle">
-
-    <td width="94" align="right" valign="middle" nowrap="nowrap" class="spinSmallTitle">View Mode:  </td>
-    <td  align="left" valign="middle" nowrap="nowrap" class="spinSmallTitle">
-      <div align="left">
-        <input name="rdoStatus" type="radio" value="statusView" <?=$VIEWMODE == 'statusView' ? 'checked' : ''?> onclick="doAction('statusView')" />
-      Status&nbsp;<input name="rdoStatus" type="radio" value="deliveryView" <?=$VIEWMODE == 'deliveryView' ? 'checked' : ''?>  onclick="doAction('deliveryView')"/>
-        Deliveries </div>
-    </div></td>
-  </tr>
-</table>
---><? endif; ?>
+<? endif; ?>
 <center>
 <? if ($_COOKIE['mapVisible'] == 1): ?>
 <iframe frameborder="0" align="top" name="mapFrame" id="mapFrame" width="750" height=440 src="map.php" style="border-style:ridge"></iframe><br />
@@ -566,7 +571,10 @@ bigEcho($database);
 <iframe frameborder="0" align="top" name="mapFrame" id="mapFrame" width="750" height=0  style="border-style:none"></iframe><br />
 <? endif; ?>
 
-<?
+<?php
+	$id = '';
+	$upd = '';
+	$init = '';
 	if (!empty($deliveryID))
 	{
 		$id = "?id=$deliveryID";
@@ -580,8 +588,9 @@ bigEcho($database);
 	{
 		$init = "&initialize=yes";
 	}
+	bigEcho($_SESSION['ROOT_URL'] . $_SESSION['VIEWMODE'] == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init");
 ?>
-<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650 src="http://h202.customhostingtools.com/<?=$VIEWMODE == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init"?>" frameborder="0" ></iframe>
+<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650 src="<?= $_SESSION['ROOT_URL'] . $_SESSION['VIEWMODE'] == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init"?>" frameborder="0" ></iframe>
 
 </center>
 <?

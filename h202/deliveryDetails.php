@@ -951,7 +951,7 @@ if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
 }
 
 
-if ( $USERTYPE == 'customer' )
+if ( $_SESSION['USERTYPE'] == 'customer' )
 {
 	$custTanks = "and s.deliveryEmailDist LIKE '%$USERID%'";
 }
@@ -1172,7 +1172,7 @@ if (checkResult($res))
 						$modCancel = "<a target='_parent' href='tanks.php?tankAction=deliveryView&deliveryID=$deliveryID'>modify/cancel</a>";
 					}
 					
-if ($USERTYPE == 'super' || $USERTYPE == 'service')
+if ($_SESSION['USERTYPE'] == 'super' || $_SESSION['USERTYPE'] == 'service')
 {
 					if ($actual_quantity > 0)
 					{
@@ -1534,14 +1534,14 @@ if (strpos($fillDate, 'Saturday') !== false || strpos($fillDate, 'Sunday') !== f
 			}
 			
 			
-			$group = $USERTYPE == 'customer' ? '' : "<a href='/deliveryDetails.php?zip=$zippart'>group</a>&nbsp;";
-			$tankNameOut = $USERTYPE == 'customer' ? "<strong>$Location</strong>" : "<a href=\"$href\">$Location</a>";
+			$group = $_SESSION['USERTYPE'] == 'customer' ? '' : "<a href='/deliveryDetails.php?zip=$zippart'>group</a>&nbsp;";
+			$tankNameOut = $_SESSION['USERTYPE'] == 'customer' ? "<strong>$Location</strong>" : "<a href=\"$href\">$Location</a>";
 			
 			// add link to customer page 
 			// look up monitor id in customer
 			$monitorSiteID = getSiteID($monitorID);
 			//$query = "SELECT email as customerEmail FROM customerLoginEmail WHERE siteID LIKE '%$monitorSiteID%'";
-			if ( $USERTYPE != 'customer' )
+			if ( $_SESSION['USERTYPE'] != 'customer' )
 			{
 				$query = "SELECT c.email as customerEmail FROM customerLoginEmail c, customer cust WHERE c.customerID=cust.customerID and concat(',',cust.siteID,',') LIKE '%,$monitorSiteID,%'";
 				$monitorRes = getResult($query);

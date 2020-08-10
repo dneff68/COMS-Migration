@@ -98,7 +98,7 @@ if ($REQUEST_METHOD == 'POST')
 				session_unregister('ADDTANK1');
 				session_unregister('ADDTANK2');
 				session_unregister('ADDTANK3');
-				header("location:/index.php?msg=$msg");
+				header("location:index.php?msg=$msg");
 				die;
 			}
 		}

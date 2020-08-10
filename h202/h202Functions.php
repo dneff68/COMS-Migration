@@ -253,7 +253,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
   function verifyUser($usr, $pw)
   {
 //  	bigEcho($usr . ", -- " . $pw);
-  	global $USERID, $PASSWORD, $USERTYPE, $CUSTOMER_SITES;
+  	global $PASSWORD, $CUSTOMER_SITES;
 	$query = "select type from users where loginID='$usr' LIMIT 1";
 	$res = getResult($query);
 	if (checkResult($res))
@@ -287,7 +287,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 			extract($line);
 			$USERID = $usr;
 			$PASSWORD = $pwd;
-			$USERTYPE = 'customer';
+			$_SESSION['USERTYPE'] = 'customer';
 			
 			if (empty($CUSTOMER_SITES))
 			{
@@ -2192,8 +2192,8 @@ function getDeliveryInfo($deliveryID, $info='deliveryDateFmt')
 
 function sendDeliveryEmails($deliveryID, $displayOnly=0)
 {
-	global $USERTYPE, $USERID, $database;
-	if ( $USERTYPE == 'customer' )
+	global $database;
+	if ( $_SESSION['USERTYPE'] == 'customer' )
 	{
 		$custTanks = "and s.deliveryEmailDist LIKE '%$USERID%'";
 	}
@@ -2282,7 +2282,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 	
 		if ($notesOut == 0 && !empty($notes) && $displayOnly == 1)
 		{
-			if ( $USERTYPE != 'customer' )
+			if ( $_SESSION['USERTYPE'] != 'customer' )
 			{
 				echo "$notes<br>";
 			}
@@ -2331,7 +2331,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 					// $emailBody .= "<hr>debug: will be sent to $internalEmail";
 					if ($displayOnly==1)
 					{
-						if ($flag == 0 && ( $USERTYPE != 'customer' ))
+						if ($flag == 0 && ( $_SESSION['USERTYPE'] != 'customer' ))
 						{
 							echo "<tr class='spinTableBarEven'>
 							<td colspan='3'  class='spinMedTitle'>Internal</td>
@@ -2348,7 +2348,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 							$readon = " <span class='spinAlert'>(read: $readDate)</span>";
 						}
 
-						if ( $USERTYPE != 'customer' )
+						if ( $_SESSION['USERTYPE'] != 'customer' )
 						{
 							echo "<tr class='spinTableBarOdd'>
 							<td width='25%' nowrap valign='top'>
@@ -2428,7 +2428,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 
 				if ($displayOnly==1)
 				{
-					if ($flag == 0 && ( $USERTYPE != 'customer' ))
+					if ($flag == 0 && ( $_SESSION['USERTYPE'] != 'customer' ))
 					{
 						echo "<tr class='spinTableBarEven'>
 							<td colspan='2'  class='spinMedTitle'>Supplier: $supplierName</td>
@@ -2445,7 +2445,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 						$readon = " <span class='spinAlert'>(read: $readDate)</span>";
 					}
 
-					if ( $USERTYPE != 'customer' )
+					if ( $_SESSION['USERTYPE'] != 'customer' )
 					{
 						echo "<tr class='spinTableBarOdd'>
 						<td nowrap valign='top'>
@@ -2512,7 +2512,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 	
 					if ($displayOnly==1)
 					{
-						if ($flag == 0 && ( $USERTYPE != 'customer' ))
+						if ($flag == 0 && ( $_SESSION['USERTYPE'] != 'customer' ))
 						{
 							echo "<tr class='spinTableBarOdd'>
 							<td nowrap valign='top'>
@@ -2544,7 +2544,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 						} 
 					}
 				}
-				if (!empty($carrierEmailOut) && ( $USERTYPE != 'customer' ))
+				if (!empty($carrierEmailOut) && ( $_SESSION['USERTYPE'] != 'customer' ))
 				{
 					echo "$carrierEmailOut</td></tr>";
 				}
