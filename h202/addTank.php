@@ -1,11 +1,11 @@
 <?
 session_start();
-include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-include_once '/var/www/html/CHT/h202/h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
+include_once '../lib/chtFunctions.php';
+include_once '../lib/db_mysql.php';
+include_once 'GlobalConfig.php';
+include_once 'h202Functions.php';
 
-if (empty($USERID) || empty($USERTYPE))
+if ( !isLoggedIn() )
 {
 	header("location:/");
 	die;
@@ -13,28 +13,22 @@ if (empty($USERID) || empty($USERTYPE))
 
 if ($init=='yes')
 {
-	if (!empty($ADDTANK3))
+	if (!empty($_SESSION['ADDTANK3']))
 	{
-		$ADDTANK3['monitorID'] = '';
-		$ADDTANK3['tankName'] = '';
-		$ADDTANK3['concentration'] = '';
+		$_SESSION['ADDTANK3']['monitorID'] = '';
+		$_SESSION['ADDTANK3']['tankName'] = '';
+		$_SESSION['ADDTANK3']['concentration'] = '';
 	}
 	
-	$ADDTANK1 = '';
-	$ADDTANK2 = '';
-	$ADDTANK3 = '';
-	$editMonitor = '';
-	unset($ADDTANK1);
-	unset($ADDTANK2);
-	unset($ADDTANK3);
-	unset($editMonitor);
-	session_unregister('ADDTANK1');
-	session_unregister('ADDTANK2');
-	session_unregister('ADDTANK3');
+	$_SESSION['editMonitor'] = '';
+	unset( $_SESSION['ADDTANK1'] );
+	unset( $_SESSION['ADDTANK2'] );
+	unset( $_SESSION['ADDTANK3'] );
+	unset($_SESSION['editMonitor']);
 
-	$editMonitor = '';
-	unset($editMonitor);
-	//die($editMonitor);
+	$_SESSION['editMonitor'] = '';
+	unset($_SESSION['editMonitor']);
+	//die($_SESSION['editMonitor']);
 }
 
 if (!empty($mon))
@@ -43,7 +37,7 @@ if (!empty($mon))
 	$res = getResult("SELECT monitorID FROM tank where monitorID='$mon' LIMIT 1");
 	if (checkResult($res))
 	{
-		$editMonitor = $mon;
+		$_SESSION['editMonitor'] = $mon;
 	}
 	else
 	{
@@ -52,45 +46,36 @@ if (!empty($mon))
 	}
 }
 
-//bigecho($editMonitor);
+//bigecho($_SESSION['editMonitor']);
 if ($REQUEST_METHOD == 'POST')
 {
 	// store values in an array
 	if ($page == 1)
 	{
-		if (empty($ADDTANK1))
-		{
-			session_register('ADDTANK1');
-		}
-		$ADDTANK1 = $_POST;
+		if (empty($_SESSION['ADDTANK1']))
+			$_SESSION['ADDTANK1'] = $_POST;
 	}
 	elseif ($page == 2)
 	{
-		if (empty($ADDTANK2))
-		{
-			session_register('ADDTANK2');
-		}
-		$ADDTANK2 = $_POST;
+		if (empty($_SESSION['ADDTANK2']))
+			$_SESSION['ADDTANK2'] = $_POST;
 	}
 	elseif ($page == 3)
 	{
-		if (empty($ADDTANK3))
-		{
-			session_register('ADDTANK3');
-		}
-		$ADDTANK3 = $_POST;
+		if (empty($_SESSION['ADDTANK3']))
+			$_SESSION['ADDTANK3'] = $_POST;
 				
 		if ($addTankAction == 'addtank')
 		{
 			// Add the tank and get outta here
-			if (!empty($editMonitor))
+			if (!empty($_SESSION['editMonitor']))
 			{
-				$err = addTank($ADDTANK1, $ADDTANK2, $ADDTANK3, $editMonitor);
+				$err = addTank($_SESSION['ADDTANK1'], $_SESSION['ADDTANK2'], $_SESSION['ADDTANK3'], $_SESSION['editMonitor']);
 				$msg = "Tank%20Successfully%20Modified";
 			}
 			else
 			{
-				$err = addTank($ADDTANK1, $ADDTANK2, $ADDTANK3);
+				$err = addTank($_SESSION['ADDTANK1'], $_SESSION['ADDTANK2'], $_SESSION['ADDTANK3']);
 				$msg = "Tank%20Successfully%20Added";
 			}
 
@@ -102,14 +87,14 @@ if ($REQUEST_METHOD == 'POST')
 			}
 			else
 			{
-				$ADDTANK1 = '';
-				$ADDTANK2 = '';
-				$ADDTANK3 = '';
-				$editMonitor = '';
-				unset($ADDTANK1);
-				unset($ADDTANK2);
-				unset($ADDTANK3);
-				unset($editMonitor);
+				$_SESSION['ADDTANK1'] = '';
+				$_SESSION['ADDTANK2'] = '';
+				$_SESSION['ADDTANK3'] = '';
+				$_SESSION['editMonitor'] = '';
+				unset($_SESSION['ADDTANK1']);
+				unset($_SESSION['ADDTANK2']);
+				unset($_SESSION['ADDTANK3']);
+				unset($_SESSION['editMonitor']);
 				session_unregister('ADDTANK1');
 				session_unregister('ADDTANK2');
 				session_unregister('ADDTANK3');
@@ -132,30 +117,30 @@ if ($REQUEST_METHOD == 'POST')
 }
 
 
-if (!empty($ADDTANK1))
+if (!empty($_SESSION['ADDTANK1']))
 {
-	unset($ADDTANK1['page']);
-	unset($ADDTANK1['gotopage']);
-	unset($ADDTANK1['addTankAction']);
+	unset($_SESSION['ADDTANK1']['page']);
+	unset($_SESSION['ADDTANK1']['gotopage']);
+	unset($_SESSION['ADDTANK1']['addTankAction']);
 
-//	showArray($ADDTANK1);
-	extract($ADDTANK1);
+//	showArray($_SESSION['ADDTANK1']);
+	extract($_SESSION['ADDTANK1']);
 }
-if (!empty($ADDTANK2))
+if (!empty($_SESSION['ADDTANK2']))
 {
-	unset($ADDTANK2['page']);
-	unset($ADDTANK2['gotopage']);
-	unset($ADDTANK2['addTankAction']);
+	unset($_SESSION['ADDTANK2']['page']);
+	unset($_SESSION['ADDTANK2']['gotopage']);
+	unset($_SESSION['ADDTANK2']['addTankAction']);
 
-//	showArray($ADDTANK2);
-	extract($ADDTANK2);
+//	showArray($_SESSION['ADDTANK2']);
+	extract($_SESSION['ADDTANK2']);
 }
-if (!empty($ADDTANK3))
+if (!empty($_SESSION['ADDTANK3']))
 {
-	unset($ADDTANK3['page']);
-	unset($ADDTANK3['gotopage']);
-	unset($ADDTANK3['addTankAction']);
-	extract($ADDTANK3);
+	unset($_SESSION['ADDTANK3']['page']);
+	unset($_SESSION['ADDTANK3']['gotopage']);
+	unset($_SESSION['ADDTANK3']['addTankAction']);
+	extract($_SESSION['ADDTANK3']);
 }
 
 if ($addTankAction == 'lookupZip')
@@ -331,10 +316,10 @@ echo $popframe;
 ?>
 
 
-<? if (empty($editMonitor)) : ?>
+<? if (empty( $_SESSION['editMonitor'] )) : ?>
 	<p align="center" class="spinLargeTitle style1">Add New Tank</p>
 <? else : ?>
-	<p align="center" class="spinLargeTitle style1">Edit Tank: <?=$editMonitor?></p>
+	<p align="center" class="spinLargeTitle style1">Edit Tank: <?=$_SESSION['editMonitor']?></p>
 <? endif; ?>
 <p align="center" class="spinAlert style1"><?=empty($addTankError) ? '&nbsp;' : $addTankError?></p>
 <?

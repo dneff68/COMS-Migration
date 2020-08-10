@@ -1,4 +1,5 @@
 <?php
+// session_start();  <--- session already started
 // CHT Functions
 
 function david()
@@ -22,6 +23,10 @@ function jim()
 	return $_SESSION['USERID'] == 'Jim';
 }
 
+function isLoggedIn()
+{
+	return empty($USERID) || empty($USERTYPE);
+}
 
 function fixSingleQuotes($str)
 {

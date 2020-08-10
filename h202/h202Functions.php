@@ -36,7 +36,7 @@ function getSiteID($monitorID)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		return $siteID;
 	}
@@ -72,7 +72,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 	$res = getResult($query);
 	if (checkResult($res))
 	{	
-		while( $line = mysql_fetch_assoc($res) )
+		while( $line = $res->fetch_assoc() )
 		{
 			$totalCount++;
 			extract($line);		
@@ -223,7 +223,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		return $tankName;
 	}
@@ -283,7 +283,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$USERID = $usr;
 			$PASSWORD = $pwd;
@@ -310,7 +310,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 		$res = getResult("Select siteID, deliveryEmailDist from site where deliveryEmailDist LIKE '%$user%'");
 		if (checkResult($res))
 		{
-			while( $line = mysql_fetch_assoc($res) )
+			while( $line = $res->fetch_assoc() )
 			{
 				extract($line);
 				array_push($CUSTOMER_SITES, $siteID);
@@ -324,7 +324,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 	cast(date as date) >= DATE_ADD(cast(NOW() as date), INTERVAL -$days day) group by cast(date as date) order by date desc"); 
 	if (checkResult($res))
 	{
-		while( $line = mysql_fetch_assoc($res) )
+		while( $line = $res->fetch_assoc() )
 		{
 			extract($line);
 			generateStats($monitorID, "'$dateOnly'", 0);
@@ -343,7 +343,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 			$query = "SELECT deliveryDate FROM delivery WHERE deliveryID=$deliveryID";
 			$res = getResult($query);
 			if (!checkResult($res)) return;
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 					
@@ -351,7 +351,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 		$res = getResult($query);
 		if (!checkResult($res)) return;
 
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			// get date/time of reading for monitor on the delivery date
@@ -853,7 +853,7 @@ function checkTankLevel($monitorID, $statDate='')
 	
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		if ($levelStat == 'Critical' )
 		{
@@ -884,7 +884,7 @@ function getDaysSinceLastReading($monitorID, $readingDate='NOW()')
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	return $daysSinceLastReading;
@@ -909,7 +909,7 @@ function daysInCurrentStatus($monitorID)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		return $DateDifference;
 	}
@@ -934,7 +934,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		return "TempShutdown,Temporary Shutdown ($shutdownStartDate - $shutdownEndDate)";
 	}
@@ -955,7 +955,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 		else
@@ -973,7 +973,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	WHERE readingDate='$lastReading' AND monitorID='$monitorID' AND statGenDate = DATE(NOW()) ORDER BY statGenDate DESC LIMIT 1";
 	$res = getResult($query);
 
-	$genstats = false;
+	$_POST["genstat"] = false;
 	if (!checkResult($res))
 	{
 		updateTankStats($monitorID, 2);
@@ -982,7 +982,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	$res = getResult("SELECT tankStats.* FROM tankStats WHERE monitorID = '$monitorID' ORDER BY readingDate DESC LIMIT 1");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}	
 
@@ -1100,7 +1100,7 @@ function getDose($monitorID, $daysAgo, &$debug)
 	else
 	{
 		// We have the second date's reading
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 
@@ -1125,7 +1125,7 @@ function getDose($monitorID, $daysAgo, &$debug)
 	
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		$diff_in_hours = round($diff_in_hours);
 		$diff_in_hours = $diff_in_hours < 1 ? 1 : $diff_in_hours;
@@ -1158,7 +1158,7 @@ function getDose($monitorID, $daysAgo, &$debug)
 			if (checkResult($res))
 			{
 				$useActualQuantity = true;
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 			}
 	
@@ -1197,10 +1197,10 @@ function getDeliveryAvg($monitorID, $endDate = 'NOW()')
 	if (checkResult($res))
 	{
 		//echoResults($res);
-		$cnt = mysql_num_rows($res);
+		$cnt = $res->num_rows;
 		if ($cnt == 1) 
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			return $latestDose;
 		}
@@ -1212,7 +1212,7 @@ function getDeliveryAvg($monitorID, $endDate = 'NOW()')
 		$sumOfLastTwoValues = 0;
 		$firstVal = 0;
 		$secondVal = 0;
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 	
@@ -1265,7 +1265,7 @@ function generateAllStats()
 	$res = getResult("SELECT DISTINCT monitorID FROM data");
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			//generateStats($monitorID);
@@ -1313,7 +1313,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 	if (checkResult($res))
 	{
 		$deliveryWasMade = true;
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	
@@ -1354,7 +1354,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 		return -1;
 	}
 
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	$daysSinceStatDate = empty($daysSinceStatDate) ? '0' : $daysSinceStatDate;
 	
@@ -1395,7 +1395,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 	}
 	$unassMonitor = 0;
 	
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	
 	if (!empty($targetDaily))
@@ -1441,7 +1441,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 	
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		
 		if ($units == 'Inches')
@@ -1865,7 +1865,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		$reorderLevel = ( $reorder / 100 ) * $capacity ;
 		$lowLevel =  ( $lowCap / 100 ) * $capacity ;
@@ -1966,13 +1966,13 @@ function reorderInfo($monitorID, $deliveryDate='')
 		
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 
 		// If there is no result then there is no data for the tank.
 		$res = getResult("SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), '%Y-%m-%d') as fillDate");
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		
 		$infoArray['fillDate'] = $fillDate;
@@ -1994,7 +1994,7 @@ function reorderInfo($monitorID, $deliveryDate='')
 		return $infoArray;
 	}
 
-	$line = mysql_fetch_assoc($res); // get result from the first query above
+	$line = $res->fetch_assoc(); // get result from the first query above
 	$avgDose = getDeliveryAvg($monitorID);
 	
 	extract($line);
@@ -2024,7 +2024,7 @@ function reorderInfo($monitorID, $deliveryDate='')
 
 	if (checkResult($dres))
 	{
-		$dline = mysql_fetch_assoc($dres);
+		$dline = $dres->fetch_assoc();
 		extract($dline);
 	}
 
@@ -2049,7 +2049,7 @@ function reorderInfo($monitorID, $deliveryDate='')
 			// This would return false if there were never a reading for the tank.
 			return false;
 		}
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 
 		if ($units == 'Inches')
@@ -2081,7 +2081,7 @@ function reorderInfo($monitorID, $deliveryDate='')
 		// This is likely an unmonitored tank.  We get no readings, but we still need to handle 
 		// this because deliveries are still made.
 		$res = getResult("SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 7 DAY), '%Y-%m-%d') as fillDate");
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		
 		$infoArray['fillDate'] = $fillDate;
@@ -2119,7 +2119,7 @@ function reorderInfo($monitorID, $deliveryDate='')
 
 		$dow = "<br><font size=\"-2\">(%W)</font>"; // formatting for showing the day of week
 		$res = getResult("SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL $daysUntilFill DAY), '%Y-%m-%d$dow') as fillDate");
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		
 		$infoArray['usableVolume_'] = $usableVolume;
@@ -2183,7 +2183,7 @@ function getDeliveryInfo($deliveryID, $info='deliveryDateFmt')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			return $deliveryDate;
 		}
@@ -2301,7 +2301,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 
 		if (checkResult($res))
 		{
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				if (!empty($internalEmail))
@@ -2400,7 +2400,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 	
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			if ( strpos($sentAddresses, "$supplierEmail") !== false && $displayOnly==1)
@@ -2673,13 +2673,13 @@ function getCustomerSummarySites($monitorID)
 	$query = "SELECT s.siteID as singleSite from site s, monitor m where s.siteID=m.siteID and m.monitorID='$monitorID'";
 	$res = getResult($query);
 	if (!checkResult($res)) return false;
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract( $line );
 	
 	$query = "select email as customerEmail from customerLoginEmail where siteID like '%$singleSite%'";
 	$res = getResult($query);
 	if (!checkResult($res)) return false;
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract( $line );
 	
 	return $customerEmail;

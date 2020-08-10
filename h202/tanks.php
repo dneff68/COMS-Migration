@@ -1,50 +1,37 @@
-<?
+<?php
 session_start();
-include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-include_once '/var/www/html/CHT/h202/h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
+include_once '../lib/chtFunctions.php';
+include_once '../lib/db_mysql.php';
+include_once 'GlobalConfig.php';
+include_once 'h202Functions.php';
 
-if (empty($LEADTIME_OVERRIDE))
-{
-	session_register('LEADTIME_OVERRIDE');
-	$LEADTIME_OVERRIDE = 'default';
-}
+if (empty($_SESSION['LEADTIME_OVERRIDE'])) $_SESSION['LEADTIME_OVERRIDE'] = 'default';
+if (empty($_SESSION['SHOWTEMPSHUTDOWN']))  $_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
+if (empty($_SESSION['SHOWUNMONITORED']))   $_SESSION['SHOWUNMONITORED'] = 'no';
 
-if (empty($SHOWTEMPSHUTDOWN))
-{
-	session_register('SHOWTEMPSHUTDOWN');
-	$SHOWTEMPSHUTDOWN = 'yes';
-}
-
-if (empty($SHOWUNMONITORED))
-{
-	session_register('SHOWUNMONITORED');
-	$SHOWUNMONITORED = 'no';
-}
-
-if (empty($USERID) || empty($USERTYPE))
+if (!isLoggedIn())
 {
 	include 'login.php';
 	die;
 }
 
-if ($genstat == 1)
+if ($_POST["genstat"] == 1)
 {
 	bigecho('generating all stats');
 	generateAllStats();
 }
 
-if ( empty($VIEWMODE) || $tankAction == 'statusView')
+extract($_POST);
+if ( empty($_SESSION['VIEWMODE']) || $tankAction == 'statusView')
 {
-	session_register('VIEWMODE');
-	if ($VIEWMODE == 'deliveryView')
+	
+	if ($_SESSION['VIEWMODE'] == 'deliveryView')
 	{
 		// switching, reset filter
 		$ZIPCOLLECTION = 0;
 		$status = 'all';
 	}
-	$VIEWMODE = 'statusView';
+	$_SESSION['VIEWMODE'] = 'statusView';
 }
 
 
@@ -64,92 +51,56 @@ if (!empty($tankAction))
 	}
 	elseif ($tankAction == 'showInactive')
 	{
-		if (empty($SHOWINACTIVE))
-		{
-			session_register('SHOWINACTIVE');
-		}
-		$SHOWINACTIVE = 'yes';
+		if ( empty($_SESSION['SHOWINACTIVE'])) $_SESSION['SHOWINACTIVE'] = 'yes';
 	}	
 	elseif ($tankAction == 'hideInactive')
 	{
-		if (empty($SHOWINACTIVE))
-		{
-			session_register('SHOWINACTIVE');
-		}
-		$SHOWINACTIVE = 'no';
+		if ( empty( $_SESSION['SHOWINACTIVE'])) $_SESSION['SHOWINACTIVE'] = 'no';
 	}
 	elseif ($tankAction == 'showTempShutdown')
 	{
-		if (empty($SHOWTEMPSHUTDOWN))
-		{
-			session_register('SHOWTEMPSHUTDOWN');
-		}
-		$SHOWTEMPSHUTDOWN = 'yes';
+		if ( empty($_SESSION['SHOWTEMPSHUTDOWN'])) $_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
 	}	
 	elseif ($tankAction == 'hideTempShutdown')
 	{
-		if (empty($SHOWTEMPSHUTDOWN))
-		{
-			session_register('SHOWTEMPSHUTDOWN');
-		}
-		$SHOWTEMPSHUTDOWN = 'no';
+		if ( empty($_SESSION['SHOWTEMPSHUTDOWN'])) $_SESSION['SHOWTEMPSHUTDOWN'] = 'no';
 	}
 	elseif ($tankAction == 'showUnmonitored')
 	{
-		if (empty($SHOWUNMONITORED))
-		{
-			session_register('SHOWUNMONITORED');
-		}
-		$SHOWUNMONITORED = 'yes';
+		if ( empty($_SESSION['SHOWUNMONITORED'])) $_SESSION['SHOWUNMONITORED'] = 'yes';
 	}	
 	elseif ($tankAction == 'hideUnmonitored')
 	{
-		if (empty($SHOWUNMONITORED))
-		{
-			session_register('SHOWUNMONITORED');
-		}
-		$SHOWUNMONITORED = 'no';
+		if ( empty($_SESSION['SHOWUNMONITORED'])) $_SESSION['SHOWUNMONITORED'] = 'no';
 	}
 	elseif ($tankAction == 'showFactories')
 	{
-		if (empty($SHOWFACTORIES))
-		{
-			session_register('SHOWFACTORIES');
-		}
-		$SHOWFACTORIES = 'yes';
+		if ( empty($_SESSION['SHOWFACTORIES'])) $_SESSION['SHOWFACTORIES'] = 'yes';
 	}
 	else if ($tankAction == 'hideFactories')
 	{
-		$SHOWFACTORIES = 'no';
+		$_SESSION['SHOWFACTORIES'] = 'no';
 	}
 	elseif ($tankAction == 'showCarriers')
 	{
-		if (empty($SHOWCARRIERS))
-		{
-			session_register('SHOWCARRIERS');
-		}
-		$SHOWCARRIERS = 'yes';
+		if ( empty($_SESSION['SHOWCARRIERS'])) $_SESSION['SHOWCARRIERS'] = 'yes';
 	}
 	elseif ($tankAction == 'hideCarriers')
 	{
-		$SHOWCARRIERS = 'no';
+		$_SESSION['SHOWCARRIERS'] = 'no';
 	}
 	elseif ($tankAction == 'showTerminals')
 	{
-		if (empty($SHOWTERMINALS))
-		{
-			session_register('SHOWTERMINALS');
-		}
-		$SHOWTERMINALS = 'yes';
+		if ( empty($_SESSION['SHOWTERMINALS'])) $_SESSION['SHOWTERMINALS'] = 'yes';
 		logAction("Viewing Terminals in Map");
 	}
 	elseif ($tankAction == 'hideTerminals')
 	{
-		$SHOWTERMINALS = 'no';
+		$_SESSION['SHOWTERMINALS'] = 'no';
 	}
 	elseif ( strpos($tankAction, 'lead_') !== false)
 	{
-		list($blah, $LEADTIME_OVERRIDE) = explode('_', $tankAction);
+		list($blah, $_SESSION['LEADTIME_OVERRIDE']) = explode('_', $tankAction);
 //		ddie($LEADTIME_OVERRIDE);
 	}
 }
@@ -157,36 +108,33 @@ if (!empty($tankAction))
 
 if (!empty($region))
 {
-	if (empty($REGION_FILTER))
+	if (empty($_SESSION['REGION_FILTER']))
 	{
-		session_register('REGION_FILTER');
+		$_SESSION['REGION_FILTER'] = '';
 	}
 	
 	list($var, $regID) = explode('_', $region);
 	if ($setOn == 'true')
 	{
-		if (strpos($REGION_FILTER, $regID) === false)
+		if (strpos($_SESSION['REGION_FILTER'], $regID) === false)
 		{
-			$REGION_FILTER .= ":$regID";
+			$_SESSION['REGION_FILTER'] .= ":$regID";
 		}
 	}
 	elseif ($setOn == 'false')
 	{
-		if (strpos($REGION_FILTER, $regID) !== false)
+		if (strpos($_SESSION['REGION_FILTER'], $regID) !== false)
 		{
-			$REGION_FILTER = str_replace(":$regID", '', $REGION_FILTER);
+			$_SESSION['REGION_FILTER'] = str_replace(":$regID", '', $_SESSION['REGION_FILTER']);
 		}
 	}
 }		
 
 if (!empty($status))
 {
-	if (empty($STATUS_FILTER))
-	{
-		session_register('STATUS_FILTER');
-	}
-	//$ZIPCOLLECTION = 0;
-	$STATUS_FILTER = $status == 'all' ? '' : $status;
+	if (
+		empty($_SESSION['STATUS_FILTER'])
+	    ) $_SESSION['STATUS_FILTER'] = $status == 'all' ? '' : $status;
 }		
 
 if ($USERTYPE == 'customer')
@@ -279,7 +227,7 @@ if ($VIEWMODE == 'statusView')
 }
 
 
-if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
+if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 {
 	// get count with regards to the site region 
 	$regFilt = getRegionFilter();
@@ -296,7 +244,7 @@ else
 				$inactiveFilt $tmpshutFilt $unmonFilt";
 }
 $res = getResult($query);
-$allCnt = mysql_num_rows($res);
+$allCnt = $res->num_rows;
 
 if ($VIEWMODE != 'statusView')
 {
@@ -316,7 +264,7 @@ if ($VIEWMODE != 'statusView')
 	
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$status = checkTankLevel($monitorID);
@@ -494,20 +442,20 @@ bigEcho($database);
         <table width="381" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="64">Regions:</td>
-            <td width="84"><input <?= strpos($REGION_FILTER, '1') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_1" id="reg_1" />
+            <td width="84"><input <?= strpos($_SESSION['USERID'], '1') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_1" id="reg_1" />
               North</td>
-            <td width="85"><input <?= strpos($REGION_FILTER, '3') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_3" id="reg_3" /> 
+            <td width="85"><input <?= strpos($_SESSION['USERID'], '3') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_3" id="reg_3" /> 
             East
         </td>
-            <td width="100"><input <?= strpos($REGION_FILTER, '5') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_5" id="reg_5" />
+            <td width="100"><input <?= strpos($_SESSION['USERID'], '5') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_5" id="reg_5" />
             S. West</td>
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td><input <?= strpos($REGION_FILTER, '2') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_2" id="reg_2" /> 
+            <td><input <?= strpos($_SESSION['USERID'], '2') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_2" id="reg_2" /> 
               S. East
         </td>
-            <td><input <?= strpos($REGION_FILTER, '4') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_4" id="reg_4" /> 
+            <td><input <?= strpos($_SESSION['USERID'], '4') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_4" id="reg_4" /> 
             West
         </td>
             <td>&nbsp;<!-- <input type="checkbox" name="reg_all" id="reg_all" /> 

@@ -96,7 +96,7 @@ function getResult($query, $handleError=false)
 		//array_push($queryArray, $query);
 		if ($ttime > 0.01)
 		{
-			bigecho($query);
+		//	bigecho($query);
 		}
 	}
 	return $result;
