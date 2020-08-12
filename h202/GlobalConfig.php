@@ -5,6 +5,19 @@ $_SESSION['ROOT_URL'] = "/";
 $_SESSION['SHOWFACTORIES'] = '';
 $_SESSION['SHOWCARRIERS'] = '';
 $_SESSION['SHOWTERMINALS'] = '';
+$_SESSION['JUMP'] = '';
+$_SESSION['DELIVERY_COMMITTED'] = '';
+$_SESSION['USED_PO_CODES'] = '';
+
+$_SESSION['DELIVERY_NOTES'] = '';
+$_SESSION['DELIVERY_TANKS'] = array();
+
+$_SESSION['TANK_DETAILS'] = array();			
+
+$_SESSION['ZIPCOLLECTION'] = array();
+$_SESSION['CONVERTED_QUANTITIES'] = array();
+
+
 //$_SESSION['ROOT_URL'] = "http://h202.customhostingtools.com/";
 
 if (david())

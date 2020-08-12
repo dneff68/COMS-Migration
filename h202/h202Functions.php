@@ -177,7 +177,6 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 
   function generatePO($monitorID, $deliveryDate)
   {
-	  	global $USED_PO_CODES;
 		// generate PO and add to deliverySite table
 		$query = "SELECT 
 				DATE_FORMAT('$deliveryDate', '%y%m%d') as today, 
@@ -198,7 +197,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 			die("Error: The site associated with monitor $monitorID does not exist.");
 		}
 		
-		if (empty($USED_PO_CODES[$PO_code])) // When looping through tanks, it's possible that mulitple delivery tanks can have the same PO_code.  In that case we allow duplicate PO's
+		if (empty($_SESSION['USED_PO_CODES'][$PO_code])) // When looping through tanks, it's possible that mulitple delivery tanks can have the same PO_code.  In that case we allow duplicate PO's
 		{
 			// check to see if po already exists
 			$res = getResult("SELECT PO FROM deliverySite WHERE PO='$po' AND markDelete=0");
@@ -207,11 +206,11 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 				// po already there, must iterate 
 				$po = iteratePO($po);
 			}
-			$USED_PO_CODES[$PO_code] = $po;
+			$_SESSION['USED_PO_CODES'][$PO_code] = $po;
 		}
 		else
 		{
-			$po = $USED_PO_CODES[$PO_code];	
+			$po = $_SESSION['USED_PO_CODES'][$PO_code];	
 		}
 
 		return "$po:$siteID:$PO_code";

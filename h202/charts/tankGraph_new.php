@@ -370,9 +370,9 @@ $varianceXML .= "</chart>";
 ?>
 
 <script language="javascript">
-<? if ($invalidDate) : ?>
+<?php if ($invalidDate) : ?>
 	alert("Date range invalid.  Please choose a start date that preceeds the end date");
-<? endif; ?>
+<?php endif; ?>
 	function submitDates()
 	{
 		if (document.dateForm.startDate.value == '')
@@ -476,10 +476,10 @@ $varianceXML .= "</chart>";
 	dosesExportComponent.Render("doseExportDiv");
 </script>
 <!-- IFrame for stats data --><br />
-<? if (david() || jim()) : ?>
+<?php if (david() || jim()) : ?>
 <p class="spinLargeTitle">Summary</p>
 <iframe scrolling="auto" width="650" height="130" src="/tankSummary.php?monitorID=<?=$monitorID?>&startDate=<?=$startDate?>&endDate=<?=$endDate?>" ></iframe><br /><br />
-<? endif; ?>
+<?php endif; ?>
 <p class="spinLargeTitle">Raw Readings</p>
 <iframe scrolling="auto" width="650" height="250" src="/tankRawData.php?monitorID=<?=$monitorID?>&startDate=<?=$startDate?>&endDate=<?=$endDate?>" ></iframe><br /><br />
 <p class="spinLargeTitle">Statistics</p>

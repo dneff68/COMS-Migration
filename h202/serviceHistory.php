@@ -271,9 +271,9 @@ if (checkResult($wkRes))
   </table>
 </div>
 
-<? if (david()): ?>
+<?php if (david()): ?>
 <div id='debugDiv' style='display:inline'></div>
-<? endif; ?>
+<?php endif; ?>
 
 
 <div id='customerLogin' style="visibility:hidden">

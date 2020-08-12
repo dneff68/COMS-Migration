@@ -10,7 +10,7 @@ if (empty($SELECTED_TANK))
 
 	
 ?>
-<? if (true) : ?>
+<?php if (true) : ?>
 <chart>
 <chart_value prefix='' 
           suffix='' 
@@ -70,4 +70,4 @@ if (empty($SELECTED_TANK))
     <string>column</string>
   </chart_type>
 </chart>
-<? endif; ?>
+<?php endif; ?>

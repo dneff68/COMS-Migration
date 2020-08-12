@@ -269,7 +269,7 @@ $rand = "$pid.$t";
 //die;
 ?>
 
-<? if (david()) : ?>
+<?php if (david()) : ?>
 
 <script language="JavaScript" type="text/javascript">
 <!--
@@ -369,7 +369,7 @@ AC_FL_RunContent( 'codebase','http://download.macromedia.com/pub/shockwave/cabs/
 </EMBED>
 </OBJECT></noscript>
 
-<? endif; ?>
+<?php endif; ?>
 
 <!-- IFrame for stats data -->
 <p class="spinLargeTitle">Statistics</p>

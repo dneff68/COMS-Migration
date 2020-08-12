@@ -86,7 +86,7 @@ function checkPage()
   <tr valign="top" class="spinMedTitle">
     <td colspan="3" class="spinTableTitle style1"><span class="style2">Step One:</span> Set Customer Site </td>
   </tr>
-  <? if (empty($editMonitor)) : ?>
+  <?php if (empty($editMonitor)) : ?>
   <tr>
     <td width="113" valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Customer Site: </div></td>
     <td width="210" valign="top">    <div align="left">choose existing sites:<br />
@@ -154,7 +154,7 @@ function checkPage()
 	  </td>
 	  <td>&nbsp;</td>
   </tr>
-  <? endif; ?>
+  <?php endif; ?>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Region:</div></td>
     <td valign="top"><select name="region" id="region" <?= $clearNew ? 'disabled="disabled"' : ''?>>

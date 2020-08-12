@@ -7,7 +7,7 @@ include_once 'db_mysql.php';
 
 $deliveryRows = '';
 $dateMod = '';
-$DELIVERY_COMMITTED = '';
+$_SESSION['DELIVERY_COMMITTED'] = '';
 error_log("PING DELIVERY SUMMARY");
 
 if (empty($SORT_DELIVERIES_BY))

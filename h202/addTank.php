@@ -316,11 +316,11 @@ echo $popframe;
 ?>
 
 
-<? if (empty( $_SESSION['editMonitor'] )) : ?>
+<?php if (empty( $_SESSION['editMonitor'] )) : ?>
 	<p align="center" class="spinLargeTitle style1">Add New Tank</p>
 <? else : ?>
 	<p align="center" class="spinLargeTitle style1">Edit Tank: <?=$_SESSION['editMonitor']?></p>
-<? endif; ?>
+<?php endif; ?>
 <p align="center" class="spinAlert style1"><?=empty($addTankError) ? '&nbsp;' : $addTankError?></p>
 <?
 if ($page == 1 || empty($page))

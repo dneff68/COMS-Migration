@@ -6,14 +6,14 @@ include_once 'chtFunctions.php';
 include_once 'db_mysql.php';
 
 
-if (empty($DELIVERY_TANKS))
+if (empty($_SESSION['DELIVERY_TANKS']))
 {
 	$js = "alert('It appears your session has timed out.  Please reload main page and log in again');window.close();";
 }
 else
 {
 	$sites_arr = array();
-	foreach ($DELIVERY_TANKS as $monitorID)
+	foreach ($_SESSION['DELIVERY_TANKS'] as $monitorID)
 	{
 		$query = "SELECT siteID FROM monitor WHERE monitorID='$monitorID' LIMIT 1";
 		$res = getResult($query);
@@ -62,7 +62,7 @@ else
 		$SHOW_SUPPLIER = 'checked';
 	}
 	
-	if (empty($DELIVERY_TANKS))
+	if (empty($_SESSION['DELIVERY_TANKS']))
 	{
 		$js = "\nwindow.close();";
 	}
@@ -369,7 +369,7 @@ function showInternal(val)
 </style>
 </head>
 <body>
-<? if (false) : ?>
+<?php if (false) : ?>
 <div id='ActionDiv' name='ActionDiv' style='position:absolute;left:0;top:0'>
 		<iframe id='ActionFrame' name='ActionFrame' style='background-color:#FFFFFF' scrolling=no width=200 height=200 align=top frameborder=0 
 		src=''  align='left' allowtransparency='true' marginheight='0' marginwidth='0' ></iframe>
@@ -379,7 +379,7 @@ function showInternal(val)
 		<iframe id='ActionFrame' name='ActionFrame' style='background-color:#FFFFFF' scrolling=no width=0 height=0 align=top frameborder=0 
 		src=''  align='left' allowtransparency='true' marginheight='0' marginwidth='0' ></iframe>
 </div>
-<? endif; ?>
+<?php endif; ?>
 <p align="center" class="spinSmallTitle">Select each contact email to be included for this delivery confirmation email.  </p>
 <p align="center">&nbsp;</p>
 <div align="center">
@@ -395,19 +395,19 @@ function showInternal(val)
             <span class="spinSmallTitle style4">      List each customer email address on a seperate line. </span></div></td>
       <td width="229"><div align="left">Supplier Email </div><p align="left" class="header_3"><br />
           <span class="style6">
-		  <? if ($SHOW_SUPPLIER=='all') : ?>
+		  <?php if ($SHOW_SUPPLIER=='all') : ?>
 		  <a href='javascript:showSupplier("checked")'>show selected only</a>
 		  <? else : ?>
 		  <a href='javascript:showSupplier("all")'>show all</a>
-		  <? endif; ?>
+		  <?php endif; ?>
 		  </span></p></td>
       <td width="229"><div align="left">Internal Email </div><p align="left" class="header_3"><br />
           <span class="style6">
-		  <? if ($SHOW_INTERNAL=='all') : ?>
+		  <?php if ($SHOW_INTERNAL=='all') : ?>
 		  <a href='javascript:showInternal("checked")'>show selected only</a>
 		  <? else : ?>
 		  <a href='javascript:showInternal("all")'>show all</a>
-		  <? endif; ?>
+		  <?php endif; ?>
 		  </span></p></td>
     </tr>
     <tr valign="top">
@@ -417,7 +417,7 @@ function showInternal(val)
 $monitor_arr = array();
 $siteHTML = '';
 $tmpSiteID = 0;
-foreach($DELIVERY_TANKS as $monitorID)
+foreach($_SESSION['DELIVERY_TANKS'] as $monitorID)
 {
 	if (array_search($monitorID, $monitor_arr) === false)
 	{

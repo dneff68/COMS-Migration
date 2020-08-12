@@ -93,11 +93,11 @@ function editItem(id)
 
 function saveItem()
 {
-<? 	if (david()): ?>
+<?php 	if (david()): ?>
 //		alert(selectedColor);
 //		return;
 	
-<? endif; ?>
+<?php endif; ?>
 	var itemID		= $('#itemID').html();
 	var title 		= $('#title').val();
 	var category 	= $('#categories').val();

@@ -91,11 +91,11 @@ if (!empty($st))
 
 ?>
 
-<? if (empty($st) && false): ?>
+<?php if (empty($st) && false): ?>
 <div class="spinNormalText"><a href='tankGraph_all.php?skip=first'>&lt;&lt;</a>&nbsp;&nbsp;<a href='tankGraph_all.php?skip=prev'>Prev <?=$groupCount?></a>
 &nbsp;<a href='tankGraph_all.php?skip=next'>Next <?=$groupCount?></a>&nbsp;&nbsp;<a href='tankGraph_all.php?skip=last'>&gt;&gt;</a>
 <?=$groupText?></div><hr />
-<? endif; ?>
+<?php endif; ?>
 
 <?
 $query = "
@@ -521,11 +521,11 @@ while ($line = mysql_fetch_assoc($res))
 }
 
 ?>
-<? if (empty($st) && false): ?>
+<?php if (empty($st) && false): ?>
 <div class="spinNormalText"><a href='tankGraph_all.php?skip=first'>&lt;&lt;</a>&nbsp;&nbsp;<a href='tankGraph_all.php?skip=prev'>Prev <?=$groupCount?></a>
 &nbsp;<a href='tankGraph_all.php?skip=next'>Next <?=$groupCount?></a>&nbsp;&nbsp;<a href='tankGraph_all.php?skip=last'>&gt;&gt;</a>
 <?=$groupText?></div><hr />
-<? endif; ?>
+<?php endif; ?>
 
 </body>
 </html>

@@ -460,20 +460,20 @@ function setmapvis()
         <table width="381" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="64">Regions:</td>
-            <td width="84"><input <?php echo strpos($_SESSION['USERID'], '1') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_1" id="reg_1" />
+            <td width="84"><input <?= strpos($_SESSION['USERID'], '1') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_1" id="reg_1" />
               North</td>
-            <td width="85"><input <?php echo strpos($_SESSION['USERID'], '3') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_3" id="reg_3" /> 
+            <td width="85"><input <?= strpos($_SESSION['USERID'], '3') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_3" id="reg_3" /> 
             East
         </td>
-            <td width="100"><input <?php echo strpos($_SESSION['USERID'], '5') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_5" id="reg_5" />
+            <td width="100"><input <?= strpos($_SESSION['USERID'], '5') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_5" id="reg_5" />
             S. West</td>
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td><input <?php echo strpos($_SESSION['USERID'], '2') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_2" id="reg_2" /> 
+            <td><input <?= strpos($_SESSION['USERID'], '2') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_2" id="reg_2" /> 
               S. East
         </td>
-            <td><input <?php echo strpos($_SESSION['USERID'], '4') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_4" id="reg_4" /> 
+            <td><input <?= strpos($_SESSION['USERID'], '4') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_4" id="reg_4" /> 
             West
         </td>
             <td>&nbsp;<!-- <input type="checkbox" name="reg_all" id="reg_all" /> 
@@ -490,12 +490,12 @@ function setmapvis()
       <option value="hideMap">Hide Map</option>
       <option value="newCustomerForm">New Customer Form</option>
       <option value="newCustomerList">New Customer List</option>
-      <option value="<?php echo$_SESSION['SHOWINACTIVE']=='yes' ? 'hideInactive' : 'showInactive'?>"><?php echo$_SESSION['SHOWINACTIVE']=='yes' ? 'Hide Inactive Tanks' : 'Show Inactive Tanks'?></option>
-      <option value="<?php echo$_SESSION['SHOWTEMPSHUTDOWN']=='yes' ? 'hideTempShutdown' : 'showTempShutdown'?>"><?php echo$_SESSION['SHOWTEMPSHUTDOWN']=='yes' ? 'Hide Temporary Shutdown' : 'Show Temporary Shutdown'?></option>
-      <option value="<?php echo$_SESSION['SHOWUNMONITORED']=='yes' ? 'hideUnmonitored' : 'showUnmonitored'?>"><?php echo$_SESSION['SHOWUNMONITORED']=='yes' ? 'Hide Unmonitored Sites' : 'Show Unmonitored Sites'?></option>
-      <option value="<?php echo$_SESSION['SHOWFACTORIES']=='yes' ? 'hideFactories' : 'showFactories'?>"><?php echo$_SESSION['SHOWFACTORIES']=='yes' ? 'Hide' : 'Show'?> Suppliers</option>
-      <option value="<?php echo$_SESSION['SHOWCARRIERS']=='yes' ? 'hideCarriers' : 'showCarriers'?>"><?php echo$_SESSION['SHOWCARRIERS']=='yes' ? 'Hide' : 'Show'?> Carriers</option>
-      <option value="<?php echo$_SESSION['SHOWTERMINALS']=='yes' ? 'hideTerminals' : 'showTerminals'?>"><?php echo$_SESSION['SHOWTERMINALS']=='yes' ? 'Hide' : 'Show'?> Terminals</option>
+      <option value="<?=$_SESSION['SHOWINACTIVE']=='yes' ? 'hideInactive' : 'showInactive'?>"><?=$_SESSION['SHOWINACTIVE']=='yes' ? 'Hide Inactive Tanks' : 'Show Inactive Tanks'?></option>
+      <option value="<?=$_SESSION['SHOWTEMPSHUTDOWN']=='yes' ? 'hideTempShutdown' : 'showTempShutdown'?>"><?=$_SESSION['SHOWTEMPSHUTDOWN']=='yes' ? 'Hide Temporary Shutdown' : 'Show Temporary Shutdown'?></option>
+      <option value="<?=$_SESSION['SHOWUNMONITORED']=='yes' ? 'hideUnmonitored' : 'showUnmonitored'?>"><?=$_SESSION['SHOWUNMONITORED']=='yes' ? 'Hide Unmonitored Sites' : 'Show Unmonitored Sites'?></option>
+      <option value="<?=$_SESSION['SHOWFACTORIES']=='yes' ? 'hideFactories' : 'showFactories'?>"><?=$_SESSION['SHOWFACTORIES']=='yes' ? 'Hide' : 'Show'?> Suppliers</option>
+      <option value="<?=$_SESSION['SHOWCARRIERS']=='yes' ? 'hideCarriers' : 'showCarriers'?>"><?=$_SESSION['SHOWCARRIERS']=='yes' ? 'Hide' : 'Show'?> Carriers</option>
+      <option value="<?=$_SESSION['SHOWTERMINALS']=='yes' ? 'hideTerminals' : 'showTerminals'?>"><?=$_SESSION['SHOWTERMINALS']=='yes' ? 'Hide' : 'Show'?> Terminals</option>
       <?php 
 		  if ($_SESSION['USERTYPE'] == 'super')
 		  {
@@ -510,46 +510,46 @@ function setmapvis()
     <td width="108" valign="middle" nowrap="nowrap">Status Filter: </td>
     <td nowrap="nowrap"><select name="status" class="spinNormalText" id="status" onchange="setStatusFilter(this.value)">
 	<?php if ($_SESSION['VIEWMODE'] == 'statusView') : ?>	
-	      <option value="all" <?php echo$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?php echo$allCnt?>)</option>
-	      <option value="Normal" <?php echo$_SESSION['STATUS_FILTER']=='Normal' ? 'Selected' : ''?>>Normal (<?php echo$normalCnt?>)</option>
-	      <option value="NoReading" <?php echo$_SESSION['STATUS_FILTER']=='NoReading' ? 'Selected' : ''?>>No Reading (<?php echo$nrCnt?>)</option>
-	      <option value="ExceedCap" <?php echo$_SESSION['STATUS_FILTER']=='ExceedCap' ? 'Selected' : ''?>>Exceed Capacity (<?php echo$ecCnt?>)</option>
-	      <option value="TempShutdown" <?php echo$_SESSION['STATUS_FILTER']=='TempShutdown' ? 'Selected' : ''?>>Temporary Shutdown (<?php echo$tsCnt?>)</option>
-	      <option value="H_Dose" <?php echo$_SESSION['STATUS_FILTER']=='H_Dose' ? 'Selected' : ''?>>High Dose (<?php echo$HdoseCnt?>)</option>
-	      <option value="L_Dose" <?php echo$_SESSION['STATUS_FILTER']=='L_Dose' ? 'Selected' : ''?>>Low Dose (<?php echo$LdoseCnt?>)</option>
-	      <option value="unmon" <?php echo$_SESSION['STATUS_FILTER']=='unmon' ? 'Selected' : ''?>>Unmonitored Tanks (<?php echo$unmonCnt?>)</option>
-	      <option value="unass" <?php echo$_SESSION['STATUS_FILTER']=='unass' ? 'Selected' : ''?>>Unassociated Readings (<?php echo$unassCnt?>)</option>
+	      <option value="all" <?=$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?=$allCnt?>)</option>
+	      <option value="Normal" <?=$_SESSION['STATUS_FILTER']=='Normal' ? 'Selected' : ''?>>Normal (<?=$normalCnt?>)</option>
+	      <option value="NoReading" <?=$_SESSION['STATUS_FILTER']=='NoReading' ? 'Selected' : ''?>>No Reading (<?=$nrCnt?>)</option>
+	      <option value="ExceedCap" <?=$_SESSION['STATUS_FILTER']=='ExceedCap' ? 'Selected' : ''?>>Exceed Capacity (<?=$ecCnt?>)</option>
+	      <option value="TempShutdown" <?=$_SESSION['STATUS_FILTER']=='TempShutdown' ? 'Selected' : ''?>>Temporary Shutdown (<?=$tsCnt?>)</option>
+	      <option value="H_Dose" <?=$_SESSION['STATUS_FILTER']=='H_Dose' ? 'Selected' : ''?>>High Dose (<?=$HdoseCnt?>)</option>
+	      <option value="L_Dose" <?=$_SESSION['STATUS_FILTER']=='L_Dose' ? 'Selected' : ''?>>Low Dose (<?=$LdoseCnt?>)</option>
+	      <option value="unmon" <?=$_SESSION['STATUS_FILTER']=='unmon' ? 'Selected' : ''?>>Unmonitored Tanks (<?=$unmonCnt?>)</option>
+	      <option value="unass" <?=$_SESSION['STATUS_FILTER']=='unass' ? 'Selected' : ''?>>Unassociated Readings (<?=$unassCnt?>)</option>
 	<? else : ?>
-	      <option value="all" <?php echo$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?php echo$allCnt?>)</option>
-	      <option value="Ok" <?php echo$_SESSION['STATUS_FILTER']=='Ok' ? 'Selected' : ''?>>Ok (<?php echo$okCnt?>)</option>
-	      <option value="Reorder" <?php echo$_SESSION['STATUS_FILTER']=='Reorder' ? 'Selected' : ''?>>Reorder (<?php echo$reorderCnt?>)</option>
-	      <option value="Low" <?php echo$_SESSION['STATUS_FILTER']=='Low' ? 'Selected' : ''?>>Low (<?php echo$lowCnt?>)</option>
-	      <option value="Critical" <?php echo$_SESSION['STATUS_FILTER']=='Critical' ? 'Selected' : ''?>>Critical (<?php echo$criticalCnt?>)</option>
+	      <option value="all" <?=$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?=$allCnt?>)</option>
+	      <option value="Ok" <?=$_SESSION['STATUS_FILTER']=='Ok' ? 'Selected' : ''?>>Ok (<?=$okCnt?>)</option>
+	      <option value="Reorder" <?=$_SESSION['STATUS_FILTER']=='Reorder' ? 'Selected' : ''?>>Reorder (<?=$reorderCnt?>)</option>
+	      <option value="Low" <?=$_SESSION['STATUS_FILTER']=='Low' ? 'Selected' : ''?>>Low (<?=$lowCnt?>)</option>
+	      <option value="Critical" <?=$_SESSION['STATUS_FILTER']=='Critical' ? 'Selected' : ''?>>Critical (<?=$criticalCnt?>)</option>
 	<?php endif ; ?>	  
 	    </select>
 	<?php if ($_SESSION['STATUS_FILTER'] == 'Reorder'): ?>
 		<span class="spinNormalText">Lead Time:</span> <select name="leadTimeOverride" id="leadTimeOverride" onchange="doAction(this.value)">
-	    <option value="lead_default" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == 'default' ? 'Selected' : ''?>>-Default-</option>
-	    <option value="lead_1" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '1' ? 'Selected' : ''?>>1</option>
-	    <option value="lead_2" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '2' ? 'Selected' : ''?>>2</option>
-	    <option value="lead_3" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '3' ? 'Selected' : ''?>>3</option>
-	    <option value="lead_4" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '4' ? 'Selected' : ''?>>4</option>
-	    <option value="lead_5" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '5' ? 'Selected' : ''?>>5</option>
-	    <option value="lead_6" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '6' ? 'Selected' : ''?>>6</option>
-	    <option value="lead_7" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '7' ? 'Selected' : ''?>>7</option>
-	    <option value="lead_8" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '8' ? 'Selected' : ''?>>8</option>
-	    <option value="lead_9" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '9' ? 'Selected' : ''?>>9</option>
-	    <option value="lead_10" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '10' ? 'Selected' : ''?>>10</option>
-	    <option value="lead_11" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '11' ? 'Selected' : ''?>>11</option>
-	    <option value="lead_12" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '12' ? 'Selected' : ''?>>12</option>
-	    <option value="lead_13" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '13' ? 'Selected' : ''?>>13</option>
-	    <option value="lead_14" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '14' ? 'Selected' : ''?>>14</option>
-	    <option value="lead_15" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '15' ? 'Selected' : ''?>>15</option>
-	    <option value="lead_16" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '16' ? 'Selected' : ''?>>16</option>
-	    <option value="lead_17" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '17' ? 'Selected' : ''?>>17</option>
-	    <option value="lead_18" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '18' ? 'Selected' : ''?>>18</option>
-	    <option value="lead_19" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '19' ? 'Selected' : ''?>>19</option>
-	    <option value="lead_20" <?php echo $_SESSION['LEADTIME_OVERRIDE'] == '20' ? 'Selected' : ''?>>20</option>
+	    <option value="lead_default" <?= $_SESSION['LEADTIME_OVERRIDE'] == 'default' ? 'Selected' : ''?>>-Default-</option>
+	    <option value="lead_1" <?= $_SESSION['LEADTIME_OVERRIDE'] == '1' ? 'Selected' : ''?>>1</option>
+	    <option value="lead_2" <?= $_SESSION['LEADTIME_OVERRIDE'] == '2' ? 'Selected' : ''?>>2</option>
+	    <option value="lead_3" <?= $_SESSION['LEADTIME_OVERRIDE'] == '3' ? 'Selected' : ''?>>3</option>
+	    <option value="lead_4" <?= $_SESSION['LEADTIME_OVERRIDE'] == '4' ? 'Selected' : ''?>>4</option>
+	    <option value="lead_5" <?= $_SESSION['LEADTIME_OVERRIDE'] == '5' ? 'Selected' : ''?>>5</option>
+	    <option value="lead_6" <?= $_SESSION['LEADTIME_OVERRIDE'] == '6' ? 'Selected' : ''?>>6</option>
+	    <option value="lead_7" <?= $_SESSION['LEADTIME_OVERRIDE'] == '7' ? 'Selected' : ''?>>7</option>
+	    <option value="lead_8" <?= $_SESSION['LEADTIME_OVERRIDE'] == '8' ? 'Selected' : ''?>>8</option>
+	    <option value="lead_9" <?= $_SESSION['LEADTIME_OVERRIDE'] == '9' ? 'Selected' : ''?>>9</option>
+	    <option value="lead_10" <?= $_SESSION['LEADTIME_OVERRIDE'] == '10' ? 'Selected' : ''?>>10</option>
+	    <option value="lead_11" <?= $_SESSION['LEADTIME_OVERRIDE'] == '11' ? 'Selected' : ''?>>11</option>
+	    <option value="lead_12" <?= $_SESSION['LEADTIME_OVERRIDE'] == '12' ? 'Selected' : ''?>>12</option>
+	    <option value="lead_13" <?= $_SESSION['LEADTIME_OVERRIDE'] == '13' ? 'Selected' : ''?>>13</option>
+	    <option value="lead_14" <?= $_SESSION['LEADTIME_OVERRIDE'] == '14' ? 'Selected' : ''?>>14</option>
+	    <option value="lead_15" <?= $_SESSION['LEADTIME_OVERRIDE'] == '15' ? 'Selected' : ''?>>15</option>
+	    <option value="lead_16" <?= $_SESSION['LEADTIME_OVERRIDE'] == '16' ? 'Selected' : ''?>>16</option>
+	    <option value="lead_17" <?= $_SESSION['LEADTIME_OVERRIDE'] == '17' ? 'Selected' : ''?>>17</option>
+	    <option value="lead_18" <?= $_SESSION['LEADTIME_OVERRIDE'] == '18' ? 'Selected' : ''?>>18</option>
+	    <option value="lead_19" <?= $_SESSION['LEADTIME_OVERRIDE'] == '19' ? 'Selected' : ''?>>19</option>
+	    <option value="lead_20" <?= $_SESSION['LEADTIME_OVERRIDE'] == '20' ? 'Selected' : ''?>>20</option>
 	    </select>
 	<?php endif; ?>    
     
@@ -557,8 +557,8 @@ function setmapvis()
     <td width="94" align="right" valign="middle" nowrap="nowrap" class="spinSmallTitle">View Mode:  </td>
     <td width="240" align="right" valign="middle" nowrap="nowrap" class="spinSmallTitle">
       <div align="left">
-        <input name="rdoStatus" type="radio" value="statusView" <?php echo$_SESSION['VIEWMODE'] == 'statusView' ? 'checked' : ''?> onclick="doAction('statusView')" />
-      Status&nbsp;<input name="rdoStatus" type="radio" value="deliveryView" <?php echo$_SESSION['VIEWMODE'] == 'deliveryView' ? 'checked' : ''?>  onclick="doAction('deliveryView')"/>
+        <input name="rdoStatus" type="radio" value="statusView" <?=$_SESSION['VIEWMODE'] == 'statusView' ? 'checked' : ''?> onclick="doAction('statusView')" />
+      Status&nbsp;<input name="rdoStatus" type="radio" value="deliveryView" <?=$_SESSION['VIEWMODE'] == 'deliveryView' ? 'checked' : ''?>  onclick="doAction('deliveryView')"/>
         Deliveries </div>
     </div></td>
   	</tr>
@@ -566,13 +566,11 @@ function setmapvis()
 <?php endif; ?>
 <center>
 
-
 <?php if ($_COOKIE['mapVisible'] == 1): ?>
 	<iframe frameborder="0" align="top" name="mapFrame" id="mapFrame" width="750" height=440 src="map.php" style="border-style:ridge"></iframe><br />
 <? else: ?>
 	<iframe frameborder="0" align="top" name="mapFrame" id="mapFrame" width="750" height=0  style="border-style:none"></iframe><br />
 <?php endif; ?>
-
 
 <?php
 	$id = '';
@@ -593,7 +591,7 @@ function setmapvis()
 	}
 	bigEcho($_SESSION['ROOT_URL'] . $_SESSION['VIEWMODE'] == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init");
 ?>
-<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650 src="<?php echo $_SESSION['ROOT_URL'] . $_SESSION['VIEWMODE'] == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init"?>" frameborder="0" ></iframe>
+<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650 src="<?= $_SESSION['ROOT_URL'] . $_SESSION['VIEWMODE'] == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init"?>" frameborder="0" ></iframe>
 
 </center>
 <?php showSessionVars(); ?>

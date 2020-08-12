@@ -19,7 +19,7 @@ elseif (!empty($delID))
 	$res = getResult($query);
 	$line = mysql_fetch_assoc($res);
 	extract($line);
-	$notes = empty($DELIVERY_NOTES) ? $notes : $DELIVERY_NOTES;
+	$notes = empty($_SESSION['DELIVERY_NOTES']) ? $notes : $_SESSION['DELIVERY_NOTES'];
 }
 elseif (!empty($tankDelivID))
 {
@@ -30,7 +30,7 @@ elseif (!empty($tankDelivID))
 }
 else
 {
-	$notes = $DELIVERY_NOTES;
+	$notes = $_SESSION['DELIVERY_NOTES'];
 }
 
 if ($REQUEST_METHOD == 'POST')
@@ -56,7 +56,7 @@ if ($REQUEST_METHOD == 'POST')
 		$deliverySites = getDeliverySites($delID);
 		$deliveryDate =  getDeliveryInfo($delID);
 		logAction("Delivery notes updated for $deliverySites dated $deliveryDate" );
-		$DELIVERY_NOTES = $noteText;
+		$_SESSION['DELIVERY_NOTES'] = $noteText;
 		$jsClose = "window.close();\n";
 	}
 	elseif (!empty($tankDelivID))
@@ -80,7 +80,7 @@ if ($REQUEST_METHOD == 'POST')
 	}
 	else
 	{
-		$DELIVERY_NOTES = $noteText; // must be a new delivery 
+		$_SESSION['DELIVERY_NOTES'] = $noteText; // must be a new delivery 
 		$jsClose = "window.close();\n";
 	}
 	

@@ -76,9 +76,9 @@ $(document).ready(function() {
 		$("#section_3").hide();
 		$("#thank_you").show();
 		return;
-<? endif; ?>
+<?php endif; ?>
 	
-	<? if (empty($key)) : ?>
+	<?php if (empty($key)) : ?>
 	window.onbeforeunload = function() 
 	{
 		if (st > 1) // check for read only state
@@ -105,7 +105,7 @@ $(document).ready(function() {
 		}
 		return -1;
 	}
-	<? endif;?>		
+	<?php endif;?>		
 	
 	var st=<?= empty($st) ? 3 : $st?>;
 	
@@ -306,11 +306,11 @@ $(document).ready(function() {
 </head>
 
 <body style="width:850px; padding-left:15px">
-<? if ($st==1): ?>
+<?php if ($st==1): ?>
 <p style="width:850px; text-align:right">
 <a href='javascript:window.print()'>print</a>
 </p>
-<? endif; ?>
+<?php endif; ?>
 
 <div id="sectionIdentifier" name="sectionIdentifier">
   <input type="hidden" name="sectionID" id="sectionID" value="1">
@@ -2054,9 +2054,9 @@ $(document).ready(function() {
       <div class="label-field-right" style="padding-top:20px"> 
       <span class='navDiv'><a href="javascript:processSection(3, 'back')"><img src="images/go-back-to-section-2.png" alt="Back to Section 2" border="0" ></a></span> 
       <span class='postDiv'><a href="javascript:processSection(3, 'commit')"><img src="images/save-Form.png" alt="Save Form" border="0" ></a></span> 
-<? if ( $_SESSION['USERTYPE'] == 'super' && $committed==1 && $complete==0): ?>  
+<?php if ( $_SESSION['USERTYPE'] == 'super' && $committed==1 && $complete==0): ?>  
       <span class='mapDiv'><a href="javascript:mapToCOMS()"><img src="images/post-Form.png" alt="Post to COMS" border="0" ></a></span> 
-<? endif; ?>
+<?php endif; ?>
       </div>
       <div style="clear:both"></div>
     </div>

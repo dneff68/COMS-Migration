@@ -143,7 +143,7 @@ if (!empty($PROCESS_START_DATE))
 <SCRIPT LANGUAGE="Javascript" SRC="/FusionCharts/Code/FusionCharts/FusionCharts.js"></SCRIPT>
 <SCRIPT LANGUAGE="Javascript" SRC="/FusionCharts/Code/FusionCharts/FusionChartsExportComponent.js"></SCRIPT>
 
-<? if (david() || jim()) : ?>
+<?php if (david() || jim()) : ?>
 	<link rel="stylesheet" href="../ui_theme/themes/base/jquery.ui.all.css"> 
 	<script src="../ui_theme/ui/jquery.ui.core.js"></script> 
 	<script src="../ui_theme/ui/jquery.ui.widget.js"></script> 
@@ -168,7 +168,7 @@ if (!empty($PROCESS_START_DATE))
 		});
 	});	
 	</script>
-<? endif; ?>
+<?php endif; ?>
 
 <script language="javascript">
 <?=$jsClose?>
@@ -331,7 +331,7 @@ var httpObject = null;
   <tr valign="top" class="spinTableBarEven">
 	    <form name="dateForm" action="processGraph.php" method="post">
       <td width="466" valign="middle" nowrap="nowrap">
-<? if (david() || jim()) : ?>
+<?php if (david() || jim()) : ?>
     <label for="from">From</label> 
     <input type="text" id="startDate" name="startDate" value="<?=$PROCESS_START_DATE?>"/> 
     <label for="to">to</label> 
@@ -343,7 +343,7 @@ var httpObject = null;
         &nbsp;&nbsp;End Date: 
         <input readonly name='endDate' id="endDate" type="text" size="10" value="<?=$PROCESS_END_DATE?>">
         <a href="javascript:NewCal('endDate','yyyymmdd')"> <img src="/images/calbtn.gif" width="16" height="16" border="0" alt="Pick an end date"></a>
-<? endif; ?>
+<?php endif; ?>
         
         <input type="button" value="Set Date Range" onclick="submitDates()" />
         </div>
@@ -391,15 +391,15 @@ var httpObject = null;
       <td width="103" align="center" valign="middle" nowrap="nowrap"><input type="submit" name="button" id="button" value="Set Lag" onclick="setLagtime()" /></td>
 
   </tr>
-  <? if (true) : ?>
+  <?php if (true) : ?>
   <tr valign="top" class="spinTableBarEven">
     <td height="20" colspan="2" align="right" valign="middle" nowrap="nowrap">Process Target:</td>
     <td height="20" align="left" valign="middle" nowrap="nowrap">&nbsp;&nbsp;<input value="<?=$PROCESS_TARGET?>" name="txt_processTarget" type="text" id="txt_processTarget" size="4" maxlength="4" onkeypress="return numbersonly(this, event)" /></td>
     <td align="center" valign="middle" nowrap="nowrap"><input type="submit" name="button2" id="button2" value="Set Target" onclick="setProcessTarget()" /></td>
   </tr>
-  <? endif; ?>
+  <?php endif; ?>
   
- <? if ($singleDayGraph == 1): ?>
+ <?php if ($singleDayGraph == 1): ?>
   <tr>
     <td colspan="4">
     <table width="800" border="0" align="center" cellpadding="5" cellspacing="1">
@@ -451,7 +451,7 @@ var httpObject = null;
       </tr>
     </table></td>
   </tr>
-  <? endif ; ?>
+  <?php endif ; ?>
   
  <TR><td colspan="4">
 	<div id="ProcessDiv" align="left">
@@ -708,9 +708,9 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 ?>
 
 <script language="javascript">
-<? if ($invalidDate) : ?>
+<?php if ($invalidDate) : ?>
 	alert("Date range invalid.  Please choose a start date that preceeds the end date");
-<? endif; ?>
+<?php endif; ?>
 	function submitDates()
 	{
 		if (document.dateForm.startDate.value == '')

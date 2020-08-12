@@ -25,10 +25,10 @@ if (!empty($id))
 		$js .= "parent.location='/index.php';\n";
 
 	}	
-	$DELIVERY_COMMITTED = '';
-	$DELIVERY_NOTES = '';
+	$_SESSION['DELIVERY_COMMITTED'] = '';
+	$_SESSION['DELIVERY_NOTES'] = '';
 	$TANK_NOTES = false;
-	$DELIVERY_TANKS = false;
+	$_SESSION['DELIVERY_TANKS'] = false;
 	$TANK_DETAILS = false;
 	$DELIVERY_DATA = false;
 	$sentArray = false;

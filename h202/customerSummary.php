@@ -78,9 +78,9 @@ function showBudgetHistory(selobj)
               </td>
             <td><div class="<?=  $USERID != $CUSTOMER_EMAIL ? 'planningButtonBarCenter' : 'planningButtonBarLeft'?>"> <?=$customerName?></div></td>
             <td><div style="text-align:right;padding-right:15px"> &nbsp;
-<? if ( $USERID != $CUSTOMER_EMAIL) : ?>
+<?php if ( $USERID != $CUSTOMER_EMAIL) : ?>
             <img onMouseUp="javascript:surfDialog('/planning.php?customerID=<?=$customerID?>', 835, 650, window, false)" onMouseOver="this.src='images/planning_down.gif'" onMouseOut="this.src='images/planning_up.gif'" src="images/planning_up.gif"> 
-<? endif; ?>
+<?php endif; ?>
             </div></td>
           </tr>
         </table>

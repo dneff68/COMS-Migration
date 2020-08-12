@@ -1,32 +1,32 @@
-<?
+<?php
 session_start();
+
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
+include_once '../lib/db_mysql.php';
+include_once '../lib/chtFunctions.php';
 
 
-if (empty($JUMP))
-{
-	session_register('JUMP');
-}
-else
-{
-	// set global variable
-	$jump = $JUMP;
-	$JUMP = '';
-}
+// include_once 'GlobalConfig.php';
+// include_once 'h202Functions.php';
+// include_once 'chtFunctions.php';
+// include_once 'db_mysql.php';
 
-if (empty($_SESSION['DELIVERY_COMMITTED']))
-{	
-	session_register('DELIVERY_COMMITTED');
-}
 
-if (empty($_SESSION['USED_PO_CODES']))
-{
-	session_register('USED_PO_CODES');
-	
-}
+// if (empty($JUMP))
+// {
+// 	session_register('JUMP');
+// }
+// else
+// {
+// 	// set global variable
+// 	$jump = $JUMP;
+// 	$JUMP = '';
+// }
+
+// set global variable
+$jump = $_SESSION['JUMP'];
+$_SESSION['JUMP'] = '';
 
 if (!empty($id))
 {
@@ -35,12 +35,12 @@ if (!empty($id))
 
 	// allow for adding tanks to a delivery
 	$aTankNotes 	= $TANK_NOTES;
-	$aDeliveryTanks = $DELIVERY_TANKS;
-	$aTankDetails 	= $TANK_DETAILS;
+	$aDeliveryTanks = $_SESSION['DELIVERY_TANKS'];
+	$aTankDetails 	= $_SESSION['TANK_DETAILS'];
 
 	$TANK_NOTES 	= array();
-	$DELIVERY_TANKS = array();
-	$TANK_DETAILS 	= array();
+	$_SESSION['DELIVERY_TANKS'] = array();
+	$_SESSION['TANK_DETAILS'] 	= array();
 	
 	$query = "select monitorID, time, quantity, deliveryUnitQuantity, actual_quantity, notes from deliveryTanks where deliveryID = $id";
 	$res = getResult($query);
@@ -50,10 +50,10 @@ if (!empty($id))
 		while ($line = mysql_fetch_assoc($res))
 		{
 			extract($line);
-			$DELIVERY_TANKS[$cnt] = $monitorID;
-			$TANK_DETAILS[$monitorID]['time'] = $time;
-			$TANK_DETAILS[$monitorID]['quantity'] = $quantity; 
-			$TANK_DETAILS[$monitorID]['deliveryUnitQuantity'] = $deliveryUnitQuantity; 
+			$_SESSION['DELIVERY_TANKS'][$cnt] = $monitorID;
+			$_SESSION['TANK_DETAILS'][$monitorID]['time'] = $time;
+			$_SESSION['TANK_DETAILS'][$monitorID]['quantity'] = $quantity; 
+			$_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity'] = $deliveryUnitQuantity; 
 			$TANK_NOTES[$monitorID] = $notes;
 			$cnt++;
 		}
@@ -63,13 +63,13 @@ if (!empty($id))
 	{
 		foreach($aDeliveryTanks as $tmp_tankName)
 		{
-			if ( array_search($tmp_tankName, $DELIVERY_TANKS) === false )
+			if ( array_search($tmp_tankName, $_SESSION['DELIVERY_TANKS']) === false )
 			{
 				// add the tank to the array
-				array_push($DELIVERY_TANKS, $tmp_tankName);
-				$TANK_DETAILS[$tmp_tankName]['time'] = $aTankDetails[$tmp_tankName]['time'];
-				$TANK_DETAILS[$tmp_tankName]['quantity'] = $aTankDetails[$tmp_tankName]['quantity']; 
-				$TANK_DETAILS[$tmp_tankName]['deliveryUnitQuantity'] = $aTankDetails[$tmp_tankName]['deliveryUnitQuantity']; 
+				array_push($_SESSION['DELIVERY_TANKS'], $tmp_tankName);
+				$_SESSION['TANK_DETAILS'][$tmp_tankName]['time'] = $aTankDetails[$tmp_tankName]['time'];
+				$_SESSION['TANK_DETAILS'][$tmp_tankName]['quantity'] = $aTankDetails[$tmp_tankName]['quantity']; 
+				$_SESSION['TANK_DETAILS'][$tmp_tankName]['deliveryUnitQuantity'] = $aTankDetails[$tmp_tankName]['deliveryUnitQuantity']; 
 				$TANK_NOTES[$tmp_tankName] = $aTankNotes[$tmp_tankName];
 			}
 		}
@@ -91,7 +91,7 @@ if (!empty($id))
 		$DELIVERY_DATA = mysql_fetch_assoc($res);
 		extract($DELIVERY_DATA);
 		$truckCaps = $truckCapacity . ' gallons';
-		$DELIVERY_NOTES = $notes;
+		$_SESSION['DELIVERY_NOTES'] = $notes;
 	}
 }
 
@@ -99,15 +99,15 @@ if (!empty($id))
 if ($sendInvoices == 'yes')
 {
 	sendDeliveryEmails($modifyDeliveryID);
-	$DELIVERY_NOTES = '';
+	$_SESSION['DELIVERY_NOTES'] = '';
 	$TANK_NOTES = false;
-	$DELIVERY_TANKS = false;
-	$TANK_DETAILS = false;
+	$_SESSION['DELIVERY_TANKS'] = array(); //false
+	$_SESSION['TANK_DETAILS'] = false;
 	$DELIVERY_DATA = false;
 	$sentArray = false;
-	array_splice($ZIPCOLLECTION,0);
-	unset($ZIPCOLLECTION);
-	$ZIPCOLLECTION = '';
+	array_splice($_SESSION['ZIPCOLLECTION'],0);
+	unset($_SESSION['ZIPCOLLECTION']);
+	$_SESSION['ZIPCOLLECTION'] = '';
 	header('location:/deliveryDetails.php');
 }
 
@@ -123,24 +123,24 @@ if ($submitted == 'yes')
 if ($REQUEST_METHOD == 'POST')
 {
 
-	$JUMP = "<a href='#$tankid'>jump to last</a> ";
+	$_SESSION['JUMP'] = "<a href='#$tankid'>jump to last</a> ";
 	
 	if ($tankAction == 'cancel')
 	{
-		$DELIVERY_COMMITTED = '';
-		$DELIVERY_NOTES = '';
+		$_SESSION['DELIVERY_COMMITTED'] = '';
+		$_SESSION['DELIVERY_NOTES'] = '';
 		$TANK_NOTES = false;
 		$CONVERTED_QUANTITIES = false;
-		$DELIVERY_TANKS = false;
-		$TANK_DETAILS = false;
+		$_SESSION['DELIVERY_TANKS'] = array(); //false;
+		$_SESSION['TANK_DETAILS'] = false;
 		$DELIVERY_DATA = false;
 		$sentArray = false;
-		if (!empty($ZIPCOLLECTION))
+		if (!empty($_SESSION['ZIPCOLLECTION']))
 		{
-			array_splice($ZIPCOLLECTION,0);
+			array_splice($_SESSION['ZIPCOLLECTION'],0);
 		}
-		unset($ZIPCOLLECTION);
-		$ZIPCOLLECTION = '';
+		unset($_SESSION['ZIPCOLLECTION']);
+		$_SESSION['ZIPCOLLECTION'] = '';
 		header('location:/deliveryDetails.php');
 
 	}
@@ -154,7 +154,7 @@ if ($REQUEST_METHOD == 'POST')
 		$truckCapacity = empty($truckCapacity) ? '0' : $truckCapacity ;
 
 	
-		if (!empty($deliveryProduct) && sizeof($DELIVERY_TANKS) > 0)
+		if (!empty($deliveryProduct) && sizeof($_SESSION['DELIVERY_TANKS']) > 0)
 		{
 			$key = generateCode();
 			if (!empty($modifyDeliveryID))
@@ -179,7 +179,7 @@ if ($REQUEST_METHOD == 'POST')
 				updateDeliveryTankStats($modifyDeliveryID);  // update the tank stats 
 				
 				// modify an existing delivery
-				$del_notes = fixSingleQuotes($DELIVERY_NOTES);
+				$del_notes = fixSingleQuotes($_SESSION['DELIVERY_NOTES']);
 				$query = "UPDATE delivery SET 
 						deliveryDate = '$deliveryDate',
 						dateOrdered = NOW(),
@@ -197,7 +197,7 @@ if ($REQUEST_METHOD == 'POST')
 				executeQuery($query);
 				$deliverySites = getDeliverySites($modifyDeliveryID);
 				logAction("Delivery Updated for $deliverySites dated $deliveryDate" );
-				$DELIVERY_NOTES = '';
+				$_SESSION['DELIVERY_NOTES'] = '';
 				$deliveryID = $modifyDeliveryID;
 				//executeQuery("DELETE FROM deliverySite WHERE deliveryID=$deliveryID");
 				executeQuery("UPDATE deliverySite SET markDelete=1 WHERE deliveryID=$deliveryID");
@@ -213,7 +213,7 @@ if ($REQUEST_METHOD == 'POST')
 					extract($cline);
 				}
 				
-				$del_notes = htmlentities($DELIVERY_NOTES, ENT_QUOTES);
+				$del_notes = htmlentities($_SESSION['DELIVERY_NOTES'], ENT_QUOTES);
 				$query = "INSERT INTO delivery 
 					(
 						deliveryDate,
@@ -247,8 +247,8 @@ if ($REQUEST_METHOD == 'POST')
 						'$del_notes'
 					)";
 				$deliveryID = executeQuery($query, 'INSERT');
-				$DELIVERY_COMMITTED = $deliveryID;
-				$DELIVERY_NOTES = '';
+				$_SESSION['DELIVERY_COMMITTED'] = $deliveryID;
+				$_SESSION['DELIVERY_NOTES'] = '';
 				// preserve the supplier email distribution
 				$query = "SELECT id, selected FROM supplierEmailDist WHERE supplierID=$supplierID";
 				$supRes = getResult($query);
@@ -273,8 +273,8 @@ if ($REQUEST_METHOD == 'POST')
 				function in h202Functions.
 			*/
 			
-			$USED_PO_CODES = array();
-			foreach($DELIVERY_TANKS as $monitorID)
+			$_SESSION['USED_PO_CODES'] = array();
+			foreach($_SESSION['DELIVERY_TANKS'] as $monitorID)
 			{
 				if (array_search($monitorID, $sites_arr) === false)
 				{
@@ -366,7 +366,7 @@ if ($REQUEST_METHOD == 'POST')
 				updateDeliveryTankStats($deliveryID);  // update the tank stats on the dates of the delivery after the update or addition of a new delivery
 			}
 			executeQuery("DELETE FROM deliverySite WHERE deliveryID=$deliveryID AND markDelete=1");
-			$USED_PO_CODES = '';
+			$_SESSION['USED_PO_CODES'] = '';
 			
 			echo('<hr>');
 			sendDeliveryEmails($deliveryID, 1); // 1 means display only
@@ -379,32 +379,32 @@ if ($REQUEST_METHOD == 'POST')
 
 			$TANK_NOTES = false;
 			$CONVERTED_QUANTITIES = false;
-			$DELIVERY_TANKS = false;
-			$TANK_DETAILS = false;
+			$_SESSION['DELIVERY_TANKS'] = array(); //false;
+			$_SESSION['TANK_DETAILS'] = false;
 			$DELIVERY_DATA = false;
 			$sentArray = false;
-			array_splice($ZIPCOLLECTION,0);
-			unset($ZIPCOLLECTION);
-			$ZIPCOLLECTION = '';
+			array_splice($_SESSION['ZIPCOLLECTION'],0);
+			unset($_SESSION['ZIPCOLLECTION']);
+			$_SESSION['ZIPCOLLECTION'] = '';
 		}
 	}
 }
 
 
-if (empty($DELIVERY_TANKS))
-{
-	session_register('DELIVERY_TANKS');
-	session_register('DELIVERY_NOTES');
-	$DELIVERY_TANKS = array();
-}
+// if (empty($DELIVERY_TANKS))
+// {
+// 	session_register('DELIVERY_TANKS');
+// 	session_register('DELIVERY_NOTES');
+// 	$DELIVERY_TANKS = array();
+// }
 
 if (!empty($tankAction))
 {
 	if ($tankAction == 'addTank' && !empty($tankid))
 	{
-		if (array_search($tankid, $DELIVERY_TANKS) === false)
+		if (array_search($tankid, $_SESSION['DELIVERY_TANKS']) === false)
 		{
-			array_push($DELIVERY_TANKS, $tankid);
+			array_push($_SESSION['DELIVERY_TANKS'], $tankid);
 			
 			$STATUS_FILTER = '';
 			$reloadParent = "window.parent.location='/index.php?deliveryID=$modifyDeliveryID&status=all';\n";
@@ -412,35 +412,24 @@ if (!empty($tankAction))
 	}	
 	elseif ($tankAction == 'removeTank' && !empty($tankid))
 	{
-		$key = array_search($tankid, $DELIVERY_TANKS);
+		$key = array_search($tankid, $_SESSION['DELIVERY_TANKS']);
 		if ( $key !== false)
 		{
-			unset($DELIVERY_TANKS[$key]);
+			unset($_SESSION['DELIVERY_TANKS'][$key]);
 		}
 	}
 }
 
-if (empty($TANK_DETAILS))
-{
-	session_register('TANK_DETAILS');
-	$TANK_DETAILS = array();			
-}
-
-if (empty($DELIVERY_DATA))
-{
-	session_register('DELIVERY_DATA');
-	$DELIVERY_DATA = array();
-}
 
 $divVis = "";
-if (sizeof($DELIVERY_TANKS) == 0)
+if (sizeof($_SESSION['DELIVERY_TANKS']) == 0)
 {
 	$divVis = "style=\"visibility:hidden;height:0\"";
 	$DELIVERY_DATA = false;
 }
-elseif (sizeof($DELIVERY_TANKS) == 1)
+elseif (sizeof($_SESSION['DELIVERY_TANKS']) == 1)
 {
-	$reorderInfo = reorderInfo(first($DELIVERY_TANKS));
+	$reorderInfo = reorderInfo(first($_SESSION['DELIVERY_TANKS']));
 	extract($reorderInfo);
 	if ($REQUEST_METHOD == 'POST')
 	{
@@ -500,7 +489,7 @@ elseif (sizeof($DELIVERY_TANKS) == 1)
 
 }
 
-if (sizeof($DELIVERY_TANKS) > 0)
+if (sizeof($_SESSION['DELIVERY_TANKS']) > 0)
 {
 
 	if (!empty($supplierID))
@@ -522,11 +511,11 @@ if (sizeof($DELIVERY_TANKS) > 0)
 	if ($REQUEST_METHOD == 'POST')
 	{
 		
-		$TANK_DETAILS = '';
-		$TANK_DETAILS = array(); // start fresh and build
+		$_SESSION['TANK_DETAILS'] = '';
+		$_SESSION['TANK_DETAILS'] = array(); // start fresh and build
 
 	
-		foreach ($DELIVERY_TANKS as $monitorID)
+		foreach ($_SESSION['DELIVERY_TANKS'] as $monitorID)
 		{
 			if (strpos($monitorID, '-') !== false)
 			{
@@ -540,15 +529,15 @@ if (sizeof($DELIVERY_TANKS) > 0)
 			$monitorOut = trim($monitorOut);
 			//bigecho("-- $monitorID  == $monitorOut");
 			eval('$t = $time_' . $monitorOut . ';');
-			$TANK_DETAILS[$monitorID]['time'] = $t;
-			if (empty($TANK_DETAILS[$monitorID]['time']))
+			$_SESSION['TANK_DETAILS'][$monitorID]['time'] = $t;
+			if (empty($_SESSION['TANK_DETAILS'][$monitorID]['time']))
 			{
 				$timeres = getResult("select timeOfDelivery from tank where monitorID='$monitorID' LIMIT 1");
 				if (checkResult($timeres))
 				{
 					$timeline = mysql_fetch_assoc($timeres);
 					extract($timeline);
-					$TANK_DETAILS[$monitorID]['time'] = $timeOfDelivery;
+					$_SESSION['TANK_DETAILS'][$monitorID]['time'] = $timeOfDelivery;
 				}
 			}			
 
@@ -556,13 +545,13 @@ if (sizeof($DELIVERY_TANKS) > 0)
 	
 			if (!empty($q) && $tankAction != 'changeTime')
 			{
-				$TANK_DETAILS[$monitorID]['quantity'] = $q;
+				$_SESSION['TANK_DETAILS'][$monitorID]['quantity'] = $q;
 			}
 			else
 			{
-				$TANK_DETAILS[$monitorID]['quantity'] = $refillAmount; 
+				$_SESSION['TANK_DETAILS'][$monitorID]['quantity'] = $refillAmount; 
 			}
-			//$TANK_DETAILS[$monitorID]['deliveryUnitQuantity'] = $q;
+			//$_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity'] = $q;
 		}
 	}
 	extract($DELIVERY_DATA);
@@ -619,8 +608,8 @@ if ($tankAction == 'showEmailDist')
 
 <script language="javascript" type="text/javascript">
 
-<?=$reloadParent?>
-<?=$js?>
+<?php echo $reloadParent?>
+<?php echo $js?>
 
 $(document).ready(function() {
 	$( "#messageBox" ).dialog(
@@ -657,7 +646,7 @@ $(document).ready(function() {
  
 function convertUnits(value, units, ratio)
 {
-	<?	
+	<?php	
 		echo "\n // product: " . $DELIVERY_DATA['deliveryProduct'] ; 
 		echo "\n // concentration: " . $DELIVERY_DATA['deliveryConcentration'] . "\n\n" ; 
 	?>
@@ -879,20 +868,22 @@ function checkTank(name, checked)
 </head>
 
 <body>
-<?
+<?php
 
 if ($clearlist == 'yes')
 {
-	array_splice($ZIPCOLLECTION,0);
-	unset($ZIPCOLLECTION);
-	$ZIPCOLLECTION = '';
+	array_splice($_SESSION['ZIPCOLLECTION'],0);
+	unset($_SESSION['ZIPCOLLECTION']);
+	$_SESSION['ZIPCOLLECTION'] = '';
 }
 
 // include selected delivery tanks
 $selTanks = '';
-if (sizeof($DELIVERY_TANKS > 0))
+
+//if (count($_SESSION['DELIVERY_TANKS'] > 0))
+if (empty($_SESSION['DELIVERY_TANKS']))
 {
-	foreach ($DELIVERY_TANKS as $selectedMonitorID)
+	foreach ($_SESSION['DELIVERY_TANKS'] as $selectedMonitorID)
 	{
 		$selTanks .= "m.monitorID='$selectedMonitorID' or ";	
 	}
@@ -903,30 +894,19 @@ if (sizeof($DELIVERY_TANKS > 0))
 	}
 }
 
-if (empty($ZIPCOLLECTION))
-{
-	session_register('ZIPCOLLECTION');
-	$ZIPCOLLECTION = array();
-}
-
-if (empty($CONVERTED_QUANTITIES))
-{
-	session_register('CONVERTED_QUANTITIES');
-	$CONVERTED_QUANTITIES = array();
-}
 
 if (!empty($zip))
 {
-	if (!array_key_exists($zip, $ZIPCOLLECTION))
+	if (!array_key_exists($zip, $_SESSION['ZIPCOLLECTION']))
 	{
-		$ZIPCOLLECTION[$zip] = 1; // value of 1 is just a holder
+		$_SESSION['ZIPCOLLECTION'][$zip] = 1; // value of 1 is just a holder
 	}
 }
 
-if (count($ZIPCOLLECTION) > 0)
+if (empty($_SESSION['ZIPCOLLECTION']))
 {
 	$more = " and (";
-	foreach ($ZIPCOLLECTION as $key => $storedzip)
+	foreach ($_SESSION['ZIPCOLLECTION'] as $key => $storedzip)
 	{
 //		$more .= "s.zip = $key || ";
 		$more .= "s.zip LIKE '$key%' || ";
@@ -1061,7 +1041,7 @@ if (checkResult($res))
 		$status = "<span style=\"color:#000000\">$status</span>";
 		$deliveryAverage = getDeliveryAvg($monitorID);
 
-		$inSelection = array_search($monitorID, $DELIVERY_TANKS) !== false;
+		$inSelection = array_search($monitorID, $_SESSION['DELIVERY_TANKS']) !== false;
 		
 		if ( empty($STATUS_FILTER) || $statkey == $STATUS_FILTER || $STATUS_FILTER == 'all' || $inSelection)
 		{
@@ -1222,7 +1202,7 @@ else
 
 			$checked = '';
 				
-			$key = array_search($monitorID, $DELIVERY_TANKS);
+			$key = array_search($monitorID, $_SESSION['DELIVERY_TANKS']);
 			if ( $key !== false)
 			{
 				$checked = " checked='checked'";
@@ -1246,7 +1226,7 @@ else
 				}
 
 				eval('$postedTime = $time_' . $monitorOut . ';');
-				$timeOfDelivery = $TANK_DETAILS[$monitorID]['time'];
+				$timeOfDelivery = $_SESSION['TANK_DETAILS'][$monitorID]['time'];
 				$timeOfDelivery = empty($postedTime) ? $timeOfDelivery : $postedTime;
 
 				if (!empty($timeOfDelivery))
@@ -1329,7 +1309,7 @@ else
 					//die($notesOut);
 				}
 
-				$quantity = $TANK_DETAILS[$monitorID]['quantity'];
+				$quantity = $_SESSION['TANK_DETAILS'][$monitorID]['quantity'];
 				if ($tankAction == 'changeTime')
 				{
 					$newFillInfo = reorderInfo($monitorID, $deliveryDate);
@@ -1373,7 +1353,7 @@ else
 				//bigecho(" $hideConversion = $deliveryUnits != 'Gallons' && $deliveryUnits != 'Unit' ? '' : '; display: none'; " );
 				$deliveryUnitsfmt = getDeliveryUnitFmt($deliveryUnits);
 				$refillAmountVal = $refillAmount;
-//bigecho($TANK_DETAILS[$monitorID]['deliveryUnitQuantity']);
+//bigecho($_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity']);
 			    if ($tankAction == "updateQuantity")	
 				{
 					$CONVERTED_QUANTITIES[$monitorID][0] = $refillAmountVal;
@@ -1415,8 +1395,8 @@ else
 				$refillAmountVal = empty($CONVERTED_QUANTITIES[$monitorID]) ? $refillAmountVal : $CONVERTED_QUANTITIES[$monitorID][0];
 				//bigecho("refillAmountVal = $refillAmountVal   --  refillAmount=$refillAmount ");
 				$ratioOut = $deliveryUnits == 'Pounds' ? ', ' . $CONVERTED_QUANTITIES[$monitorID][1] : '';	
-// bigecho("deliveryUnitQuantity: " . $TANK_DETAILS[$monitorID]['deliveryUnitQuantity']);				
-				$refillAmountVal = $TANK_DETAILS[$monitorID]['deliveryUnitQuantity'] > 0 ? $TANK_DETAILS[$monitorID]['deliveryUnitQuantity'] : $refillAmountVal;			
+// bigecho("deliveryUnitQuantity: " . $_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity']);				
+				$refillAmountVal = $_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity'] > 0 ? $_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity'] : $refillAmountVal;			
 				$deliveryTankRows .= "
 				<tr class='spinBoxedNormal'>
 				  <td nowrap='nowrap' class='spinSmallTitle'><div align='left'>$tankName</div></td>
@@ -1576,7 +1556,7 @@ if (strpos($fillDate, 'Saturday') !== false || strpos($fillDate, 'Sunday') !== f
 }
 
 $rowcnt = sizeof($marr);
-if (count($ZIPCOLLECTION) > 0) // && $STATUS_FILTER != 'unass')
+if (count($_SESSION['ZIPCOLLECTION']) > 0) // && $STATUS_FILTER != 'unass')
 {
 	$title = "<td colspan=\"3\"><div align=\"right\"><a href='deliveryDetails.php?clearlist=yes'>reset list</a></div></td>";
 }
@@ -1612,11 +1592,11 @@ else
 	}
   ?>
   
-  <? if ( $change_order || ( (!empty($modifyDeliveryID) || !empty($id)) && $update != 1 ) ) : ?>
+  <?php if ( $change_order || ( (!empty($modifyDeliveryID) || !empty($id)) && $update != 1 ) ) : ?>
     <tr align="center" class="tab1">
       <td height="34" colspan="5" nowrap="nowrap" class="style4"><div align="center">Change Order</div></td>
       </tr>
-  <? endif; ?>
+  <?php endif; ?>
     <tr>
       <td width="108" height="34" nowrap="nowrap" class="spinSmallTitle"><div align="left">Delivery Date: </div>
       <td width="147" nowrap="nowrap">
@@ -1694,8 +1674,8 @@ else
 	  <select name='truckSel'><?=$truckCaps?></select> </div></td>
       <td class="spinSmallTitle">
             
-		<? if (!empty($modifyDeliveryID) || !empty($id) ): ?>	
-		<?
+		<?php if (!empty($modifyDeliveryID) || !empty($id) ): ?>	
+		<?php
 			$devID = empty($modifyDeliveryID) ? $id : $modifyDeliveryID;
 			$res = getResult("SELECT status FROM delivery WHERE deliveryID = $devID AND status = 'Cancelled' LIMIT 1");
 			if (mysql_num_rows($res) > 0)
@@ -1704,7 +1684,7 @@ else
 			}
 			else
 			{
-				if ($update==1 && !empty($deliveryID) && $DELIVERY_COMMITTED == $modifyDeliveryID)
+				if ($update==1 && !empty($deliveryID) && $_SESSION['DELIVERY_COMMITTED'] == $modifyDeliveryID)
 				{
 					$cancelDeliveryButton = '';
 				}
@@ -1717,7 +1697,7 @@ else
 			}
 		?>
           
-		<? endif ; ?>
+		<?php endif ; ?>
           <br /><input type="button" name="confirmButton"  id="confirmButton" value="<?= $update != 1 && ((!empty($modifyDeliveryID) || !empty($id)))? 'Submit Change' : 'Submit Request'?>" onclick="submitDelivery()" />
 
 		  </td>
@@ -1735,11 +1715,11 @@ else
 				</tr>
 		<?=$deliveryTankRows?>
   </table>
-<?
+<?php
 	$delID = !empty($modifyDeliveryID) ? "?delID=$modifyDeliveryID" : '';
 	$delID = empty($delID) && !empty($id) ? "?delID=$id" : '';
 	
-	if ($update==1 && !empty($modifyDeliveryID) && $DELIVERY_COMMITTED == $modifyDeliveryID)
+	if ($update==1 && !empty($modifyDeliveryID) && $_SESSION['DELIVERY_COMMITTED'] == $modifyDeliveryID)
 	{
 		$cancelLink = "javascript:quietCommit(\"/deleteDelivery.php?id=$modifyDeliveryID\", true)";
 	}
@@ -1757,7 +1737,7 @@ else
 <table width="100%" border="1" align="left" cellpadding="3" cellspacing="0" bordercolorlight="#333333">
   <tr class="spinTableBarOdd">
     <td width="46">&nbsp;</td>
-    <?
+    <?php
     	$countOut = $rowcnt > 1 ? "Showing $rowcnt Tanks" : '&nbsp;';
 	?>
     <td align='left'><?=$countOut?></td>
@@ -1773,13 +1753,12 @@ else
     <td width="275" class="spinTableTitle"><div align="center" class="style1">Deliveries</div></td>
   </tr>
   
-<?
+<?php
 //=$rows
 foreach ($marr as $row)
 {
 	echo($row);
 }
-;
 ?>
 
 </table><br /><br /><br /><br />

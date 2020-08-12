@@ -344,7 +344,7 @@ var httpObject = null;
       <td width="103" align="center" valign="middle" nowrap="nowrap"><input type="submit" name="button" id="button" value="Set Lag" onclick="setLagtime()" /></td>
 
   </tr>
-  <? if (true) : ?>
+  <?php if (true) : ?>
  <tr valign="top" class="spinTableBarEven">
       <?
 			$los = getLevelOfService($SELECTED_TANK, $PROCESS_START_DATE, $PROCESS_END_DATE);  
@@ -365,8 +365,8 @@ var httpObject = null;
     <td height="20" align="left" valign="middle" nowrap="nowrap">&nbsp;&nbsp;<input value="<?=$PROCESS_TARGET?>" name="txt_processTarget" type="text" id="txt_processTarget" size="4" maxlength="4" onkeypress="return numbersonly(this, event)" /></td>
     <td align="center" valign="middle" nowrap="nowrap"><input type="submit" name="button2" id="button2" value="Set Target" onclick="setProcessTarget()" /></td>
   </tr>  
-  <? endif; ?>
-  <? if ($singleDayGraph == 1): ?>
+  <?php endif; ?>
+  <?php if ($singleDayGraph == 1): ?>
   <tr>
     <td colspan="4">
     <table width="800" border="0" align="center" cellpadding="5" cellspacing="1">
@@ -416,7 +416,7 @@ var httpObject = null;
       </tr>
     </table></td>
   </tr>
-  <? endif ; ?>
+  <?php endif ; ?>
 
 
  <TR><td colspan="4">
@@ -697,9 +697,9 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 ?>
 
 <script language="javascript">
-<? if ($invalidDate) : ?>
+<?php if ($invalidDate) : ?>
 	alert("Date range invalid.  Please choose a start date that preceeds the end date");
-<? endif; ?>
+<?php endif; ?>
 	function submitDates()
 	{
 		if (document.dateForm.startDate.value == '')

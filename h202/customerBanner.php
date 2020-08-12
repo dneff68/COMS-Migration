@@ -2,8 +2,8 @@
 	<img src="images/logo-us-peroxide.gif" />&nbsp;&nbsp;USP Process Control Management
 </td>
 <td class="customerBanner" style="float:right;width:100%">
-<? if ( $USERID == $CUSTOMER_EMAIL) : ?>
+<?php if ( $USERID == $CUSTOMER_EMAIL) : ?>
 	<a style="color:#FFFFFF; font-size:12px; padding-right:15px; padding-top:10px" href='/index.php?logout=yes'>logout</a>
-<? endif; ?>    
+<?php endif; ?>    
 &nbsp;
 </td>

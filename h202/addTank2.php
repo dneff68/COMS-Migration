@@ -354,7 +354,7 @@ unmonitored</span></td>
         $deviation_plus = empty($deviation_plus) ? 0 : $deviation_plus;
         $deviation_minus = empty($deviation_minus) ? 0 : $deviation_minus;
   ?>
-  <? if (empty($editMonitor)) : ?>
+  <?php if (empty($editMonitor)) : ?>
     <td rowspan="2" valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Dosage Criteria </div></td>
     <td width="42" rowspan="2">Target</td>
     <td width="168" rowspan="2"><input name="dosage" value='<?=empty($dosage) ? 0 : $dosage?>' type="text" id="dosage" size="5" maxlength="5" 
@@ -383,7 +383,7 @@ unmonitored</span></td>
   <input type="hidden" name="deviation_plus" value='<?=$deviation_plus?>' id="deviation_plus"  />
   <input type="hidden" name="deviation_minus" value='<?=$deviation_minus?>' id="deviation_minus"  />
   <input type='hidden' name="dosage_days" id='dosage_days' value="0" />
-  <? endif; ?>  
+  <?php endif; ?>  
   </tr>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Product </div></td>

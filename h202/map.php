@@ -30,7 +30,7 @@ include_once 'db_mysql.php';
 	
 	</div>
 
-<? if ($VIEWMODE == 'statusView') : ?>
+<?php if ($VIEWMODE == 'statusView') : ?>
 	<table width="676">
 	  <tr class="header_1">	
 	  <td nowrap="nowrap" width="64"><div align="left">Normal: <a href="javascript:setStatusFilter('Normal')"><img border="0" src='images/mkr_green.png' /></a></div></td>
@@ -49,7 +49,7 @@ include_once 'db_mysql.php';
 	  <td width="73"><div align="right">Low: <a href="javascript:setStatusFilter('Low')"><img src='images/mkr_orange.png' /></div></td>
 	  <td width="106"><div align="right">Critical: <a href="javascript:setStatusFilter('Critical')"><img src='images/mkr_red.png' /></div></td>
   </table>
-<? endif; ?>	
+<?php endif; ?>	
   </body>
 	<script language="javascript">
 		function showTheMap()

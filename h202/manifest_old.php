@@ -164,7 +164,7 @@ Atlanta, GA 30318<br />
     <td align="right" class="spinSmallTitle"><div align="right">Supplier: </div></td>
     <td align="right" class="spinNormalText"><div align="left"><?=$supplierName?></div></td>
   </tr>
-  <? if (!empty($carrierID)): 
+  <?php if (!empty($carrierID)): 
   
   $res = getResult("SELECT carrierName, contact as carrierContact, phone as carrierPhone FROM carrier WHERE carrierID = $carrierID");
   if (checkResult($res))
@@ -183,7 +183,7 @@ Atlanta, GA 30318<br />
     <td align="right" class="spinSmallTitle"><div align="right">Carrier Phone #: </div></td>
     <td align="right" class="spinNormalText"><div align="left"><?=$carrierPhone?></div></td>
   </tr>
-  <? endif; ?>
+  <?php endif; ?>
   <tr>
     <td class="spinMedTitle">
       <p>Deliver To: </p>

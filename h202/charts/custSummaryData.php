@@ -49,36 +49,36 @@ if (!empty($READING_DATASET))
 }
 ?>
 
-<? if (!empty($FLOW_DATASET)): ?>
+<?php if (!empty($FLOW_DATASET)): ?>
 <dataset seriesName='Flow Rate'  color='0000AA' renderAs='Line' alpha='80' plotBorderColor='cccccc' plotBorderThickness='2' parentYAxis='P'>
 <?=$FLOW_DATASET?>
 </dataset>
-<? endif ;?>
+<?php endif ;?>
 
-<? if (!empty($FLOW_TARGET)): ?>
+<?php if (!empty($FLOW_TARGET)): ?>
 <dataset seriesName='Flow Rate Target' renderAs='Line' alpha='60' color='ff0000' plotBorderThickness='2' parentYAxis='P'>
 <?=$FLOW_TARGET?>
 </dataset>
-<? endif ;?>
+<?php endif ;?>
 
-<? if (!empty($FLOW_AVERAGE)): ?>
+<?php if (!empty($FLOW_AVERAGE)): ?>
 <dataset seriesName='Flow Average' renderAs='Line' alpha='60' color='008800' plotBorderThickness='2' parentYAxis='S'>
 <?=$FLOW_AVERAGE?>
 </dataset>
-<? endif ;?>
+<?php endif ;?>
 
-<? if (!empty($PPM_DATASET)): ?>
+<?php if (!empty($PPM_DATASET)): ?>
 <dataset seriesName='PPM' renderAs='Area' alpha='60' color='FF9933' plotBorderThickness='2' parentYAxis='S'>
 <?=$PPM_DATASET?>
 </dataset>
-<? endif ;?>
+<?php endif ;?>
 
 
-<? if (!empty($PROCESS_TARGET) && $PROCESS_TARGET > 0): ?>
+<?php if (!empty($PROCESS_TARGET) && $PROCESS_TARGET > 0): ?>
 <trendLines>
       <line startValue='<?=$PROCESS_TARGET?>' color='009933' displayvalue='Process Target' valueOnRight ='1'  parentYAxis='S' toolText='Target: <?=$PROCESS_TARGET?>'/>
    </trendLines>
-<? endif; ?>
+<?php endif; ?>
 
 <styles>
 	<definition>
