@@ -39,7 +39,7 @@ if (checkResult($res))
 			$prevVal = -1;
 			$values = '';
 			$cnt = 0;
-			while($dataLine = mysql_fetch_assoc($dataRes))
+			while($dataLine = mysqli_fetch_assoc($dataRes))
 			{
 				$cnt++;
 				extract($dataLine);

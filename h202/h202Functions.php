@@ -52,7 +52,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 	$pres = getResult($query);
 	if (checkResult($pres))
 	{
-		$pline = mysql_fetch_assoc($pres);
+		$pline = mysqli_fetch_assoc($pres);
 		extract($pline);
 	}
 	
@@ -187,7 +187,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 		$siteres = getResult($query);
 		if (checkResult($siteres))
 		{
-			$siteline = mysql_fetch_assoc($siteres);
+			$siteline = mysqli_fetch_assoc($siteres);
 			extract($siteline);
 			$po = $PO_code . "$today";
 		}
@@ -358,7 +358,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 			$mres = getResult($query);
 			if (checkResult($mres))
 			{
-				$mline = mysql_fetch_assoc($mres);
+				$mline = mysqli_fetch_assoc($mres);
 				extract($mline);
 				generateStats($monitorID, "'$date'", 0);
 			}
@@ -368,7 +368,7 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 			$mres = getResult($query);
 			if (checkResult($mres))
 			{
-				$mline = mysql_fetch_assoc($mres);
+				$mline = mysqli_fetch_assoc($mres);
 				extract($mline);
 				generateStats($monitorID, "'$date'", 0);
 			}
@@ -796,7 +796,7 @@ function addTank($tankArr1, $tankArr2, $tankArr3, $mon='')
 		$activityRes = getResult("SELECT reorder as tmp_reorder FROM tank WHERE monitorID='$editMonitor' and reorder <> $reorder LIMIT 1");
 		if (checkResult($activityRes))
 		{
-			$activityLine = mysql_fetch_assoc($activityRes);
+			$activityLine = mysqli_fetch_assoc($activityRes);
 			extract($activityLine);
 			logAction("Reorder changed from $tmp_reorder" . '%' . " to $reorder" . '%' . " for $tankName");
 		}
@@ -1055,7 +1055,7 @@ function getDose($monitorID, $daysAgo, &$debug)
 	$ures = getResult("SELECT t.diameter FROM tank t WHERE t.monitorID = '$monitorID'");
 	if (checkResult($ures))
 	{
-		$uline = mysql_fetch_assoc($ures);
+		$uline = mysqli_fetch_assoc($ures);
 		extract($uline);
 	}
 	
@@ -1409,7 +1409,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 	$histRes = getResult($query);
 	if (checkResult($histRes))
 	{
-		$histLine = mysql_fetch_assoc($histRes);
+		$histLine = mysqli_fetch_assoc($histRes);
 		extract($histLine);
 		if (!empty($targetDaily))
 		{
@@ -1482,7 +1482,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 	$prevRes = getResult($query);
 	if (checkResult($prevRes))
 	{
-		$line = mysql_fetch_assoc($prevRes);
+		$line = mysqli_fetch_assoc($prevRes);
 		extract($line);
 	}
 	else
@@ -1503,7 +1503,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 			$res2 = getResult($query);
 			if (checkResult($res2))
 			{
-				$line = mysql_fetch_assoc($res2);
+				$line = mysqli_fetch_assoc($res2);
 				extract($line);
 			}
 			else
@@ -1602,7 +1602,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 				$res2 = getResult($query);
 				if (checkResult($res2))
 				{
-					$line = mysql_fetch_assoc($res2);
+					$line = mysqli_fetch_assoc($res2);
 					extract($line);
 				}
 				else
@@ -2159,7 +2159,7 @@ function getDeliverySites($deliveryID)
 	}
 	
 	$sites = '';
-	while ($line = mysql_fetch_assoc($siteres))
+	while ($line = mysqli_fetch_assoc($siteres))
 	{
 		extract($line);
 		$sites .= "$siteLocationName, ";
@@ -2231,7 +2231,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 			and d.deliveryID=$deliveryID LIMIT 1");
 	if (checkResult($contactres))
 	{
-		$contactline = mysql_fetch_assoc($contactres);
+		$contactline = mysqli_fetch_assoc($contactres);
 		extract($contactline);
 	}
 		
@@ -2254,13 +2254,13 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 	$notres = getResult("SELECT notes FROM delivery WHERE deliveryID=$deliveryID LIMIT 1");
 	if (checkResult($notres))
 	{
-		$noteline = mysql_fetch_assoc($notres);
+		$noteline = mysqli_fetch_assoc($notres);
 		extract($noteline);
 		$notes = empty($notes) ? '' : "<b>Message:</b> $notes<br>";
 	}
 	
 	$flag = 0;
-	while ($line = mysql_fetch_assoc($siteres))
+	while ($line = mysqli_fetch_assoc($siteres))
 	{
 		extract($line);
 		// email body template
@@ -2342,7 +2342,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 						$readon = '';
 						if (checkResult($eres))
 						{
-							$eline = mysql_fetch_assoc($eres);
+							$eline = mysqli_fetch_assoc($eres);
 							extract($eline);
 							$readon = " <span class='spinAlert'>(read: $readDate)</span>";
 						}
@@ -2439,7 +2439,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 					$readon = '';
 					if (checkResult($eres))
 					{
-						$eline = mysql_fetch_assoc($eres);
+						$eline = mysqli_fetch_assoc($eres);
 						extract($eline);
 						$readon = " <span class='spinAlert'>(read: $readDate)</span>";
 					}
@@ -2472,7 +2472,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 
 	$flag = 0;
 	mysql_data_seek($siteres, 0);
-	while ($line = mysql_fetch_assoc($siteres))
+	while ($line = mysqli_fetch_assoc($siteres))
 	{
 		$flag = 0;
 		extract($line);
@@ -2524,7 +2524,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 						$readon = '';
 						if (checkResult($eres))
 						{
-							$eline = mysql_fetch_assoc($eres);
+							$eline = mysqli_fetch_assoc($eres);
 							extract($eline);
 							$readon = " <span class='spinAlert'>(read: $readDate)</span>";
 						}
@@ -2552,7 +2552,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 	
 	mysql_data_seek($siteres, 0);
 	$siteEmailOut = '';
-	while ($line = mysql_fetch_assoc($siteres))
+	while ($line = mysqli_fetch_assoc($siteres))
 	{
 		$flag = 0;
 		extract($line);
@@ -2607,7 +2607,7 @@ function sendDeliveryEmails($deliveryID, $displayOnly=0)
 				  $readon = '';
 				  if (checkResult($eres))
 				  {
-				  	$eline = mysql_fetch_assoc($eres);
+				  	$eline = mysqli_fetch_assoc($eres);
 					extract($eline);
 				  	$readon = " <span class='spinAlert'>(read: $readDate)</span>";
 				  }

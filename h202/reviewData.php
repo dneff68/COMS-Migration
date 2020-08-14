@@ -22,12 +22,12 @@ $monitorRes = getResult("SELECT DISTINCT monitorID FROM data order by monitorID"
 
 $output = '';
 $cnt = 0;
-while ($monitorLine = mysql_fetch_assoc($monitorRes))
+while ($monitorLine = mysqli_fetch_assoc($monitorRes))
 {
   extract($monitorLine);
 
   $statRes = getResult("SELECT * from tankStats WHERE monitorID='$monitorID' ORDER BY readingDate DESC LIMIT 1");
-  $statLine = mysql_fetch_assoc($statRes);
+  $statLine = mysqli_fetch_assoc($statRes);
   extract($statLine);
 
   $nodose = $nodose == 1 ? 'Yes' : 'No';
@@ -75,7 +75,7 @@ $output .= "
    $readRes = getResult("SELECT date, value from data where monitorID = '$monitorID' order by date desc LIMIT 2");
    if (checkResult($readRes))
    {
-	   while ($readLine = mysql_fetch_assoc($readRes))
+	   while ($readLine = mysqli_fetch_assoc($readRes))
 	   {
 			extract($readLine);
 			$output .= "

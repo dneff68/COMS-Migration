@@ -15,7 +15,7 @@ $targetRes = getResult($query);
 if (checkResult($targetRes))
 {
 	// get target values
-	$targetLine = mysql_fetch_assoc($targetRes);
+	$targetLine = mysqli_fetch_assoc($targetRes);
 	extract($targetLine);
 	$targetsArray = unserialize($hourlyTargets);
 	showArray($targetsArray);
@@ -95,7 +95,7 @@ die("-- $x");
 //updateTankStats($monitorID
 $query = "SELECT distinct monitorID FROM data ORDER BY monitorID";
 $mres = getResult($query);
-while ($mline = mysql_fetch_assoc($mres))
+while ($mline = mysqli_fetch_assoc($mres))
 {
 	extract($mline);
 	updateTankStats($monitorID);
@@ -189,7 +189,7 @@ having cnt = 2";
 
 $query = "SELECT distinct monitorID FROM data ORDER BY monitorID";
 $mres = getResult($query);
-while ($mline = mysql_fetch_assoc($mres))
+while ($mline = mysqli_fetch_assoc($mres))
 {
 	extract($mline);
 	echo("MontiorID: $monitorID<br>"); 

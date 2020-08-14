@@ -104,7 +104,7 @@ function setDeliveryTime()
 		$cpgRes = getResult("SELECT costPerGallon FROM costHistory WHERE monitorID='$editMonitor' AND costPerGallon > 0 ORDER BY date DESC LIMIT 1");
 		if (checkResult($cpgRes))
 		{
-			$cpgLine = mysql_fetch_assoc($cpgRes);
+			$cpgLine = mysqli_fetch_assoc($cpgRes);
 			extract($cpgLine);
 			$costPerGallon = (string)$costPerGallon;
 		}

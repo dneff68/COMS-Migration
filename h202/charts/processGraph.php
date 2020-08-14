@@ -55,7 +55,7 @@ if ($_POST)
 		if (checkResult($targetRes))
 		{
 			// get target values
-			$targetLine = mysql_fetch_assoc($targetRes);
+			$targetLine = mysqli_fetch_assoc($targetRes);
 			extract($targetLine);
 			$PROCESS_TARGET_ARRAY = unserialize($hourlyTargets);
 		}
@@ -106,7 +106,7 @@ if (!empty($PROCESS_START_DATE))
 	// set the value of $i to go back more than $DAYS_PLOTTED days
 	$daysRes = getResult("SELECT DATEDIFF(  NOW(), '$PROCESS_START_DATE' ) as daysAgo, DATEDIFF(  '$PROCESS_END_DATE', '$PROCESS_START_DATE' ) as daysPlotted");
 
-	$daysLine = mysql_fetch_assoc($daysRes);
+	$daysLine = mysqli_fetch_assoc($daysRes);
 	extract($daysLine);
 
 	if ($PROCESS_END_DATE == $PROCESS_START_DATE) // this is actually 1 day, there just insn't a range 
@@ -467,7 +467,7 @@ if (empty($PROCESS_START_DATE) || $invalidDate == 1)
 {
 	$usingDefaultStart = TRUE;
 	$daysRes = getResult("SELECT cast( NOW() AS date) as endDate, DATE_ADD( cast( NOW() AS date ) , INTERVAL -" . $DAYS_PLOTTED . " DAY ) as startDate");
-	$daysLine = mysql_fetch_assoc($daysRes);
+	$daysLine = mysqli_fetch_assoc($daysRes);
 	extract($daysLine);
 	//$PROCESS_START_DATE = $startDate;
 	$daysAgo = $DAYS_PLOTTED;
@@ -516,7 +516,7 @@ error_log($query);
 $pres = getResult($query);
 if (checkResult($pres))
 {
-	$pline = mysql_fetch_assoc($pres);
+	$pline = mysqli_fetch_assoc($pres);
 	extract($pline);
 	$PROCESS_TARGET = $processTarget;
 }
@@ -528,7 +528,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 	if (checkResult($targetRes))
 	{
 		// get target values
-		$targetLine = mysql_fetch_assoc($targetRes);
+		$targetLine = mysqli_fetch_assoc($targetRes);
 		extract($targetLine);
 		$PROCESS_TARGET_ARRAY = unserialize($hourlyTargets);
 	}
@@ -571,7 +571,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 		
 				if (checkResult($avgResult))
 				{
-					$avgLine = mysql_fetch_assoc($avgResult);
+					$avgLine = mysqli_fetch_assoc($avgResult);
 					extract($avgLine);
 				}
 			}

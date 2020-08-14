@@ -38,7 +38,7 @@ function roundToNextQuarterHour($datetime)
 		if ($hour == '23')
 		{
 			$result = getResult("select date_add('$date', interval 1 day) as date");
-			$line = mysql_fetch_assoc($result);
+			$line = mysqli_fetch_assoc($result);
 			extract($line);
 			$hour = '00';
 		}

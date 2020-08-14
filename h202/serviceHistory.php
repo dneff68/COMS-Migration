@@ -75,7 +75,7 @@ function processWorkOrder($workKey)
 $wkRes = getResult("SELECT html, workKey FROM serviceHistory WHERE workOrderNumber=''");
 if (checkResult($wkRes))
 {
-	while ($wkLine = mysql_fetch_assoc($wkRes))
+	while ($wkLine = mysqli_fetch_assoc($wkRes))
 	{
 		extract($wkLine);
 		processWorkOrder($workKey);

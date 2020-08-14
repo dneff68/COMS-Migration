@@ -139,7 +139,7 @@ if (checkResult($res))
 	$unitRes = getResult("Select t.diameter from tank t where t.monitorID='$monitorID' LIMIT 1");
 	if (checkResult($unitRes))
 	{
-		$unitLine = mysql_fetch_assoc($unitRes);
+		$unitLine = mysqli_fetch_assoc($unitRes);
 		extract($unitLine);
 	}
 	

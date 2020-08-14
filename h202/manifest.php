@@ -122,7 +122,7 @@ include_once 'h202Functions.php';
 		{
 			if (checkResult($siteres))
 			{
-				$line = mysql_fetch_assoc($siteres);
+				$line = mysqli_fetch_assoc($siteres);
 				$poRow1 = 'PO:';
 				$poRow2 = $line['PO'];
 			}
@@ -238,7 +238,7 @@ Atlanta, GA 30339<br />
 			{
 				$query = "SELECT PO from deliverySite WHERE siteID=$siteID AND deliveryID=$id ORDER BY PO LIMIT 1";
 				$pores = getResult($query);
-				$poline = mysql_fetch_assoc($pores);
+				$poline = mysqli_fetch_assoc($pores);
 				extract($poline);
 				$po_out = "&nbsp;(PO: $PO)";
 				$cnt_out = "$cnt: ";
@@ -293,7 +293,7 @@ if (checkResult($siteres))
 	// need to loop through each row and see if we have only Pounds as a delivery unit, a mix of Pounds and other units, or only others
 	$anyPounds = false;
 	$anyNonPounds = false;
-	while ($line = mysql_fetch_assoc($siteres))
+	while ($line = mysqli_fetch_assoc($siteres))
 	{
 		$query = "select deliveryUnits from tank where tankID = '" . $line['monitorID'] . "' AND deliveryUnits = 'Pounds'";
 		$tres = getResult($query);
@@ -309,14 +309,14 @@ if (checkResult($siteres))
 	//bigecho($poundsOnly ? "Pounds Only" : "Not Pounds Only");
 	
   	mysql_data_seek($siteres, 0);
-	while ($line = mysql_fetch_assoc($siteres))
+	while ($line = mysqli_fetch_assoc($siteres))
 	{
 		extract($line);
 		// get the weight based on the quantity, product, and concentration
 		$wRes = getResult("SELECT r.ratio FROM productWeightRatios r, product p WHERE p.prodID=r.prodID and p.value='$product' and '$concentration' LIKE CONCAT('%', r.concentration, '%')");
 		if (checkResult($wRes))
 		{
-			$wLine = mysql_fetch_assoc($wRes);
+			$wLine = mysqli_fetch_assoc($wRes);
 			extract($wLine);
 		}
 		else
@@ -330,7 +330,7 @@ if (checkResult($siteres))
 		$tres = getResult($query);
 		if (checkResult($tres))
 		{
-			$tline = mysql_fetch_assoc($tres);
+			$tline = mysqli_fetch_assoc($tres);
 			extract($tline);
 		}
 		else

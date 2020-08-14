@@ -111,7 +111,7 @@ if (checkResult($res))
 		{
 			//echoResults($po_res);
 			$pos = '';
-			while ($pline = mysql_fetch_assoc($po_res))
+			while ($pline = mysqli_fetch_assoc($po_res))
 			{
 				extract($pline);
 				

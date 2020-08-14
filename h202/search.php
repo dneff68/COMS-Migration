@@ -150,7 +150,7 @@ echo "<BR>";
 				
 				// get the value based on the date of the reading.  In some cases it's an older reading date
 				$xres = getResult("select value from data where date = '$date' and monitorID = '$monitorID'");
-				$xline = mysql_fetch_assoc($xres);
+				$xline = mysqli_fetch_assoc($xres);
 				extract($xline);
 			
 				// get region
@@ -158,7 +158,7 @@ echo "<BR>";
 				$region = '&nbsp;';
 				if (checkResult($regRes))
 				{
-					$regLine = mysql_fetch_assoc($regRes);
+					$regLine = mysqli_fetch_assoc($regRes);
 					extract($regLine);
 				}
 				
@@ -184,7 +184,7 @@ echo "<BR>";
 				$delRes = getResult($query);
 				if (checkResult($delRes))
 				{
-					$delLine = mysql_fetch_assoc($delRes);
+					$delLine = mysqli_fetch_assoc($delRes);
 					extract($delLine);
 				}
 			
@@ -207,7 +207,7 @@ echo "<BR>";
 				if (checkResult($delRes))
 				{
 					$i = 1;
-					while($delLine = mysql_fetch_assoc($delRes))
+					while($delLine = mysqli_fetch_assoc($delRes))
 					{
 						extract($delLine);
 						eval('$date' . "$i" . '=$deliveryDate;');

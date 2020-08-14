@@ -3,7 +3,7 @@ session_start();
 $result= getResult("SHOW COLUMNS FROM monitor LIKE 'status'");
 if( checkResult( $result ) )
 {
-	$line = mysql_fetch_assoc($result);
+	$line = mysqli_fetch_assoc($result);
 	extract($line);
 	$Type = str_replace('enum(', '', $Type);
 	$Type = str_replace(')', '', $Type);
@@ -206,7 +206,7 @@ function monitorCheck(val)
 			$cpgRes = getResult("SELECT costPerGallon FROM costHistory WHERE monitorID='$editMonitor' ORDER BY date DESC LIMIT 1");
 			if (checkResult($cpgRes))
 			{
-				$cpgLine = mysql_fetch_assoc($cpgRes);
+				$cpgLine = mysqli_fetch_assoc($cpgRes);
 				extract($cpgLine);
 				$costPerGallon = (string)$costPerGallon;
 			}

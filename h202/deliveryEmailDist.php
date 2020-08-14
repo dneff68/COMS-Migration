@@ -120,7 +120,7 @@ else
 						}
 						else
 						{
-							$iline = mysql_fetch_assoc($ires);
+							$iline = mysqli_fetch_assoc($ires);
 							extract($iline);
 						}
 						$ires = getResult("SELECT id FROM internalEmailDistSites WHERE id=$id AND siteID=$siteID");
@@ -199,7 +199,7 @@ else
 						$res2 = getResult("Select deliveryEmailDist from site where siteID=$siteID");
 						if (checkResult($res2))
 						{
-							$line2 = mysql_fetch_assoc($res2);
+							$line2 = mysqli_fetch_assoc($res2);
 							extract($line2);
 							$emails2 = explode("\n", $deliveryEmailDist);
 							foreach($emails2 as $email2)
@@ -292,7 +292,7 @@ else
 										$sRes = getResult("SELECT siteLocationName FROM site WHERE siteID=$siteID LIMIT 1");
 										if (checkResult($sRes))
 										{
-											$sLine = mysql_fetch_assoc($sRes);
+											$sLine = mysqli_fetch_assoc($sRes);
 											extract($sLine);
 										}
 										$sitesLogged .= "$siteID:";
@@ -316,7 +316,7 @@ else
 				$supRes = getResult($query);
 				if (checkResult($supRes))
 				{
-					while ($supLine = mysql_fetch_assoc($supRes))
+					while ($supLine = mysqli_fetch_assoc($supRes))
 					{
 						extract($supLine);
 						executeQuery("INSERT INTO deliveryEmailSupplierSelected (deliveryID, emailID, selected) 
@@ -428,7 +428,7 @@ foreach($_SESSION['DELIVERY_TANKS'] as $monitorID)
 		$siteres = getResult($query);
 		if (checkResult($siteres))
 		{
-			$sline = mysql_fetch_assoc($siteres);
+			$sline = mysqli_fetch_assoc($siteres);
 			extract($sline);	
 			if ($siteID != $tmpSiteID)
 			{	
@@ -542,7 +542,7 @@ echo $siteHTML;
 	$carrierEmailRes = getResult("SELECT carrierName, deliveryEmailDist as carrierEmailDist FROM carrier WHERE carrierID= " . $DELIVERY_DATA['deliveryCarrierID']);
 	if (checkResult($carrierEmailRes))
 	{
-		$cline = mysql_fetch_assoc($carrierEmailRes);
+		$cline = mysqli_fetch_assoc($carrierEmailRes);
 		extract($cline);
 	}
 
@@ -552,7 +552,7 @@ echo $siteHTML;
 		$carrierEmailRes = getResult("SELECT carrierEmailDist FROM delivery WHERE deliveryID= $deliveryID");
 		if (checkResult($carrierEmailRes))
 		{
-			$cline = mysql_fetch_assoc($carrierEmailRes);
+			$cline = mysqli_fetch_assoc($carrierEmailRes);
 			extract($cline);
 		}
 	}

@@ -55,7 +55,7 @@
 			$tres = getResult($query);
 			if (checkResult($tres))
 			{
-				while ($line = mysql_fetch_assoc($tres))
+				while ($line = mysqli_fetch_assoc($tres))
 				{
 					extract($line);					
 
@@ -123,7 +123,7 @@
 						$readRes = getResult("select value as lastRead, date as lastReadDate from data where monitorID='$monitorID' ORDER BY date DESC LIMIT 1");
 						if (checkResult($readRes))
 						{
-							$readLine = mysql_fetch_assoc($readRes);
+							$readLine = mysqli_fetch_assoc($readRes);
 							extract($readLine);
 							$lastRead = "Last Read: $lastRead $units<br>"; 
 						}

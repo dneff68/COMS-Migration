@@ -324,7 +324,7 @@ else
 				$noteres = getResult($query);
 				if (checkResult($noteres))
 				{
-					$noteline = mysql_fetch_assoc($noteres);
+					$noteline = mysqli_fetch_assoc($noteres);
 					extract($noteline);
 					$notesOut = strlen($note) > 50 ? substr($note, 0, 50) . '...' : $note;
 					$notesOut = "$noteDate<br>&nbsp;&nbsp;$notesOut&nbsp;(<span class='spinAlert'>$user</span>)";
@@ -343,7 +343,7 @@ else
 				$histRes = getResult($query);
 				if (checkResult($histRes))
 				{
-					$histLine = mysql_fetch_assoc($histRes);
+					$histLine = mysqli_fetch_assoc($histRes);
 					extract($histLine);
 					if (!empty($targetDaily))
 					{

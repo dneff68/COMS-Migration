@@ -96,7 +96,7 @@ include_once 'db_mysql.php';
 					$tres = getResult($query);
 					if (checkResult($tres))
 					{
-						$line = mysql_fetch_assoc($tres);
+						$line = mysqli_fetch_assoc($tres);
 						extract($line);					
 
 						// Filter out based on status

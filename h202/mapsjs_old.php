@@ -93,7 +93,7 @@ function drawSiteTanks($siteID)
 	if (!checkResult($tanksRes)) return;
 
 	$i = 1;
-	while ($tankLine = mysql_fetch_assoc($tanksRes))
+	while ($tankLine = mysqli_fetch_assoc($tanksRes))
 	{
 		$tankLatLng = '';
 		extract($tankLine); // gives us tankID
@@ -155,7 +155,7 @@ function drawTank($tankID, $LatLng, $i)
 		$tankInfoResult = getResult($query);
 		if (checkResult($tankInfoResult))
 		{
-			$line = mysql_fetch_assoc($tankInfoResult);
+			$line = mysqli_fetch_assoc($tankInfoResult);
 			extract($line);
 			$capacity = number_format($capacity);
 			$usableVolume = number_format($usableVolume);
@@ -172,7 +172,7 @@ function drawTank($tankID, $LatLng, $i)
 		$levelRes = getResult($query);
 		if (checkResult($levelRes))
 		{
-			$levelLine = mysql_fetch_assoc($levelRes);
+			$levelLine = mysqli_fetch_assoc($levelRes);
 			extract($levelLine);
 			$tankLevel = number_format($tankLevel);
 			$levelOut = "$tankLevel<p style='font-size:smaller'>($readingDate)</p>";
@@ -182,7 +182,7 @@ function drawTank($tankID, $LatLng, $i)
 		$doseRes = getResult($query);
 		if (checkResult($doseRes))
 		{
-			$doseLine = mysql_fetch_assoc($doseRes);
+			$doseLine = mysqli_fetch_assoc($doseRes);
 			extract($doseLine);
 			$normalizedDose = number_format($normalizedDose);
 		}
@@ -295,7 +295,7 @@ function drawTrunkline($tankID)
 
 	echo ("\nvar trunkLineCoordinates = [];");
 	$pathValues = '';
-	while ( $trunkLineValues = mysql_fetch_assoc($tankInfoResult) )
+	while ( $trunkLineValues = mysqli_fetch_assoc($tankInfoResult) )
 	{
 		extract($trunkLineValues);
 		if ($LatLng != '') 
@@ -347,7 +347,7 @@ function drawTrunkline($tankID)
 		$lastNoteRes = getResult($query);
 		if (checkResult($lastNoteRes))
 		{
-			$lastNoteLine = mysql_fetch_assoc($lastNoteRes);
+			$lastNoteLine = mysqli_fetch_assoc($lastNoteRes);
 			extract($lastNoteLine);
 			if (!empty($lastNote))
 			{

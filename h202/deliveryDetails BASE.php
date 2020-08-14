@@ -428,7 +428,7 @@ if (!empty($tankAction))
 		{
 			array_push($_SESSION['DELIVERY_TANKS'], $tankid);
 			
-			$_SESSION['STATUS_FILTER'] = '';
+			$STATUS_FILTER = '';
 			$reloadParent = "window.parent.location='/index.php?deliveryID=$modifyDeliveryID&status=all';\n";
 		}
 	}	
@@ -911,8 +911,7 @@ if (!empty($zip))
 	}
 }
 
-$more = "";
-if (count($_SESSION['ZIPCOLLECTION']))
+if (empty($_SESSION['ZIPCOLLECTION']))
 {
 	$more = " and (";
 	foreach ($_SESSION['ZIPCOLLECTION'] as $key => $storedzip)
@@ -929,15 +928,13 @@ if (count($_SESSION['ZIPCOLLECTION']))
 //	session_register('marr');
 	$marr = array();
 //}
-//bigEcho("marr is type: " . gettype($marr));	
+bigEcho("marr is type: " . gettype($marr));	
 
 
 $regfilt = '';
-//if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
-
-if ($_SESSION['REGION_FILTER'] != '' && $_SESSION['REGION_FILTER'] != 'all')
+if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
 {	
-	$regfilt = "and s.regionID=" . $_SESSION['REGION_FILTER'];
+	$regfilt = "and s.regionID=$REGION_FILTER";
 	if (true)
 	{
 		$regfilt = getRegionFilter();
@@ -967,9 +964,6 @@ $query = "select s.siteID, s.siteLocationName as 'Location', s.city as City,
 
 $res = getResult($query);
 
-bigEcho($more . ":" . $regfilt);
-bigEcho($query);	
-
 if (checkResult($res))
 {
 	$rowcnt = 0;
@@ -977,7 +971,6 @@ if (checkResult($res))
 	$rows = '';
 	$deliveryTankRows = '';
 	$notesOut = '';
-
 	while ($line = $res->fetch_assoc())
 	{
 		extract($line);
@@ -1036,14 +1029,13 @@ if (checkResult($res))
 		$status = checkTankLevel($monitorID);
 		list($statkey, $status) = explode(',', $status);
 
-
 		// If this is a reorder filter and a leadtime override value
 		// has been selected, override whatever checkTankLevel() returned
 		// since it gets it's value from the stats table.
-		if ($_SESSION['STATUS_FILTER'] =='Reorder' && $_SESSION['LEADTIME_OVERRIDE'] != 'default')
+		if ($STATUS_FILTER=='Reorder' && $LEADTIME_OVERRIDE != 'default')
 		{
 			$reorderData = reorderInfo($monitorID);
-			if ($reorderData['daysToDelivery'] <= $_SESSION['LEADTIME_OVERRIDE'])
+			if ($reorderData['daysToDelivery'] <= $LEADTIME_OVERRIDE)
 			{
 			//bigecho($monitorID . ':' . $reorderData['daysToDelivery']);
 				$status = 'Reorder';
@@ -1062,8 +1054,8 @@ if (checkResult($res))
 		$deliveryAverage = getDeliveryAvg($monitorID);
 
 		$inSelection = array_search($monitorID, $_SESSION['DELIVERY_TANKS']) !== false;
-
-		if ( empty($_SESSION['STATUS_FILTER']) || $statkey == $_SESSION['STATUS_FILTER'] || $_SESSION['STATUS_FILTER'] == 'all' || $inSelection)
+		
+		if ( empty($STATUS_FILTER) || $statkey == $STATUS_FILTER || $STATUS_FILTER == 'all' || $inSelection)
 		{
 			$mkey = str_replace('-', '_', $monitorID);
 			$href = "javascript:parent.doAction('showMap');parent.frames['mapFrame'].marker" . $mkey . ".openInfoWindowHtml(parent.frames['mapFrame'].marker" . $mkey . ".html)";
@@ -1127,7 +1119,7 @@ if (checkResult($res))
 //	{
 //		bigecho($query);
 //	}
-
+			
 			if (checkResult($res2))
 			{
 				while ($line2 = mysqli_fetch_assoc($res2))
@@ -1172,55 +1164,56 @@ if (checkResult($res))
 						$modCancel = "<a target='_parent' href='tanks.php?tankAction=deliveryView&deliveryID=$deliveryID'>modify/cancel</a>";
 					}
 					
-				if ($_SESSION['USERTYPE'] == 'super' || $_SESSION['USERTYPE'] == 'service')
-				{
-									if ($actual_quantity > 0)
-									{
-										$quantityOut = "Qty: <strong>$prevQuantity gal</strong>&nbsp;&nbsp; - &nbsp;&nbsp;<a href=\"javascript:showActualDeliveryEdit('del_" . $deliveryID . "__" . $monitorID . "')\">Actual: <strong>$actual_quantity</strong></a>";
-									}
-									else
-									{
-										$quantityOut = "Qty: <strong>$prevQuantity gal</strong>&nbsp;&nbsp; - &nbsp;&nbsp;<a href=\"javascript:showActualDeliveryEdit('del_" . $deliveryID . "__" . $monitorID . "')\">set actual delivered</a></strong>";
-									}
-									
-									$prevDeliveryHTML .= "\n
-									$tableHTML
-										<tr style='border-bottom:thin'>
-											<td width='118' nowrap>PO: <strong>$PO</strong></td>
-											<td width='135' nowrap align='right'>$prevDeliveryDate</td>
-										  </tr>
-										  <tr>
-											<td id='del_" . $deliveryID . "__" . $monitorID . "' nowrap>$quantityOut</td>
-											<td align='right' width='135' nowrap>Time: $prevTime</td>
-										  </tr>
-										  <tr><td><a $style href=\"javascript:surfDialog('/emailSummary.php?id=$deliveryID',800,515,window,false)\">Email: $pctRead%</a>
-										  </td><td align='left'>$modCancel</td></tr>
-										</table> <hr>";
-									$style = "";
+if ($_SESSION['USERTYPE'] == 'super' || $_SESSION['USERTYPE'] == 'service')
+{
+					if ($actual_quantity > 0)
+					{
+						$quantityOut = "Qty: <strong>$prevQuantity gal</strong>&nbsp;&nbsp; - &nbsp;&nbsp;<a href=\"javascript:showActualDeliveryEdit('del_" . $deliveryID . "__" . $monitorID . "')\">Actual: <strong>$actual_quantity</strong></a>";
+					}
+					else
+					{
+						$quantityOut = "Qty: <strong>$prevQuantity gal</strong>&nbsp;&nbsp; - &nbsp;&nbsp;<a href=\"javascript:showActualDeliveryEdit('del_" . $deliveryID . "__" . $monitorID . "')\">set actual delivered</a></strong>";
+					}
+					
+					$prevDeliveryHTML .= "\n
+					$tableHTML
+						<tr style='border-bottom:thin'>
+							<td width='118' nowrap>PO: <strong>$PO</strong></td>
+							<td width='135' nowrap align='right'>$prevDeliveryDate</td>
+						  </tr>
+						  <tr>
+							<td id='del_" . $deliveryID . "__" . $monitorID . "' nowrap>$quantityOut</td>
+							<td align='right' width='135' nowrap>Time: $prevTime</td>
+						  </tr>
+						  <tr><td><a $style href=\"javascript:surfDialog('/emailSummary.php?id=$deliveryID',800,515,window,false)\">Email: $pctRead%</a>
+						  </td><td align='left'>$modCancel</td></tr>
+						</table> <hr>";
+					$style = "";
 
-				}
-				else
-				{
-									$prevDeliveryHTML .= "\n
-									$tableHTML
-										<tr style='border-bottom:thin'>
-											<td width='118' nowrap>PO: <strong>$PO</strong></td>
-											<td width='135' nowrap align='right'>$prevDeliveryDate</td>
-										  </tr>
-										  <tr>
-											<td width='118'>Quantity: <strong>$prevQuantity gal</strong></td>
-											<td align='right' width='135' nowrap>Time: $prevTime</td>
-										  </tr>
-										  <tr><td><a href=\"javascript:surfDialog('/emailSummary.php?id=$deliveryID',800,515,window,false)\">Email: $pctRead%</a>
-										  </td><td align='left'>$modCancel</td></tr>
-										</table> <hr>";
-				}
+}
+else
+{
+					$prevDeliveryHTML .= "\n
+					$tableHTML
+						<tr style='border-bottom:thin'>
+							<td width='118' nowrap>PO: <strong>$PO</strong></td>
+							<td width='135' nowrap align='right'>$prevDeliveryDate</td>
+						  </tr>
+						  <tr>
+							<td width='118'>Quantity: <strong>$prevQuantity gal</strong></td>
+							<td align='right' width='135' nowrap>Time: $prevTime</td>
+						  </tr>
+						  <tr><td><a href=\"javascript:surfDialog('/emailSummary.php?id=$deliveryID',800,515,window,false)\">Email: $pctRead%</a>
+						  </td><td align='left'>$modCancel</td></tr>
+						</table> <hr>";
+}
 
 				}
 				$prevDeliveryHTML = substr($prevDeliveryHTML, 0, strlen($prevDeliveryHTML) - 5);
 			}
 
 			$checked = '';
+				
 			$key = array_search($monitorID, $_SESSION['DELIVERY_TANKS']);
 			if ( $key !== false)
 			{
@@ -1551,7 +1544,6 @@ if (checkResult($res))
 					$tankNameOut = $tankNameOut . "<br><a style='font-size:smaller;color:#336666' target='_blank' href='index.php?customerEmail=$customerEmail'>(customer summary)</a>";
 				}
 			}
-
 			$marr[$mkey] = "<tr class=\"spinTableBarOdd\">
 				<td valign='top'><a name='a_$tankName' />$checkboxhtml</td>
 				<td valign='top'>$tankNameOut<br><br>$tankName<br>$product: $concentration
@@ -1577,13 +1569,13 @@ if (checkResult($res))
 
 bigEcho("marr size: " . sizeof($marr));
 $rowcnt = sizeof($marr);
-if (count($_SESSION['ZIPCOLLECTION']) > 0) // && $_SESSION['STATUS_FILTER'] != 'unass')
+if (count($_SESSION['ZIPCOLLECTION']) > 0) // && $STATUS_FILTER != 'unass')
 {
 	$title = "<td colspan=\"3\"><div align=\"right\"><a href='deliveryDetails.php?clearlist=yes'>reset list</a></div></td>";
 }
 else
 {
-	$t2 = '&nbsp;'; //$_SESSION['STATUS_FILTER'] == 'unass' ? '&nbsp;' : 'All Tanks';
+	$t2 = '&nbsp;'; //$STATUS_FILTER == 'unass' ? '&nbsp;' : 'All Tanks';
 	$title = "<td colspan=\"3\"><div align=\"right\">$t2</div></td>";
 }
 
@@ -1777,7 +1769,7 @@ else
   
 <?php
 //=$rows
-bigEcho(sizeof($marr));
+
 foreach ($marr as $row)
 {
 	echo($row);

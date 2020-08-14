@@ -30,7 +30,7 @@
 			$tres = getResult($query);
 			if (checkResult($tres))
 			{
-				while ($line = mysql_fetch_assoc($tres))
+				while ($line = mysqli_fetch_assoc($tres))
 				{
 					extract($line);					
 

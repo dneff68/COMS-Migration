@@ -60,7 +60,7 @@ function addSiteToArray($siteID, &$arr)
 				$cRes = getResult($query);
 				if (checkResult($cRes))
 				{
-					$cline = mysql_fetch_assoc($cRes);
+					$cline = mysqli_fetch_assoc($cRes);
 					extract($cline);
 				}
 			}
@@ -70,7 +70,7 @@ function addSiteToArray($siteID, &$arr)
 		$cRes = getResult($query);
 		if (checkResult($cRes))
 		{
-			$cline = mysql_fetch_assoc($cRes);
+			$cline = mysqli_fetch_assoc($cRes);
 			extract($cline);
 		}
 		$arr[$monitorID] = "$tankName~$carrierName~$supplierName~$usableVolume~$carrierLatLng~$monitorLatLng";

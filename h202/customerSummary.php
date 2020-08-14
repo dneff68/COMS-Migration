@@ -101,7 +101,7 @@ function showBudgetHistory(selobj)
 $catRes = getResult("select catID, name from planning_categories order by name");
 if (checkResult($catRes))
 {
-	while ($catLine = mysql_fetch_assoc($catRes))
+	while ($catLine = mysqli_fetch_assoc($catRes))
 	{
 		extract($catLine);
 		$itemRes = getResult("SELECT pi.itemID, pi.custView, pi.title, pi.pctComplete, pi.responsible, pi.item_timing, pi.impact FROM planning_items pi where pi.customerID='$customerID' and pi.custView=1 and pi.catID=$catID and pi.pctComplete < 100 order by itemID");
@@ -128,13 +128,13 @@ if (checkResult($catRes))
 
 		if (checkResult($itemRes))
 		{
-			while( $itemLine = mysql_fetch_assoc($itemRes) )
+			while( $itemLine = mysqli_fetch_assoc($itemRes) )
 			{
 				extract($itemLine);
 				$statusRes = getResult("SELECT DATE_FORMAT(date, '%m/%d/%Y %I:%i %p') as statusDate, author, status FROM planning_status WHERE itemID=$itemID order by date DESC LIMIT 1");
 				if (checkResult($statusRes))
 				{
-					$statusLine = mysql_fetch_assoc($statusRes);
+					$statusLine = mysqli_fetch_assoc($statusRes);
 					extract($statusLine);
 					$status = "<p class=\"smallerText\">$status</p><div class=\"author-date\">$author: $statusDate</div>";
 				}

@@ -75,7 +75,7 @@ $query = "SELECT targetDose as targetDosage, targetDaily FROM tankHistory WHERE 
 $histRes = getResult($query);
 if (checkResult($histRes))
 {
-	$histLine = mysql_fetch_assoc($histRes);
+	$histLine = mysqli_fetch_assoc($histRes);
 	extract($histLine);
 	if (!empty($targetDaily))
 	{
@@ -122,7 +122,7 @@ $units = 'Gallons';
 $ures = getResult("SELECT t.diameter FROM monitor m, tank t WHERE t.monitorID=m.monitorID and m.monitorID = '$monitorID' LIMIT 1");
 if (checkResult($ures))
 {
-	$uline = mysql_fetch_assoc($ures);
+	$uline = mysqli_fetch_assoc($ures);
 	extract($uline);
 }
 
@@ -133,7 +133,7 @@ if (!empty($startDate))
 	$usingDefaultStart = FALSE;
 	// set the value of $i to go back more than $DAYS_PLOTTED days
 	$daysRes = getResult("SELECT DATEDIFF(  NOW(), '$startDate' ) as daysAgo, DATEDIFF(  '$endDate', '$startDate' ) as daysPlotted");
-	$daysLine = mysql_fetch_assoc($daysRes);
+	$daysLine = mysqli_fetch_assoc($daysRes);
 	extract($daysLine);
 
 	if ($daysPlotted <= 0)
@@ -154,7 +154,7 @@ if (empty($startDate) || $invalidDate == 1)
 {
 	$usingDefaultStart = TRUE;
 	$daysRes = getResult("SELECT cast( NOW() AS date) as endDate, DATE_ADD( cast( NOW() AS date ) , INTERVAL -" . $DAYS_PLOTTED . " DAY ) as startDate");
-	$daysLine = mysql_fetch_assoc($daysRes);
+	$daysLine = mysqli_fetch_assoc($daysRes);
 	extract($daysLine);
 	$daysAgo = $DAYS_PLOTTED;
 	$stopDay = 0;
@@ -186,7 +186,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 	$histRes = getResult("SELECT targetDose as targetDosage, targetDaily FROM tankHistory WHERE monitorID='$monitorID' ORDER BY date LIMIT 1");
 	if (checkResult($histRes))
 	{
-		$histLine = mysql_fetch_assoc($histRes);
+		$histLine = mysqli_fetch_assoc($histRes);
 		extract($histLine);
 		if (!empty($targetDaily))
 		{
@@ -208,7 +208,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 		$histRes = getResult($query);
 		if (checkResult($histRes))
 		{
-			$histLine = mysql_fetch_assoc($histRes);
+			$histLine = mysqli_fetch_assoc($histRes);
 			extract($histLine);
 			if (!empty($targetDaily))
 			{
@@ -229,7 +229,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 			$prevAvgRes = getResult("SELECT avgDose as doseOut FROM tankStats WHERE monitorID='$monitorID' ORDER BY readingDate DESC");
 			if (checkResult($prevAvgRes))
 			{
-				$prevAvgLine = mysql_fetch_assoc($prevAvgRes);
+				$prevAvgLine = mysqli_fetch_assoc($prevAvgRes);
 				extract($prevAvgLine);
 			}
 		}
@@ -241,7 +241,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 									monitorID='$monitorID' ORDER BY date DESC LIMIT 1");
 		if (checkResult($histRes))
 		{
-			$histLine = mysql_fetch_assoc($histRes);
+			$histLine = mysqli_fetch_assoc($histRes);
 			extract($histLine);
 			if (!empty($targetDaily))
 			{

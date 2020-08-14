@@ -133,7 +133,7 @@ while ($line = $res->fetch_assoc())
 		$ures = getResult("SELECT m.units, t.diameter FROM monitor m, tank t WHERE t.monitorID=m.monitorID and m.monitorID = '$monitorID' LIMIT 1");
 		if (checkResult($ures))
 		{
-			$uline = mysql_fetch_assoc($ures);
+			$uline = mysqli_fetch_assoc($ures);
 			extract($uline);
 		}
 		
@@ -141,7 +141,7 @@ while ($line = $res->fetch_assoc())
 		{
 			// set the value of $i to go back more than 11 days
 			$daysRes = getResult("SELECT DATEDIFF(  NOW(), '$startDate' ) as daysAgo");
-			$daysLine = mysql_fetch_assoc($daysRes);
+			$daysLine = mysqli_fetch_assoc($daysRes);
 			extract($daysLine);
 			$stopDay = max(0, $daysAgo - 11);
 		}
@@ -161,7 +161,7 @@ while ($line = $res->fetch_assoc())
 							 cast(readingDate as date) = DATE_ADD( cast( NOW() AS date ) , INTERVAL -$i DAY )");
 			if (checkResult($resAvgDose))
 			{
-				$line = mysql_fetch_assoc($resAvgDose);
+				$line = mysqli_fetch_assoc($resAvgDose);
 				extract($line);
 			}
 			else
@@ -173,7 +173,7 @@ while ($line = $res->fetch_assoc())
 					$prevAvgRes = getResult("SELECT avgDose as doseOut FROM tankStats WHERE monitorID='$monitorID' ORDER BY readingDate DESC");
 					if (checkResult($prevAvgRes))
 					{
-						$prevAvgLine = mysql_fetch_assoc($prevAvgRes);
+						$prevAvgLine = mysqli_fetch_assoc($prevAvgRes);
 						extract($prevAvgLine);
 					}
 				}
@@ -239,7 +239,7 @@ while ($line = $res->fetch_assoc())
 			where monitorID='$monitorID' and cast(date as date) = DATE_ADD(cast(NOW() as date), INTERVAL -$i DAY) ORDER BY date DESC LIMIT 1");
 			if (checkResult($resDateFormatted))
 			{
-				$line = mysql_fetch_assoc($resDateFormatted);
+				$line = mysqli_fetch_assoc($resDateFormatted);
 				extract($line);
 		
 				$value = $units == 'Inches' ? inchToGal($value, $diameter) : $value;

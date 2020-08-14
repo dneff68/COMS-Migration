@@ -24,7 +24,7 @@ if (!checkResult($siteres))
 }
 
 $sites = '';
-while ($line = mysql_fetch_assoc($siteres))
+while ($line = mysqli_fetch_assoc($siteres))
 {
 	extract($line);
 	$sites .= "$siteLocationName, ";

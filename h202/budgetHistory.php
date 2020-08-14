@@ -82,7 +82,7 @@ function getTankRow($monitorID)
 	$deliveryRes = getResult($query);
 
 	$deliveryCostForTank = 0;
-	while ($line = mysql_fetch_assoc($deliveryRes))
+	while ($line = mysqli_fetch_assoc($deliveryRes))
 	{
 		extract($line);
 		
@@ -99,7 +99,7 @@ function getTankRow($monitorID)
 		$costPerGallon = 0;
 		if (checkResult( $costRes ))
 		{
-			$costLine = mysql_fetch_assoc($costRes);
+			$costLine = mysqli_fetch_assoc($costRes);
 			extract($costLine);
 		}	
 		
@@ -236,7 +236,7 @@ function submitDates()
 		$custRes = getResult($query);
 		if (checkResult($custRes))
 		{
-			while ($custLine = mysql_fetch_assoc($custRes))
+			while ($custLine = mysqli_fetch_assoc($custRes))
 			{
 				extract($custLine);
 				$sites = explode(',', $siteIDs);
@@ -245,7 +245,7 @@ function submitDates()
 					$monRes = getResult("SELECT monitorID FROM monitor WHERE siteID=$siteID");
 					if (checkResult($monRes))
 					{
-						while ($monLine = mysql_fetch_assoc($monRes))
+						while ($monLine = mysqli_fetch_assoc($monRes))
 						{
 							extract($monLine);
 							$tankRow = getTankRow($monitorID);  

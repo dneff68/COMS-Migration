@@ -3,7 +3,7 @@ session_start();
 $result= getResult("SHOW COLUMNS FROM monitor LIKE 'status'");
 if( checkResult( $result ) )
 {
-	$line = mysql_fetch_assoc($result);
+	$line = mysqli_fetch_assoc($result);
 	extract($line);
 	$Type = str_replace('enum(', '', $Type);
 	$Type = str_replace(')', '', $Type);

@@ -68,7 +68,7 @@ $query = "SELECT targetDose as targetDosage, targetDaily FROM tankHistory WHERE 
 $histRes = getResult($query);
 if (checkResult($histRes))
 {
-	$histLine = mysql_fetch_assoc($histRes);
+	$histLine = mysqli_fetch_assoc($histRes);
 	extract($histLine);
 	if (!empty($targetDaily))
 	{
@@ -111,7 +111,7 @@ $units = 'Gallons';
 $ures = getResult("SELECT m.units, t.diameter FROM monitor m, tank t WHERE t.monitorID=m.monitorID and m.monitorID = '$monitorID' LIMIT 1");
 if (checkResult($ures))
 {
-	$uline = mysql_fetch_assoc($ures);
+	$uline = mysqli_fetch_assoc($ures);
 	extract($uline);
 }
 
@@ -119,7 +119,7 @@ if (!empty($startDate))
 {
 	// set the value of $i to go back more than 30 days
 	$daysRes = getResult("SELECT DATEDIFF(  NOW(), '$startDate' ) as daysAgo");
-	$daysLine = mysql_fetch_assoc($daysRes);
+	$daysLine = mysqli_fetch_assoc($daysRes);
 	extract($daysLine);
 	$stopDay = max(0, $daysAgo - 30);
 }
@@ -152,7 +152,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 	$histRes = getResult("SELECT targetDose as targetDosage, targetDaily FROM tankHistory WHERE monitorID='$monitorID' ORDER BY date LIMIT 1");
 	if (checkResult($histRes))
 	{
-		$histLine = mysql_fetch_assoc($histRes);
+		$histLine = mysqli_fetch_assoc($histRes);
 		extract($histLine);
 		if (!empty($targetDaily))
 		{
@@ -174,7 +174,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 		$histRes = getResult($query);
 		if (checkResult($histRes))
 		{
-			$histLine = mysql_fetch_assoc($histRes);
+			$histLine = mysqli_fetch_assoc($histRes);
 			extract($histLine);
 			if (!empty($targetDaily))
 			{
@@ -194,7 +194,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 			$prevAvgRes = getResult("SELECT avgDose as doseOut FROM tankStats WHERE monitorID='$monitorID' ORDER BY readingDate DESC");
 			if (checkResult($prevAvgRes))
 			{
-				$prevAvgLine = mysql_fetch_assoc($prevAvgRes);
+				$prevAvgLine = mysqli_fetch_assoc($prevAvgRes);
 				extract($prevAvgLine);
 			}
 		}
@@ -206,7 +206,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 									monitorID='$monitorID' ORDER BY date DESC LIMIT 1");
 		if (checkResult($histRes))
 		{
-			$histLine = mysql_fetch_assoc($histRes);
+			$histLine = mysqli_fetch_assoc($histRes);
 			extract($histLine);
 			if (!empty($targetDaily))
 			{

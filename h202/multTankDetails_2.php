@@ -145,7 +145,7 @@ if (checkResult($res))
 			$histRes = getResult($query);
 			if (checkResult($histRes))
 			{
-				$histLine = mysql_fetch_assoc($histRes);
+				$histLine = mysqli_fetch_assoc($histRes);
 				extract($histLine);
 				if (!empty($targetDaily))
 				{

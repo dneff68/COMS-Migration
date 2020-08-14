@@ -69,7 +69,7 @@ function callPrint()
 $catRes = getResult("select catID, name from planning_categories order by name");
 if (checkResult($catRes))
 {
-	while ($catLine = mysql_fetch_assoc($catRes))
+	while ($catLine = mysqli_fetch_assoc($catRes))
 	{
 		extract($catLine);
 		$itemRes = getResult("SELECT pi.itemID, pi.custView, pi.title, pi.highlight, pi.pctComplete, pi.responsible, pi.item_timing, pi.impact FROM planning_items pi where pi.customerID='$customerID' and pi.pctComplete < 100  and pi.catID=$catID order by itemID");
@@ -98,13 +98,13 @@ if (checkResult($catRes))
 
 		if (checkResult($itemRes))
 		{
-			while( $itemLine = mysql_fetch_assoc($itemRes) )
+			while( $itemLine = mysqli_fetch_assoc($itemRes) )
 			{
 				extract($itemLine);
 				$statusRes = getResult("SELECT DATE_FORMAT(date, '%m/%d/%Y %I:%i %p') as statusDate, author, status FROM planning_status WHERE itemID=$itemID order by date DESC LIMIT 1");
 				if (checkResult($statusRes))
 				{
-					$statusLine = mysql_fetch_assoc($statusRes);
+					$statusLine = mysqli_fetch_assoc($statusRes);
 					extract($statusLine);
 					$status = "<p class=\"smallerText\">$status</p><div class=\"author-date\">$author: $statusDate</div>";
 				}
@@ -147,7 +147,7 @@ if (checkResult($catRes))
 $catRes = getResult("select catID, name from planning_categories order by name");
 if (checkResult($catRes))
 {
-	while ($catLine = mysql_fetch_assoc($catRes))
+	while ($catLine = mysqli_fetch_assoc($catRes))
 	{
 		extract($catLine);
 		$itemRes = getResult("SELECT pi.itemID, pi.custView, pi.title, pi.pctComplete, pi.responsible, pi.item_timing, pi.impact FROM planning_items pi where pi.customerID='$customerID' and pi.pctComplete = 100  and pi.catID=$catID order by itemID");
@@ -175,13 +175,13 @@ if (checkResult($catRes))
 
 		if (checkResult($itemRes))
 		{
-			while( $itemLine = mysql_fetch_assoc($itemRes) )
+			while( $itemLine = mysqli_fetch_assoc($itemRes) )
 			{
 				extract($itemLine);
 				$statusRes = getResult("SELECT DATE_FORMAT(date, '%m/%d/%Y %I:%i %p') as statusDate, author, status FROM planning_status WHERE itemID=$itemID order by date DESC LIMIT 1");
 				if (checkResult($statusRes))
 				{
-					$statusLine = mysql_fetch_assoc($statusRes);
+					$statusLine = mysqli_fetch_assoc($statusRes);
 					extract($statusLine);
 					$status = "<p class=\"smallerText\">$status</p><div class=\"author-date\">$author: $statusDate</div>";
 				}
@@ -223,7 +223,7 @@ if (checkResult($catRes))
     <td colspan="2" class="planningItemRow"><select name="categories" id="categories">
 <?
 mysql_data_seek($catRes, 0);
-while ($catLine = mysql_fetch_assoc($catRes))
+while ($catLine = mysqli_fetch_assoc($catRes))
 {
 	extract($catLine);
 	$selected = "";
@@ -252,7 +252,7 @@ while ($catLine = mysql_fetch_assoc($catRes))
 	$interEmailRes = getResult("SELECT DISTINCT FirstName as internFirst, LastName as internLast FROM internalEmailDist ORDER BY LastName");
 	if (checkResult($interEmailRes))
 	{
-		while($interEmailLine = mysql_fetch_assoc($interEmailRes))
+		while($interEmailLine = mysqli_fetch_assoc($interEmailRes))
 		{
 			extract($interEmailLine);
 			echo("\n<option value='$internLast, $internFirst'>$internLast, $internFirst</option>");

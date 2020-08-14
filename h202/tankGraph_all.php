@@ -66,7 +66,7 @@ while ($line = $res->fetch_assoc())
 		$ures = getResult("SELECT m.units, t.diameter FROM monitor m, tank t WHERE t.monitorID=m.monitorID and m.monitorID = '$monitorID' LIMIT 1");
 		if (checkResult($ures))
 		{
-			$uline = mysql_fetch_assoc($ures);
+			$uline = mysqli_fetch_assoc($ures);
 			extract($uline);
 		}
 		
@@ -74,7 +74,7 @@ while ($line = $res->fetch_assoc())
 		{
 			// set the value of $i to go back more than 11 days
 			$daysRes = getResult("SELECT DATEDIFF(  NOW(), '$startDate' ) as daysAgo");
-			$daysLine = mysql_fetch_assoc($daysRes);
+			$daysLine = mysqli_fetch_assoc($daysRes);
 			extract($daysLine);
 			$stopDay = max(0, $daysAgo - 11);
 		}
@@ -106,7 +106,7 @@ while ($line = $res->fetch_assoc())
 					$prevAvgRes = getResult("SELECT avgDose as doseOut FROM tankStats WHERE monitorID='$monitorID' ORDER BY readingDate DESC");
 					if (checkResult($prevAvgRes))
 					{
-						$prevAvgLine = mysql_fetch_assoc($prevAvgRes);
+						$prevAvgLine = mysqli_fetch_assoc($prevAvgRes);
 						extract($prevAvgLine);
 					}
 				}

@@ -34,7 +34,7 @@ elseif ($action == 'getItemStatus')
 	$statusRes = getResult("SELECT DATE_FORMAT(date, '%m/%d/%Y %I:%i %p') as statusDate, author, status FROM planning_status WHERE itemID=$itemID order by date DESC");
 	if (!checkResult($statusRes)) return;
 	$statOut = '';
-	while ($line = mysql_fetch_assoc($statusRes))
+	while ($line = mysqli_fetch_assoc($statusRes))
 	{
 		extract($line);
 		$statOut .= "<p class=\"smallerText\">$status</p><br /><div class=\"author-date\">$author: $statusDate</div><br /><hr>";
