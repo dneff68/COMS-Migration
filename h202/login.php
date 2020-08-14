@@ -7,8 +7,8 @@ showArray($_SERVER);
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
   echo($_POST["userID"].", ".$_POST["password"]);
- // extract($_POST);
-	if (empty($USERID))
+  showArray($_POST);
+	if (empty($_POST["userID"]))
 	{
 		$_SESSION["USERID"] = "";
 		$_SESSION["USERTYPE"] = "";

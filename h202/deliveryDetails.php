@@ -22,6 +22,8 @@ $modifyDeliveryID = -1;
 $truckCaps = '';
 extract($_POST);
 
+$USERID = $_SESSION['USERID'];
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -442,7 +444,6 @@ if (!empty($tankAction))
 	}
 }
 
-bigEcho("sizeof _SESSION['DELIVERY_TANKS']: " . sizeof($_SESSION['DELIVERY_TANKS']));
 $divVis = "";
 if (sizeof($_SESSION['DELIVERY_TANKS']) == 0)
 {
@@ -535,7 +536,7 @@ if (sizeof($_SESSION['DELIVERY_TANKS']) > 0)
 				$monitorOut = $monitorID;
 			}
 			$monitorOut = trim($monitorOut);
-			//bigecho("-- $monitorID  == $monitorOut");
+
 			eval('$t = $time_' . $monitorOut . ';');
 			$_SESSION['TANK_DETAILS'][$monitorID]['time'] = $t;
 			if (empty($_SESSION['TANK_DETAILS'][$monitorID]['time']))
@@ -929,7 +930,7 @@ if (count($_SESSION['ZIPCOLLECTION']))
 //	session_register('marr');
 	$marr = array();
 //}
-//bigEcho("marr is type: " . gettype($marr));	
+
 
 
 $regfilt = '';
@@ -966,10 +967,6 @@ $query = "select s.siteID, s.siteLocationName as 'Location', s.city as City,
 
 
 $res = getResult($query);
-
-bigEcho($more . ":" . $regfilt);
-bigEcho($query);	
-
 if (checkResult($res))
 {
 	$rowcnt = 0;
@@ -1045,7 +1042,6 @@ if (checkResult($res))
 			$reorderData = reorderInfo($monitorID);
 			if ($reorderData['daysToDelivery'] <= $_SESSION['LEADTIME_OVERRIDE'])
 			{
-			//bigecho($monitorID . ':' . $reorderData['daysToDelivery']);
 				$status = 'Reorder';
 				$statkey = 'Reorder';
 			}
@@ -1123,11 +1119,6 @@ if (checkResult($res))
 				$tankName = strpos($monitorID, 'none-') === false ? $monitorID : '';
 			}
 	
-//	if ($monitorID == 'none-4z69p')
-//	{
-//		bigecho($query);
-//	}
-
 			if (checkResult($res2))
 			{
 				while ($line2 = mysqli_fetch_assoc($res2))
@@ -1343,7 +1334,6 @@ if (checkResult($res))
 					//die("amt: $amt    --     refillAmount: $refillAmount");
 					$refillAmount = empty($amt) ? $refillAmount : $amt; 
 				}	
-//bigecho("1343: $refillAmount");
 				
 				if ($deliveryUnits != "Drum")
 				{
@@ -1352,11 +1342,9 @@ if (checkResult($res))
 					//$refillAmount = $refillAmount * 100;
 				}
 				// override with posted amount if necessary
-//bigecho("1351: $refillAmount");
 				
 				$refillAmount = empty($postedFillAmount) ? $refillAmount : $postedFillAmount;
 				$totalFill += $refillAmount;
-//bigecho("1355: $refillAmount");
 				// customer wants the quantity to be preserved when the date is changed.
 				if ($tankAction == "changeTime" && !empty($modifyDeliveryID) )
 				{
@@ -1372,7 +1360,6 @@ if (checkResult($res))
 				//bigecho(" $hideConversion = $deliveryUnits != 'Gallons' && $deliveryUnits != 'Unit' ? '' : '; display: none'; " );
 				$deliveryUnitsfmt = getDeliveryUnitFmt($deliveryUnits);
 				$refillAmountVal = $refillAmount;
-//bigecho($_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity']);
 			    if ($tankAction == "updateQuantity")	
 				{
 					$CONVERTED_QUANTITIES[$monitorID][0] = $refillAmountVal;
@@ -1393,14 +1380,11 @@ if (checkResult($res))
 								$wLine = mysqli_fetch_assoc($wRes);
 								extract($wLine);
 							}
-//bigecho("$refillAmount * $ratio, $deliveryUnits");
 							$weightarr = convertUnits($refillAmount * $ratio, $deliveryUnits);
-//bigecho("Pounds = convertUnits($refillAmount * $ratio, $deliveryUnits);");
 						}
 						else
 						{
 							$weightarr = convertUnits($refillAmount, $deliveryUnits);
-// bigecho("$deliveryUnits = convertUnits($refillAmount, $deliveryUnits);");
 						}
 
 						$refillAmountVal = ceil( $weightarr[1] );
@@ -1414,7 +1398,6 @@ if (checkResult($res))
 				$refillAmountVal = empty($CONVERTED_QUANTITIES[$monitorID]) ? $refillAmountVal : $CONVERTED_QUANTITIES[$monitorID][0];
 				//bigecho("refillAmountVal = $refillAmountVal   --  refillAmount=$refillAmount ");
 				$ratioOut = $deliveryUnits == 'Pounds' ? ', ' . $CONVERTED_QUANTITIES[$monitorID][1] : '';	
-// bigecho("deliveryUnitQuantity: " . $_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity']);				
 				$refillAmountVal = $_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity'] > 0 ? $_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity'] : $refillAmountVal;			
 				$deliveryTankRows .= "
 				<tr class='spinBoxedNormal'>
@@ -1575,7 +1558,6 @@ if (checkResult($res))
 	}
 }
 
-bigEcho("marr size: " . sizeof($marr));
 $rowcnt = sizeof($marr);
 if (count($_SESSION['ZIPCOLLECTION']) > 0) // && $_SESSION['STATUS_FILTER'] != 'unass')
 {
@@ -1777,7 +1759,6 @@ else
   
 <?php
 //=$rows
-bigEcho(sizeof($marr));
 foreach ($marr as $row)
 {
 	echo($row);

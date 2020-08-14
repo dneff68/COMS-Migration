@@ -1,6 +1,6 @@
 <?php
 include_once "../lib/chtFunctions.php";
-	
+
 $_SESSION['ROOT_URL'] = "/";
 $_SESSION['SHOWFACTORIES'] = '';
 $_SESSION['SHOWCARRIERS'] = '';
