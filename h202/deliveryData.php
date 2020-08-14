@@ -74,7 +74,7 @@ if (checkResult($res))
 	$encryptedOutput = array();
 	
 	// output header
-	$RecordsSent = mysql_num_rows($res);
+	$RecordsSent = mysqli_num_rows($res);
 	$QueryString = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 	$date = date("m/d/Y");
 	$time = date("H:i:s");
@@ -112,7 +112,7 @@ if (checkResult($res))
 	array_push($output, $text); 
 	pushHeaderLabel($encryptedOutput, $text, true);
 
-	while ($line = mysql_fetch_assoc($res))
+	while ($line = $res->fetch_assoc())
 	{
 		extract($line);
 		$text = "$dateToDeliver|$timeToDeliver|$status|$tankID|$tankName|$baan|$PO|$quantity|Gallons|$lastModifiedBy|$lastModifiedDate|00:00:00|";

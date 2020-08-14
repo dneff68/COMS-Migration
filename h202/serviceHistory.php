@@ -29,7 +29,7 @@ $query = "SELECT
 $res = getResult($query);
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	$sites = explode(',', $siteIDs);
 }
@@ -41,7 +41,7 @@ function processWorkOrder($workKey)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 
 		if (strpos($html, 'Work Order Closed') > 0)
@@ -119,7 +119,7 @@ if (checkResult($wkRes))
 			$currentMonitorID = '';
 			$monitorRowsOut = '';
 			$rowCount = 0;
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				if (empty($workOrderNumber))
@@ -205,7 +205,7 @@ if (checkResult($wkRes))
 			$currentMonitorID = '';
 			$monitorRowsOut = '';
 			$rowCount = 0;
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				if (empty($workOrderNumber))

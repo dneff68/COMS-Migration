@@ -9,7 +9,7 @@ $tankID = !empty($tankID) ? $tankID : $id;
 
 $query = "SELECT tankName FROM tank WHERE tankID='$tankID'";
 $res = getResult($query);
-$line = mysql_fetch_assoc($res);
+$line = $res->fetch_assoc();
 extract($line);
 
 if ($REQUEST_METHOD == 'POST')
@@ -47,7 +47,7 @@ if ($noteAction == 'static_note')
 	$res = getResult("select notesStatic as notes from tank where monitorID='$tankID'");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 }
@@ -100,7 +100,7 @@ function deleteNote(key)
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				echo "\n<tr class='spinTableBarOdd'>

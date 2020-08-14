@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 include_once '/var/www/html/CHT/h202/GlobalConfig.php';
 include_once '/var/www/html/CHT/h202/h202Functions.php';
@@ -19,7 +19,7 @@ else
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 	
 			if (array_search($siteID, $sites_arr) === false)
@@ -338,7 +338,7 @@ else
 <link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
 <SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
 <script language="javascript">
-<?=$js?>
+<?php echo $js?>
 
 function addSupplierContact()
 {
@@ -412,7 +412,7 @@ function showInternal(val)
     </tr>
     <tr valign="top">
       <td align="left" width="200">
-<?
+<?php
 //showArray($DELIVERY_DATA);
 $monitor_arr = array();
 $siteHTML = '';
@@ -451,7 +451,7 @@ echo $siteHTML;
       <td width="229">
 	  
 	  <table width="100%" height="0" border="0" cellpadding="2" cellspacing="1">
-      <?
+      <?php
 	  	$deliverySupplierID = $DELIVERY_DATA['deliverySupplierID'];
 		// if this is an existing delivery we get the values from the the supplier distribution
 		// list that was at the time of the delivery.
@@ -478,7 +478,7 @@ echo $siteHTML;
 			$res = getResult($query);
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 				$email = fixSingleQuotes($email);
 				list($FirstName, $LastName) = explode(' ', $contact);
@@ -490,7 +490,7 @@ echo $siteHTML;
 		 
 		 if (checkResult($res))
 		 {
-		 	while ($line = mysql_fetch_assoc($res))
+		 	while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				$chked = $selected == 1 ? 'CHECKED' : '';
@@ -574,7 +574,7 @@ echo $siteHTML;
 	  </td>
       <td width="229">
 	  <table width="100%" height="0" border="0" cellpadding="2" cellspacing="1">
-		<?
+		<?php
 		$int_email_arr = array();
 		foreach ($sites_arr as $siteID)
 		{
@@ -587,7 +587,7 @@ echo $siteHTML;
 					This logic builds an array of email addresses.  Since the same email address can be associated
 					with mutiple sites, we make sure that the $selected value is 1, if it's 1 for any.
 				*/
-				while ($line = mysql_fetch_assoc($res))
+				while ($line = $res->fetch_assoc())
 				{
 					extract($line);
 					if (!empty($int_email_arr[$email]))

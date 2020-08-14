@@ -9,7 +9,7 @@ if (!empty($id))
 {
 	$query = "SELECT tankName, notes FROM tank WHERE tankID='$id'";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	$notes = empty($TANK_NOTES[$id]) ? $notes : $TANK_NOTES[$id];
 }
@@ -17,7 +17,7 @@ elseif (!empty($delID))
 {
 	$query = "SELECT notes FROM delivery WHERE deliveryID=$delID";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	$notes = empty($_SESSION['DELIVERY_NOTES']) ? $notes : $_SESSION['DELIVERY_NOTES'];
 }
@@ -25,7 +25,7 @@ elseif (!empty($tankDelivID))
 {
 	$query = "SELECT tankName, deliveryNote as notes, deliveryNoteDate, deliveryNoteAuthor FROM tank WHERE tankID='$tankDelivID'";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 else

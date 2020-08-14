@@ -44,7 +44,7 @@ $query = "select s.siteLocationName, t.tankName, t.tankID, m.monitorID, m.units,
 $res = getResult($query);
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 
@@ -52,7 +52,7 @@ $query = "select DATE_FORMAT(date, '%m/%d/%Y %r') as 'date', value, DATE_FORMAT(
 $res = getResult($query);
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 

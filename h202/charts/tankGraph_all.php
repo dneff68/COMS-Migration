@@ -54,7 +54,7 @@ $query = "
 	t.prodID = p.prodID";
 
 $res = getResult($query);
-$siteCount = mysql_num_rows($res);
+$siteCount = mysqli_num_rows($res);
 	
 
 if ($skip == 'prev')
@@ -115,7 +115,7 @@ if (!checkResult($res))
 	die("NO TANKS IN DATABASE");
 }
 
-while ($line = mysql_fetch_assoc($res))
+while ($line = $res->fetch_assoc())
 {
 		extract($line);
 		if (!empty($targetDaily))

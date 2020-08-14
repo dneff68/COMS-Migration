@@ -80,7 +80,7 @@ function deleteNote(key)
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				echo "\n<tr class='spinTableBarOdd'>

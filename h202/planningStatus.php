@@ -11,7 +11,7 @@ $query = "SELECT title FROM planning_items WHERE itemID = $itemID";
 $res = getResult($query);
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 
@@ -68,7 +68,7 @@ if ($REQUEST_METHOD == 'POST')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				echo "\n<tr class='spinTableBarOdd'>

@@ -114,7 +114,7 @@ if (!checkResult($res))
 
 
 
-while ($line = mysql_fetch_assoc($res))
+while ($line = $res->fetch_assoc())
 {
 		extract($line);
 		$SHOWING_SITE = $siteLocationName;

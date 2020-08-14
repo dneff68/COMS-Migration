@@ -234,7 +234,7 @@ include_once 'db_mysql.php';
 					$res = getResult("Select z.lat, z.lng, s.supplierID from supplier s, zipcodes z where s.zip=z.zip and s.zip != ''");
 					if (checkResult($res))
 					{
-						while ($line = mysql_fetch_assoc($res))
+						while ($line = $res->fetch_assoc())
 						{
 							extract($line);
 							$lat = round($lat, 4);
@@ -253,7 +253,7 @@ include_once 'db_mysql.php';
 					$res = getResult("Select z.lat, z.lng, s.carrierID, s.carrierName, s.contact, s.phone, s.email from carrier s, zipcodes z where s.zip=z.zip and s.zip != ''");
 					if (checkResult($res))
 					{
-						while ($line = mysql_fetch_assoc($res))
+						while ($line = $res->fetch_assoc())
 						{
 							extract($line);
 							$lat = round($lat, 4);
@@ -278,7 +278,7 @@ include_once 'db_mysql.php';
 					if (checkResult($res))
 					{
 						$scnt = 0;
-						while ($line = mysql_fetch_assoc($res))
+						while ($line = $res->fetch_assoc())
 						{
 							extract($line);
 							

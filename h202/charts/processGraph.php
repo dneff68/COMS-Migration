@@ -72,7 +72,7 @@ if (empty($PROCESS_START_DATE))
 {
 	$query = "select date_add(date(now()), interval -7 day) as PROCESS_START_DATE, date(NOW()) as PROCESS_END_DATE";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	list($y, $m, $d) = explode('-', $PROCESS_START_DATE);
 	$PROCESS_START_DATE_FMT = "$m/$d/$y";
@@ -89,7 +89,7 @@ $res = getResult($query);
 //bigecho($query);
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	$LAG_MINUTES = $lagMinutes;
 }
@@ -619,7 +619,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 				if (checkResult($res))
 				{
 					
-						$ppmLine = mysql_fetch_assoc($res);
+						$ppmLine = $res->fetch_assoc();
 						extract($ppmLine);
 				}
 
@@ -660,7 +660,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 			$res = getResult($query);
 			if (checkResult($res))
 			{
-					$readlingLIne = mysql_fetch_assoc($res);
+					$readlingLIne = $res->fetch_assoc();
 					extract($readlingLIne);
 					$SELECTED_SAMPLE_POINT = $samplePointID;
 					$FLOW_DATASET .= "<set value='$flowRate' toolText='Flow Rate: $flowRate{br}($loopStartDate $hr:$quarterTime:00)' />\n";
@@ -698,7 +698,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 	
 	$query = "SELECT DATE_ADD( cast( '$loopStartDate' AS date ) , INTERVAL 1 DAY ) as loopStartDate";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 

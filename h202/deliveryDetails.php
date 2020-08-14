@@ -6,6 +6,26 @@ include_once 'h202Functions.php';
 include_once '../lib/db_mysql.php';
 include_once '../lib/chtFunctions.php';
 
+$sendInvoices = 'no';
+$submitted = 'no';
+$tankAction = '';
+$clearlist = 'no';
+$deliveryProduct = '';
+$deliverySupplierID = '';
+$deliveryConcentration = '';
+$deliveryCarrierID = '';
+$truckCapacity = 0;
+$totalFill = 0;
+$update = 0;
+$deliveryTankRows = '';
+$modifyDeliveryID = -1;
+$truckCaps = '';
+extract($_POST);
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 // include_once 'GlobalConfig.php';
 // include_once 'h202Functions.php';
@@ -43,11 +63,12 @@ if (!empty($id))
 	$_SESSION['TANK_DETAILS'] 	= array();
 	
 	$query = "select monitorID, time, quantity, deliveryUnitQuantity, actual_quantity, notes from deliveryTanks where deliveryID = $id";
+//	die("123: " . $query);
 	$res = getResult($query);
 	if (checkResult($res))
 	{	
 		$cnt = 0;
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$_SESSION['DELIVERY_TANKS'][$cnt] = $monitorID;
@@ -75,6 +96,7 @@ if (!empty($id))
 		}
 	}
 
+
 	$query = "SELECT 
 			carrierID as deliveryCarrierID, 
 			concentration as deliveryConcentration, 
@@ -88,7 +110,7 @@ if (!empty($id))
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$DELIVERY_DATA = mysql_fetch_assoc($res);
+		$DELIVERY_DATA = $res->fetch_assoc();
 		extract($DELIVERY_DATA);
 		$truckCaps = $truckCapacity . ' gallons';
 		$_SESSION['DELIVERY_NOTES'] = $notes;
@@ -120,7 +142,7 @@ if ($submitted == 'yes')
 }
 
 
-if ($REQUEST_METHOD == 'POST')
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 
 	$_SESSION['JUMP'] = "<a href='#$tankid'>jump to last</a> ";
@@ -397,7 +419,7 @@ if ($REQUEST_METHOD == 'POST')
 // 	session_register('DELIVERY_NOTES');
 // 	$DELIVERY_TANKS = array();
 // }
-
+$reloadParent = '';
 if (!empty($tankAction))
 {
 	if ($tankAction == 'addTank' && !empty($tankid))
@@ -420,7 +442,7 @@ if (!empty($tankAction))
 	}
 }
 
-
+bigEcho("sizeof _SESSION['DELIVERY_TANKS']: " . sizeof($_SESSION['DELIVERY_TANKS']));
 $divVis = "";
 if (sizeof($_SESSION['DELIVERY_TANKS']) == 0)
 {
@@ -438,20 +460,6 @@ elseif (sizeof($_SESSION['DELIVERY_TANKS']) == 1)
 	
 	$DELIVERY_DATA['deliveryProduct'] = $product;
 	$DELIVERY_DATA['deliveryConcentration'] = $concentration;
-	
-//	// get weight using ratio
-//	$wRes = getResult("SELECT r.ratio FROM productWeightRatios r, product p WHERE p.prodID=r.prodID and p.value='$product' and '$concentration' LIKE CONCAT('%', r.concentration, '%')");
-//	if (checkResult($wRes))
-//	{
-//		$wLine = mysql_fetch_assoc($wRes);
-//		extract($wLine);
-//	}
-//	else
-//	{
-//		$ratio = 1.0;
-//	}
-//	$DELIVERY_DATA['ratio'] = $ratio;
-	// die("SELECT r.ratio FROM productWeightRatios r, product p WHERE p.prodID=r.prodID and p.value='$product' and '$concentration' LIKE CONCAT('%', r.concentration, '%'): " . $DELIVERY_DATA['ratio']);
 	$DELIVERY_DATA['deliverySupplierID'] = $supplierID;
 	$DELIVERY_DATA['deliveryDate'] = $reorderInfo['fillDate'];
 	
@@ -467,7 +475,7 @@ elseif (sizeof($_SESSION['DELIVERY_TANKS']) == 1)
 	$res = getResult("SELECT c.carrierName as carrierName1, c.carrierID as carrierID1 FROM tank t, carrier c WHERE t.carrierID	= c.carrierID AND t.monitorID = '$monitorID' LIMIT 1");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	$DELIVERY_DATA['deliveryCarrierID'] = $carrierID1;
@@ -563,6 +571,7 @@ else
 	$deliveryDate = '';
 }
 
+$js = '';
 if ($tankAction == 'showEmailDist')
 {
 	$js = "surfDialog(\"/deliveryEmailDist.php?deliveryID=$modifyDeliveryID&init=yes\", 800, 515, window, false);\n";
@@ -869,7 +878,6 @@ function checkTank(name, checked)
 
 <body>
 <?php
-
 if ($clearlist == 'yes')
 {
 	array_splice($_SESSION['ZIPCOLLECTION'],0);
@@ -881,7 +889,7 @@ if ($clearlist == 'yes')
 $selTanks = '';
 
 //if (count($_SESSION['DELIVERY_TANKS'] > 0))
-if (empty($_SESSION['DELIVERY_TANKS']))
+if (!empty($_SESSION['DELIVERY_TANKS']))
 {
 	foreach ($_SESSION['DELIVERY_TANKS'] as $selectedMonitorID)
 	{
@@ -920,7 +928,10 @@ if (empty($_SESSION['ZIPCOLLECTION']))
 //	session_register('marr');
 	$marr = array();
 //}
+bigEcho("marr is type: " . gettype($marr));	
 
+
+$regfilt = '';
 if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
 {	
 	$regfilt = "and s.regionID=$REGION_FILTER";
@@ -937,9 +948,10 @@ if ( $_SESSION['USERTYPE'] == 'customer' )
 }
 else
 {
-	$inac = $SHOWINACTIVE != 'yes' ? " && m.status != 'Inactive'" : '';
-	$tmpshut   = $SHOWTEMPSHUTDOWN != 'yes' ? " && m.status != 'Temporary Shutdown'" : '';
-	$unmonFilt = $SHOWUNMONITORED 	== 'yes' ? '' : "and t.monitorID NOT LIKE 'none%'";
+	$custTanks = '';
+	$inac = $_SESSION['SHOWINACTIVE'] != 'yes' ? " && m.status != 'Inactive'" : '';
+	$tmpshut   = $_SESSION['SHOWTEMPSHUTDOWN'] != 'yes' ? " && m.status != 'Temporary Shutdown'" : '';
+	$unmonFilt = $_SESSION['SHOWUNMONITORED'] 	== 'yes' ? '' : "and t.monitorID NOT LIKE 'none%'";
 }
 
 $query = "select s.siteID, s.siteLocationName as 'Location', s.city as City, 
@@ -959,7 +971,7 @@ if (checkResult($res))
 	$rows = '';
 	$deliveryTankRows = '';
 	$notesOut = '';
-	while ($line = mysql_fetch_assoc($res))
+	while ($line = $res->fetch_assoc())
 	{
 		extract($line);
 		$reorderInfo = reorderInfo($monitorID, $deliveryDate);
@@ -1114,9 +1126,9 @@ if (checkResult($res))
 				{
 					extract($line2);
 					$cntRes = getResult("SELECT deliveryID FROM deliveryEmailLog WHERE deliveryID=$deliveryID");
-					$totCnt = mysql_num_rows($cntRes);
+					$totCnt = mysqli_num_rows($cntRes);
 					$cntRes = getResult("SELECT deliveryID FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived != '0000-00-00 00:00:00'");
-					$readCnt = mysql_num_rows($cntRes);
+					$readCnt = mysqli_num_rows($cntRes);
 					
 					
 					// check to see if there is a supplier for this site... 
@@ -1421,11 +1433,11 @@ else
 				</tr>";
 			}
 
-$weekendFormat = '';
-if (strpos($fillDate, 'Saturday') !== false || strpos($fillDate, 'Sunday') !== false)
-{
-	$weekendFormat = " class='spinAlert'";
-}
+	$weekendFormat = '';
+	if (strpos($fillDate, 'Saturday') !== false || strpos($fillDate, 'Sunday') !== false)
+	{
+		$weekendFormat = " class='spinAlert'";
+	}
 			$deliveryinfo = "
 						$tableHTML
 						  <tr>
@@ -1555,6 +1567,7 @@ if (strpos($fillDate, 'Saturday') !== false || strpos($fillDate, 'Sunday') !== f
 	}
 }
 
+bigEcho("marr size: " . sizeof($marr));
 $rowcnt = sizeof($marr);
 if (count($_SESSION['ZIPCOLLECTION']) > 0) // && $STATUS_FILTER != 'unass')
 {
@@ -1572,16 +1585,17 @@ else
 			 style='width:0px; height:0px; border:0px'
 			 src=''></iframe>
 
-<div id="infoDiv" <?=$divVis?>>
+<div id="infoDiv" <?php echo $divVis?>>
 <div id="messageBox" style="display: none"></div>
 <form name="deliveryForm" action="deliveryDetails.php" method="post" />
-<input type='hidden' name='modifyDeliveryID' id='modifyDeliveryID' value='<?=!empty($id) ? $id : $modifyDeliveryID?>' />
+<input type='hidden' name='modifyDeliveryID' id='modifyDeliveryID' value='<?php echo !empty($id) ? $id : $modifyDeliveryID?>' />
 <input type='hidden' name='update' id='update' value='<?=$update?>'  />
 <input type="hidden" id="tankAction" name="tankAction" value='' />
 <input type="hidden" id="tankid" name="tankid" value='' />
   <table width="100%" border="0" cellpadding="1" cellspacing="1" class="tab2">
   
-  <?
+  <?php
+  	$change_order = 0;
   	if (!empty($modifyDeliveryID))
 	{
 		$res_status = getResult("SELECT status FROM delivery WHERE deliveryID=$modifyDeliveryID and status = 'Change Order' LIMIT 1");		
@@ -1601,7 +1615,7 @@ else
       <td width="108" height="34" nowrap="nowrap" class="spinSmallTitle"><div align="left">Delivery Date: </div>
       <td width="147" nowrap="nowrap">
         <div align="left">
-        <?
+        <?php
         	// $delivery date may have formatting.  Strip it for the value
 			if ( strpos($deliveryDate, '(') !== false )
 			{
@@ -1627,11 +1641,11 @@ else
       <td><label>
         <div align="left">
           <select name="supplierID" id="supplierID">
-		  <?
+		  <?php
 		  	$res = getResult("SELECT supplierName as supName, supplierID as supid FROM supplier ORDER BY supplierName");
 			if (checkResult($res))
 			{
-				while ($line = mysql_fetch_assoc($res))
+				while ($line = $res->fetch_assoc())
 				{
 					extract($line);
 					$chk = ($supid == $deliverySupplierID) ? 'SELECTED' : '';
@@ -1653,11 +1667,11 @@ else
       <td><div align="left">
           <select name="carrierID" id="carrierID">
 		  <option value='-1' <?=$deliveryCarrierID=='-1' ? 'SELECTED' : ''?>>--none--</option>
-		  <?
+		  <?php
 		  	$res = getResult("SELECT carrierName as carName, carrierID as carid FROM carrier ORDER BY carrierName");
 			if (checkResult($res))
 			{
-				while ($line = mysql_fetch_assoc($res))
+				while ($line = $res->fetch_assoc())
 				{
 					extract($line);
 					$chk = ($carid == $deliveryCarrierID) ? 'SELECTED' : '';
@@ -1678,7 +1692,7 @@ else
 		<?php
 			$devID = empty($modifyDeliveryID) ? $id : $modifyDeliveryID;
 			$res = getResult("SELECT status FROM delivery WHERE deliveryID = $devID AND status = 'Cancelled' LIMIT 1");
-			if (mysql_num_rows($res) > 0)
+			if (mysqli_num_rows($res) > 0)
 			{
 				echo "<br />-- Delivery Cancelled --";
 			}
@@ -1755,6 +1769,7 @@ else
   
 <?php
 //=$rows
+
 foreach ($marr as $row)
 {
 	echo($row);

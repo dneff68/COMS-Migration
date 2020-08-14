@@ -66,7 +66,7 @@ if ($REQUEST_METHOD == 'POST')
 
 	$query = "SELECT tankName FROM tank WHERE tankID='$tankid'";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 
 	logAction("Target Dose/Deviation for $tankName updated (+$deviation_plus or -$deviation_minus)" );
@@ -143,7 +143,7 @@ $targetDaily = '';
 $res = getResult("select tankName, targetDosage, targetDaily, deviation_minus, deviation_plus from tank where tankID = '$tankid'");
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	$dosage = (string)$targetDosage;
 	list($dosage, $dosage2) = explode('.', $dosage);

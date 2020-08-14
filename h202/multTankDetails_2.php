@@ -112,7 +112,7 @@ if (checkResult($res))
 
 	$rowcnt = 0;
 	$rows = '';
-	while ($line = mysql_fetch_assoc($res))
+	while ($line = $res->fetch_assoc())
 	{
 		extract($line);
 		

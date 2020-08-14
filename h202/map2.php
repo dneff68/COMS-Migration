@@ -88,7 +88,7 @@ include_once 'db_mysql.php';
 			if (checkResult($res))
 			{
 				$zips = '';
-				while ($line = mysql_fetch_assoc($res))
+				while ($line = $res->fetch_assoc())
 				{
 					extract($line);
 					
@@ -141,7 +141,7 @@ include_once 'db_mysql.php';
 			$res = getResult("Select z.lat, z.lng, s.supplierID from supplier s, zipcodes z where s.zip=z.zip and s.zip != ''");
 			if (checkResult($res))
 			{
-				while ($line = mysql_fetch_assoc($res))
+				while ($line = $res->fetch_assoc())
 				{
 					extract($line);
 					$lat = round($lat, 4);

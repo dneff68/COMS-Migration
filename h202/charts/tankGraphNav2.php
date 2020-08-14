@@ -31,7 +31,7 @@ $res = getResult($query);
 <body class="spinTableBarOdd">
 <?
 
-while ($line=mysql_fetch_assoc($res))
+while ($line=$res->fetch_assoc())
 {
 	extract($line);
 	echo("<a href='tankGraph_all2.php?monitorID=$monitorID' target='mainFrame'>$siteLocationName</a><br>");

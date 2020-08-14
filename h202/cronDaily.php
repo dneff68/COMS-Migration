@@ -13,7 +13,7 @@ error_log('-- CRON DAILY RUN --');
 $res = getResult("select m.monitorID from monitor m where  m.status != 'Temporary Shutdown' order by m.monitorID");
 if (checkResult($res))
 {
-	while ($line = mysql_fetch_assoc($res))
+	while ($line = $res->fetch_assoc())
 	{
 		extract($line);
 		updateTankStats($monitorID, 3);
@@ -26,7 +26,7 @@ $tanksArray = array();
 $res = getResult("select m.* from monitor m where  m.status = 'Temporary Shutdown' and no_tsAlert=0 order by m.monitorID");
 if (checkResult($res))
 {
-	while ($line = mysql_fetch_assoc($res))
+	while ($line = $res->fetch_assoc())
 	{
 		extract($line);
 		// get last three readings from data
@@ -71,7 +71,7 @@ if (checkResult($res))
 		$res = getResult("SELECT tankName FROM tank WHERE monitorID='$monitorID' LIMIT 1");
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$htmlOut .= "<strong>$tankName</strong><br>$readings<br><br>";
 			$cnt++;

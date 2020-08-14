@@ -19,7 +19,7 @@ $res = getResult($query);
 $cnt = 0;
 $flag = true;
 $links = '';
-while ($line = mysql_fetch_assoc($res))
+while ($line = $res->fetch_assoc())
 {
 	extract($line);
 	$cnt++;

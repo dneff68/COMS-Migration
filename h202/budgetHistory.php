@@ -31,7 +31,7 @@ if (empty($BUDGET_START_DATE))
 {
 	$query = "select CONCAT(YEAR(now()), '-01-01') as BUDGET_START_DATE, date(NOW()) as BUDGET_END_DATE";
 	$res = getResult($query);
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	list($y, $m, $d) = explode('-', $BUDGET_START_DATE);
 	$BUDGET_START_DATE_FMT = "$m/$d/$y";

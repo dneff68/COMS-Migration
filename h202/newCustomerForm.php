@@ -24,14 +24,14 @@ if (!empty($key))
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	else
 	{
 		$query = "SELECT DATE_FORMAT(NOW(), '%m/%d/%Y') as update_date";
 		$res = getResult($query);
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 }
@@ -534,7 +534,7 @@ $(document).ready(function() {
 				{
 					$comsContacts = "";
 					$comsContactsEmail = "";
-					while ($line = mysql_fetch_assoc($res))
+					while ($line = $res->fetch_assoc())
 					{
 						extract($line);
 						$comsContacts .= "<option value=\"$comsContact\">$comsContact</option>\n";	
@@ -736,7 +736,7 @@ $(document).ready(function() {
                     if (checkResult($res))
                     {
 						$productList = '';
-                        while ($line = mysql_fetch_assoc($res))
+                        while ($line = $res->fetch_assoc())
                         {
                             extract($line);
                             $productList .= "\n<option value=\"$prodID\">$prodDesc</option>\n";	
@@ -780,7 +780,7 @@ $(document).ready(function() {
 	if (checkResult($res))
 	{
 		$supplierList = '';
-		while($line = mysql_fetch_assoc($res))
+		while($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$supplierList .= "\n<option value='$supplierID'>$supplierName</option>";
@@ -1067,7 +1067,7 @@ $(document).ready(function() {
 				$res = getResult($query);
 				if (checkResult($res))
 				{
-					while ($line = mysql_fetch_assoc($res))
+					while ($line = $res->fetch_assoc())
 					{
 						extract($line);
 						echo "<option value=\"$prodID\">$prodDesc</option>\n";	

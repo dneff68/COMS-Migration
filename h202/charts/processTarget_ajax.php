@@ -75,7 +75,7 @@ if ($action == 'saveTargets')
 			$res = getResult($query);
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 				$titleString = "#I" . $rtuID;
 				$slotcnt = 0;

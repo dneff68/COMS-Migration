@@ -73,13 +73,13 @@ include_once 'db_mysql.php';
 
 	//echoResults($res);
 
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	
 	$res = getResult("SELECT s.supplierName, s.contact as supplierContact FROM supplier s WHERE supplierID = $supplierID");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	
@@ -87,7 +87,7 @@ include_once 'db_mysql.php';
 			and d.deliveryID=$id LIMIT 1");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	
@@ -170,7 +170,7 @@ Atlanta, GA 30339<br />
   $res = getResult("SELECT carrierName, contact as carrierContact, phone as carrierPhone FROM carrier WHERE carrierID = $carrierID");
   if (checkResult($res))
   {
-  	$line = mysql_fetch_assoc($res);
+  	$line = $res->fetch_assoc();
 	extract($line);
   }
   ?>
@@ -229,7 +229,7 @@ Atlanta, GA 30339<br />
 	if (checkResult($res))
 	{
 		$cnt = 1;
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$po_out = '';

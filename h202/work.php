@@ -43,7 +43,7 @@ die;
 $res = getResult("Select siteID, deliveryEmailDist from site");
 if (checkResult($res))
 {
-	while( $line = mysql_fetch_assoc($res) )
+	while( $line = $res->fetch_assoc() )
 	{
 		extract($line);
 		$emails = explode("\n", $deliveryEmailDist);
@@ -70,7 +70,7 @@ $res = getResult("select distinct email from customerLoginEmail order by email")
 if (checkResult($res))
 {
 	executeQuery("TRUNCATE TABLE customerLoginEmail");
-	while( $line = mysql_fetch_assoc($res) )
+	while( $line = $res->fetch_assoc() )
 	{
 		extract($line);
 		$email = trim($email);
@@ -167,7 +167,7 @@ $res = getResult("SELECT max(date) as date, monitorID FROM data WHERE monitorID=
 	cast(date as date) >= DATE_ADD(cast(NOW() as date), INTERVAL -25 day) group by cast(date as date) order by date desc"); 
 if (checkResult($res))
 {
-	while( $line = mysql_fetch_assoc($res) )
+	while( $line = $res->fetch_assoc() )
 	{
 		extract($line);
 		generateStats($monitorID, "'$date'");
@@ -198,7 +198,7 @@ while ($mline = mysql_fetch_assoc($mres))
 		cast(date as date) >= DATE_ADD(cast(NOW() as date), INTERVAL -25 day) group by cast(date as date) order by date desc"); 
 	if (checkResult($res))
 	{
-		while( $line = mysql_fetch_assoc($res) )
+		while( $line = $res->fetch_assoc() )
 		{
 			extract($line);
 			generateStats($monitorID, "'$date'");

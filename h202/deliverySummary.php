@@ -86,7 +86,7 @@ if ($genTxt == 1 && file_exists('/var/www/html/CHT/h202/deliveries.txt'))
 $res = getResult($query);
 if (checkResult($res))
 {
-	while ($line = mysql_fetch_assoc($res))
+	while ($line = $res->fetch_assoc())
 	{
 		extract($line);
 	
@@ -144,9 +144,9 @@ if (checkResult($res))
 			$statusVal =  '<span class="spinAlert"><br>-- Change Order --</span>';
 		
 		$cntRes = getResult("SELECT deliveryID FROM deliveryEmailLog WHERE deliveryID=$deliveryID");
-		$totCnt = mysql_num_rows($cntRes);
+		$totCnt = mysqli_num_rows($cntRes);
 		$cntRes = getResult("SELECT deliveryID FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived > '0'");
-		$readCnt = mysql_num_rows($cntRes);
+		$readCnt = mysqli_num_rows($cntRes);
 		
 		if ($totCnt > 0)
 		{
@@ -257,7 +257,7 @@ Sort by:
     	$res = getResult("SELECT tankName, monitorID FROM tank ORDER BY tankName");
 		if (checkResult($res))
 		{
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				$sel = $monitorID == $DELIVERY_SITE_FILTER ? ' SELECTED' : '';

@@ -1,9 +1,10 @@
-<?
+<?php
 session_start();
+include_once '../lib/chtFunctions.php';
+include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
+
 
 	if (empty($id))
 	{
@@ -73,13 +74,13 @@ include_once 'db_mysql.php';
 
 	//echoResults($res);
 
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	
 	$res = getResult("SELECT s.supplierName, s.contact as supplierContact FROM supplier s WHERE supplierID = $supplierID");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	
@@ -87,7 +88,7 @@ include_once 'db_mysql.php';
 			and d.deliveryID=$id LIMIT 1");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	
@@ -114,7 +115,7 @@ include_once 'db_mysql.php';
     <td width="230" align="right" valign="middle" class="spinSmallTitle">Date Ordered:</td>
     <td width="230" valign="middle"><?=$dateOrdered?></td>
   </tr>
-	<?
+	<?php
 		$poRow1 = "&nbsp;";
 		$poRow2 = "&nbsp;";
 		if (!$fullView)
@@ -146,7 +147,7 @@ include_once 'db_mysql.php';
 Atlanta, GA 30339<br />
 (877) 346-4262 </strong></td>
 
-<?
+<?php
 
 	if ($status != 'Ordered')
 	{
@@ -170,7 +171,7 @@ Atlanta, GA 30339<br />
   $res = getResult("SELECT carrierName, contact as carrierContact, phone as carrierPhone FROM carrier WHERE carrierID = $carrierID");
   if (checkResult($res))
   {
-  	$line = mysql_fetch_assoc($res);
+  	$line = $res->fetch_assoc();
 	extract($line);
   }
   ?>
@@ -192,7 +193,7 @@ Atlanta, GA 30339<br />
     <td align="right"><div align="right"></div></td>
     <td align="right"><div align="left"></div></td>
   </tr>
-<? 
+<?php 
     if ($fullView)
 	{
 		$query = "SELECT DISTINCT s.siteID, s.siteLocationName, s.contact as siteContact,
@@ -229,7 +230,7 @@ Atlanta, GA 30339<br />
 	if (checkResult($res))
 	{
 		$cnt = 1;
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$po_out = '';
@@ -267,7 +268,7 @@ Atlanta, GA 30339<br />
   </tr>
   <tr>
     <td class="spinSmallTitle"><div align="right">Product:</div></td>
-<?
+<?php
 	//$pct = strpos('%', $concentration) === false ? '%' : '';
 ?>
     <td><div align="left"><?= "$product $concentration"?></div></td>
@@ -276,7 +277,7 @@ Atlanta, GA 30339<br />
   </tr>
 </table>
 <br />
-<?
+<?php
 
 $cnt = 1;
 $totalQuantity = 0;

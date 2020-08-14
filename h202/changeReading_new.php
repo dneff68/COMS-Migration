@@ -8,7 +8,7 @@ include_once 'db_mysql.php';
 $res = getResult("SELECT m.units, d.value as storedValue, t.diameter from monitor m, data d, tank t where d.monitorID=m.monitorID and d.date='$datetime' and m.monitorID='$monitorID' and t.monitorID='$monitorID' LIMIT 1");
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 

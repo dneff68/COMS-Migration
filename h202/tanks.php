@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
@@ -15,17 +15,24 @@ if (!isLoggedIn())
 	die;
 }
 
-if ($_POST["genstat"] == 1)
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-	bigecho('generating all stats');
-	generateAllStats();
+	extract($_POST);
+	if ($_POST["genstat"] == 1)
+	{
+		bigecho('generating all stats');
+		generateAllStats();
+	}
+}
+else
+{
+	$tankAction='statusView';	
 }
 
-extract($_POST);
 		// bigEcho("Neff: " . gettype($_SESSION['SHOWFACTORIES']));
 		// bigEcho("Neff: " . gettype($tankAction));
 		// die;
-if (is_null($tankAction)) $tankAction='statusView';
+//if (is_null($tankAction)) $tankAction='statusView';
 if ( empty($_SESSION['VIEWMODE']) || $tankAction == 'statusView')
 {
 	
@@ -108,11 +115,10 @@ if (!empty($tankAction))
 	}
 }
 
-$region = $_POST['region'];
-bigEcho($region . " tanks.php 109");
 
 if (!empty($region))
 {
+	bigEcho($region . " tanks.php 109");
 	if (empty($_SESSION['REGION_FILTER']))
 	{
 		$_SESSION['REGION_FILTER'] = '';

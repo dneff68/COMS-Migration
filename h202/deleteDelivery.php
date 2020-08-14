@@ -15,7 +15,7 @@ if (!empty($id))
 	$res = getResult("select deliveryID, deliveryDate from delivery where deliveryID=$id");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		$deliveryDate = $line['deliveryDate'];
 		executeQuery("delete from delivery where deliveryID=$id LIMIT 1");
 		updateDeliveryTankStats($id, $deliveryDate); // this MUST come after the delete from delivery query

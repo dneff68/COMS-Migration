@@ -48,7 +48,7 @@ elseif ($action == 'toggleHidden')
 	$query = "SELECT custView from planning_items where itemID=$itemID";
 	$res = getResult($query);
 	if (!checkResult($res)) return;
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	
 	$newView = $custView == 1 ? 0 : 1;
@@ -65,7 +65,7 @@ elseif ($action == 'getItem')
 	$res = getResult($query);
 	if (!checkResult($res)) return;
 	
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	echo("$title~$pctComplete~$responsible~$item_timing~$impact~$highlight");
 	return;
@@ -114,7 +114,7 @@ elseif ($action == 'addItem')
 		c.email='$CUSTOMER_EMAIL'");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		//echo "$title: $siteIDs";
 	}
@@ -145,7 +145,7 @@ elseif ($action=='clearAlarm')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			executeQuery("UPDATE flowAlarm SET cleared=1 WHERE alarmID=$alarmID LIMIT 1");
 			echo "-- Cleared --";

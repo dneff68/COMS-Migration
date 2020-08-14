@@ -5,6 +5,12 @@ $_SESSION['ROOT_URL'] = "/";
 $_SESSION['SHOWFACTORIES'] = '';
 $_SESSION['SHOWCARRIERS'] = '';
 $_SESSION['SHOWTERMINALS'] = '';
+$_SESSION['SHOWINACTIVE'] = 'yes';
+$_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
+$_SESSION['SHOWUNMONITORED'] = '';
+$_SESSION['CUSTOMER_EMAIL'] = '';
+
+
 $_SESSION['JUMP'] = '';
 $_SESSION['DELIVERY_COMMITTED'] = '';
 $_SESSION['USED_PO_CODES'] = '';
@@ -16,6 +22,8 @@ $_SESSION['TANK_DETAILS'] = array();
 
 $_SESSION['ZIPCOLLECTION'] = array();
 $_SESSION['CONVERTED_QUANTITIES'] = array();
+
+//$_SESSION['sendInvoices'] == 'yes';
 
 
 //$_SESSION['ROOT_URL'] = "http://h202.customhostingtools.com/";

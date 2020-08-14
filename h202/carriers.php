@@ -44,7 +44,7 @@ function addSiteToArray($siteID, &$arr)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		
 		if (empty($monitorLatLng))
@@ -93,7 +93,7 @@ if (!empty($custEmail))
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$sites = explode(',', $siteIDs);
 			foreach ($sites as $siteID)
@@ -111,7 +111,7 @@ else
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			addSiteToArray($siteID, $tankArray);

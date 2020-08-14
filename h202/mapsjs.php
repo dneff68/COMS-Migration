@@ -44,7 +44,7 @@ $res = getResult($query);
 
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 
@@ -120,7 +120,7 @@ function drawTank($tankID, $LatLng, $i)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		//die("$value $concentration");
 		if (empty($con))
@@ -256,7 +256,7 @@ function drawSamplePoints($tankID)
 	$res = getResult($query);
 	if (!checkResult($res)) return;
 	
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	list($lat, $lang) = explode(',', $LatLng);
 	
@@ -290,7 +290,7 @@ function drawTrunkline($tankID)
 
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	//else

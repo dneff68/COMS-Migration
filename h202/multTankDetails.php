@@ -146,7 +146,7 @@ if ($STATUS_FILTER == 'unass')
 	
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			
@@ -212,7 +212,7 @@ if ($STATUS_FILTER == 'unass')
 	
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$marr[$monitorID] = "<tr class=\"spinTableBarOdd\">
@@ -286,7 +286,7 @@ else
 	
 		$rowcnt = 0;
 		$rows = '';
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$status = checkTankStatus($monitorID, $STATUS_FILTER);
@@ -415,10 +415,10 @@ if (true) //david() || jim())
 						if ($last == 'x')
 						{
 							$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID'");
-							if (mysql_num_rows($alarmRes) > 0)
+							if (mysqli_num_rows($alarmRes) > 0)
 							{
 								$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID' AND cleared=0");
-								if (mysql_num_rows($alarmRes) > 0)
+								if (mysqli_num_rows($alarmRes) > 0)
 									$alarmColor = '#C00';
 								else
 									$alarmColor = '#0000ff';
@@ -489,7 +489,7 @@ else
 //$debug .= "number added: $rowcnt<br>";
 $rowcnt = sizeof($marr);
 //bigecho($query);
-// $cnt = mysql_num_rows($res);
+// $cnt = mysqli_num_rows($res);
 if (count($ZIPCOLLECTION) > 0 && $STATUS_FILTER != 'unass')
 	$title = "<td colspan=\"4\"><div align=\"right\"><a href='multTankDetails.php?clearlist=yes'>reset list</a></div></td>";
 else

@@ -178,7 +178,7 @@ function monitorCheck(val)
 //echoResults($res);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			
 			session_register('originalUnits');
@@ -382,7 +382,7 @@ unmonitored</span></td>
 <select name="prodID" id="prodID" onchange="setConcentration(this.value)">
       <?
 	  $res = getResult("select prodID as prodid, value from product order by value desc");
-	  while ($line = mysql_fetch_assoc($res))
+	  while ($line = $res->fetch_assoc())
 	  {
 	  	extract($line);
 	  	$sel = $prodID == $prodid ? 'SELECTED' : '';

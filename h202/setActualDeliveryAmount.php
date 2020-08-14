@@ -17,7 +17,7 @@ if ($REQUEST_METHOD == 'POST')
 	$res = getResult("SELECT quantity from deliveryTanks WHERE deliveryID=$id AND monitorID='$monitorID' LIMIT 1");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);	
+		$line = $res->fetch_assoc();	
 		$divID = "del_$id-$monitorID";
 		$js = "obj = callWin.document.getElementById('$divID');\n";
 		$quantityOut = "Qty: <strong>$quanty gal</strong>&nbsp;&nbsp; - &nbsp;&nbsp;<a href=\"javascript:surfDialog(\'/setActualDeliveryAmount.php?id=$id&monitorID=$monitorID\',460,200,window,false)\">set actual delivered</a></strong>";

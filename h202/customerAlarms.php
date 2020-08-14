@@ -40,7 +40,7 @@ function clearAlarm(id)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 	}
 	else
@@ -71,7 +71,7 @@ function clearAlarm(id)
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		while($line = mysql_fetch_assoc($res))
+		while($line = $res->fetch_assoc())
 		{
 			extract($line);
 			if ($alarm == 'low')

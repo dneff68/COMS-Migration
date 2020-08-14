@@ -9,10 +9,18 @@ include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
 //global $USERID;
+$search = 0;
+$customerView = 0; 
+$delivery = 0;
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+	extract($_POST);
+}
+
 if ($_POST['debug'] = 1) showArray($_SESSION);
 
 //if (david()) generateAllStats();
-	$_SESSION['TOTAL_DB_TIME'] 	= 0.0;
+$_SESSION['TOTAL_DB_TIME'] 	= 0.0;
 if ($david_debug)
 {
 	$current_timestamp = microtime(true);
@@ -45,7 +53,7 @@ else
 		ini_set("display_errors", 1); 				
 	}
 	
-	if (strpos($USERID, '@') > 0)
+	if (strpos($_SESSION["USERID"], '@') > 0)
 	{
 		// customer is logged in
 		$query = "SELECT
@@ -55,7 +63,7 @@ else
 					customerLoginEmail c
 					WHERE
 					cust.customerID=c.customerID and
-					c.email='$USERID' and cust.siteID IS NOT NULL LIMIT 1";
+					c.email='" . $_SESSION["USERID"] . "' and cust.siteID IS NOT NULL LIMIT 1";
 		$custres = getResult($query);
 //		bigEcho(gettype($custres));
 		if (checkResult($custres))
@@ -66,7 +74,7 @@ else
 		}
 	}
 	
-	if (strpos($customerEmail, '@') > 0)
+	if (strpos($_SESSION['CUSTOMER_EMAIL'], '@') > 0)
 	{
 		// USP is clicking into the customer summary area
 		$_SESSION['CUSTOMER_EMAIL'] = $customerEmail;

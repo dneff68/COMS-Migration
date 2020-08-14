@@ -59,7 +59,7 @@ function setDeliveryTime()
 		$truckCapacities = '';
 		if (checkResult($res))
 		{
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				$truckCapacities .= ",$capacity";
@@ -77,7 +77,7 @@ function setDeliveryTime()
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 			
@@ -95,7 +95,7 @@ function setDeliveryTime()
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 
@@ -146,7 +146,7 @@ function setDeliveryTime()
 			$res = getResult("SELECT supplierName as suppliername, supplierID as t_supplier FROM supplier order by supplierName");
 			if (checkResult($res))
 			{
-				while ($line = mysql_fetch_assoc($res))
+				while ($line = $res->fetch_assoc())
 				{
 					extract($line);
 					$sel = '';
@@ -185,7 +185,7 @@ function setDeliveryTime()
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 	} 
@@ -222,12 +222,12 @@ function setDeliveryTime()
     <div align="left" class="style4"> existing carrier:<br />
       <select name="carrier" id="carrier" onchange="lookupCarrier(this.value)">
         <option value="--none--">--- no carrier ---</option>
-        <?
+        <?php
 			$clearNew = false;
 			$res = getResult("SELECT carrierName as carriername, carrierID as t_carrier FROM carrier order by carrierName");
 			if (checkResult($res))
 			{
-				while ($line = mysql_fetch_assoc($res))
+				while ($line = $res->fetch_assoc())
 				{
 					extract($line);
 					$sel = '';
@@ -269,7 +269,7 @@ function setDeliveryTime()
 			$res = getResult($query);
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 			}
 		}

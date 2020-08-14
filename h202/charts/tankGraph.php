@@ -60,7 +60,7 @@ t.prodID = p.prodID";
 $res = getResult($query);
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	if (!empty($targetDaily))
 	{
@@ -168,7 +168,7 @@ $DEV_MINUS_SERIES 	= '';
 $res = getResult("SELECT (deviation_plus + $targetDosage) AS DEV_PLUS, CAST($targetDosage - deviation_minus AS SIGNED) AS DEV_MINUS from tank WHERE tankID='$monitorID' LIMIT 1");
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 }
 
@@ -201,7 +201,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 					 cast(readingDate as date) = DATE_ADD( cast( NOW() AS date ) , INTERVAL -$i DAY )");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		// override targetDosage with the history for this day
 		$query = "SELECT targetDose as targetDosage, targetDaily FROM tankHistory WHERE date <= '$readingDateVal' and monitorID='$monitorID' order by date desc";
@@ -279,7 +279,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 		
 			if (checkResult($res))
 			{
-				$tmpLine = mysql_fetch_assoc($res);
+				$tmpLine = $res->fetch_assoc();
 				extract($tmpLine);
 				
 				if ($tmpDelStatus == 'Cancelled')
@@ -334,7 +334,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 		where monitorID='$monitorID' and cast(date as date) = DATE_ADD(cast(NOW() as date), INTERVAL -$i DAY) ORDER BY date DESC LIMIT 1");
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 
@@ -349,7 +349,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 		$res = getResult("SELECT (deviation_plus + $targetDosage) AS DEV_PLUS, CAST($targetDosage - deviation_minus AS SIGNED) AS DEV_MINUS from tank WHERE tankID='$monitorID' LIMIT 1");
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 		}
 		$DEV_MINUS = max(0, $DEV_MINUS);
@@ -379,7 +379,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 	where monitorID='$monitorID' and cast(date as date) = DATE_ADD(cast(NOW() as date), INTERVAL -$i DAY) ORDER BY date DESC LIMIT 1");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 
 		$value = $units == 'Inches' ? inchToGal($value, $diameter) : $value;

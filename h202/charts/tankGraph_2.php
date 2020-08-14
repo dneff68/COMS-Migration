@@ -47,7 +47,7 @@ t.prodID = p.prodID";
 $res = getResult($query);
 if (checkResult($res))
 {
-	$line = mysql_fetch_assoc($res);
+	$line = $res->fetch_assoc();
 	extract($line);
 	if (!empty($targetDaily))
 	{
@@ -149,7 +149,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 					 cast(readingDate as date) = DATE_ADD( cast( NOW() AS date ) , INTERVAL -$i DAY )");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		// override targetDosage with the history for this day
 		$histRes = getResult("SELECT DAYOFWEEK(DATE_ADD( cast( date AS date ) , INTERVAL -$i DAY )) as dow, 
@@ -267,7 +267,7 @@ for ($i = $daysAgo; $i >= $stopDay; $i--)
 	where monitorID='$monitorID' and cast(date as date) = DATE_ADD(cast(NOW() as date), INTERVAL -$i DAY) ORDER BY date DESC LIMIT 1");
 	if (checkResult($res))
 	{
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 
 		$value = $units == 'Inches' ? inchToGal($value, $diameter) : $value;

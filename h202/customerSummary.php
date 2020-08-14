@@ -105,7 +105,7 @@ if (checkResult($catRes))
 	{
 		extract($catLine);
 		$itemRes = getResult("SELECT pi.itemID, pi.custView, pi.title, pi.pctComplete, pi.responsible, pi.item_timing, pi.impact FROM planning_items pi where pi.customerID='$customerID' and pi.custView=1 and pi.catID=$catID and pi.pctComplete < 100 order by itemID");
-		$itemCount = mysql_num_rows($itemRes);
+		$itemCount = mysqli_num_rows($itemRes);
 		
 		// Category Row
 		echo("\n

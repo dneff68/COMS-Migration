@@ -96,7 +96,7 @@ die;
 	if (checkResult($res))
 	{
 		echoResults($res);
-		$line = mysql_fetch_assoc($res);
+		$line = $res->fetch_assoc();
 		extract($line);
 		$PROCESS_TARGET_ARRAY = unserialize($hourlyTargets);
 		showArray($PROCESS_TARGET_ARRAY);		

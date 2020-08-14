@@ -378,13 +378,13 @@ function getLevelOfService($montiorID, $startDate, $endDate)
 
   function showSiteTable(&$result, $title='defalut')
   {
-  	if (mysql_num_rows($result) <= 0)
+  	if (mysqli_num_rows($result) <= 0)
   	{
   	  return;
   	}
 	if ($title == 'defalut')
 	{
-  		echo "Total Rows: ".mysql_num_rows($result);
+  		echo "Total Rows: ".mysqli_num_rows($result);
 	}
 	else
 	{
@@ -1533,7 +1533,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 									monitorID = '$monitorID' and 
 									date > concat( '$deliveryDate', ' $deliveryTimeMil' )";
 					$alertRes = getResult($query);
-					if (mysql_num_rows($alertRes) > 0)
+					if (mysqli_num_rows($alertRes) > 0)
 					{
 						$sendAlert = true;
 					}
@@ -1546,7 +1546,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 									cast(date as date) = '$deliveryDate' and 
 									monitorID = '$monitorID'";
 					$alertRes = getResult($query);
-					$readingCount = mysql_num_rows($alertRes);
+					$readingCount = mysqli_num_rows($alertRes);
 					if ($alertRule == 'AfterSecondReading')
 					{
 						$sendAlert = $readingCount > 2;
@@ -1631,7 +1631,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 										monitorID = '$monitorID' and 
 										date > concat( '$deliveryDate', ' $deliveryTimeMil' )";
 						$alertRes = getResult($query);
-						if (mysql_num_rows($alertRes) > 0)
+						if (mysqli_num_rows($alertRes) > 0)
 						{
 							$sendAlert = true;
 						}
@@ -1644,7 +1644,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 										cast(date as date) = '$deliveryDate' and 
 										monitorID = '$monitorID'";
 						$alertRes = getResult($query);
-						$readingCount = mysql_num_rows($alertRes);
+						$readingCount = mysqli_num_rows($alertRes);
 						if ($alertRule == 'AfterSecondReading')
 						{
 							$sendAlert = $readingCount > 2;

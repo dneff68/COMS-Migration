@@ -23,7 +23,7 @@ if ($REQUEST_METHOD == 'POST')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			echo $sectionVals;
 		}
@@ -36,7 +36,7 @@ if ($REQUEST_METHOD == 'POST')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			echo $email ;
 		}
@@ -52,7 +52,7 @@ if ($REQUEST_METHOD == 'POST')
 
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$values = json_decode($section1);
 			$updated_by = $values->{'updated_by'};
@@ -86,7 +86,7 @@ if ($REQUEST_METHOD == 'POST')
 	
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 				$values = json_decode($section1, true);
 				extract($values);
@@ -125,7 +125,7 @@ if ($REQUEST_METHOD == 'POST')
 			$res = getResult($query);
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 			}
 

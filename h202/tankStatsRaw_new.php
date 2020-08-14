@@ -14,13 +14,13 @@ if ($regen == 1)
 
 function echoRawData(&$result, $title='defalut', $width='', $units='Gallons', $diameter=1)
 {
-	if (mysql_num_rows($result) <= 0)
+	if (mysqli_num_rows($result) <= 0)
 	{
 	  return;
 	}
 	if ($title == 'defalut')
 	{
-		echo "Total Rows: ".mysql_num_rows($result);
+		echo "Total Rows: ".mysqli_num_rows($result);
 	}
 	else
 	{

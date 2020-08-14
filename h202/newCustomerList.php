@@ -161,7 +161,7 @@ a {
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$section1 = fixString($section1);
@@ -212,7 +212,7 @@ a {
 	$res = getResult($query);
 	if (checkResult($res))
 	{
-		while ($line = mysql_fetch_assoc($res))
+		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
 			$editLink = '&nbsp;';

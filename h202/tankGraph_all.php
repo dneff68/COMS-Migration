@@ -49,7 +49,7 @@ if (!checkResult($res))
 	echo("-- NO TANKS IN DATABASE --");
 }
 	
-while ($line = mysql_fetch_assoc($res))
+while ($line = $res->fetch_assoc())
 {
 		extract($line);
 		include "graphBanner.php";
@@ -94,7 +94,7 @@ while ($line = mysql_fetch_assoc($res))
 							 cast(readingDate as date) = DATE_ADD( cast( NOW() AS date ) , INTERVAL -$i DAY )");
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 			}
 			else
@@ -171,7 +171,7 @@ while ($line = mysql_fetch_assoc($res))
 			where monitorID='$monitorID' and cast(date as date) = DATE_ADD(cast(NOW() as date), INTERVAL -$i DAY) ORDER BY date DESC LIMIT 1");
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 		
 				$value = $units == 'Inches' ? inchToGal($value, $diameter) : $value;

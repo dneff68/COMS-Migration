@@ -17,7 +17,7 @@ if ($REQUEST_METHOD == 'POST')
 		$errFlag = 1;
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$values = json_decode($section1);
 			$supplierID = $values->{'sel_site_info_supplier_1'};
@@ -37,7 +37,7 @@ if ($REQUEST_METHOD == 'POST')
 		if (checkResult($res))
 		{
 			$emailDistList = '';
-			while ($line = mysql_fetch_assoc($res))
+			while ($line = $res->fetch_assoc())
 			{
 				extract($line);
 				$emailDistList .= "<br />$emailTo";
@@ -49,7 +49,7 @@ if ($REQUEST_METHOD == 'POST')
 		$res = getResult("SELECT emailAddresses FROM newCustomerEmailDist where supplierID = $supplierID");
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$emailArr = explode(',', $emailAddresses);
 			foreach( $emailArr as $emailTo )
@@ -76,7 +76,7 @@ if ($REQUEST_METHOD == 'POST')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			echo $sectionVals;
 		}
@@ -90,7 +90,7 @@ if ($REQUEST_METHOD == 'POST')
 		$res = getResult($query);
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$phone = str_replace('(', '', $phone);
 			$phone = str_replace(')', '', $phone);
@@ -134,7 +134,7 @@ if ($REQUEST_METHOD == 'POST')
 
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);
+			$line = $res->fetch_assoc();
 			extract($line);
 			$values = json_decode($section1);
 			$updated_by = $values->{'updated_by'};
@@ -169,7 +169,7 @@ if ($REQUEST_METHOD == 'POST')
 	
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 				$values = json_decode($section1, true);
 				extract($values);
@@ -191,7 +191,7 @@ if ($REQUEST_METHOD == 'POST')
 			$res = getResult($query);			
 			if (checkResult($res))
 			{
-				$line = mysql_fetch_assoc($res);
+				$line = $res->fetch_assoc();
 				extract($line);
 				
 				echo "The site '$customer_name_formal (id:$tmp_siteID)' already exists.  Update the customer name in Section 1 to continue.";

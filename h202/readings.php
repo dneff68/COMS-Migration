@@ -118,7 +118,7 @@ function checkResult($result)
 {
 	if ($result)
 	{
-		if (mysql_num_rows($result) > 0)
+		if (mysqli_num_rows($result) > 0)
 		{
 			return true;
 		}
@@ -488,7 +488,7 @@ while (!feof($stdin)) // neff
 										$res = getResult("select units from monitor where monitorID='$monitorID' LIMIT 1");
 										if (checkResult($res))
 										{
-											$line = mysql_fetch_assoc($res);
+											$line = $res->fetch_assoc();
 											extract($line);
 										}
 														

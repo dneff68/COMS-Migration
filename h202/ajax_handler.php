@@ -13,7 +13,7 @@ if ($action == "showActualDeliveryEdit")
 		//echo "SELECT quantity from deliveryTanks WHERE deliveryID=$deliveryID AND monitorID='$monitorID' LIMIT 1";
 		if (checkResult($res))
 		{
-			$line = mysql_fetch_assoc($res);	
+			$line = $res->fetch_assoc();	
 			extract($line);
 			$divID = "del_" . $deliveryID . "__" . $monitorID;
 			$quantityOut = "Qty: <strong>$quantity gal</strong>&nbsp;&nbsp; - &nbsp;&nbsp;<font color='#BB0000'><a href=\"javascript:showActualDeliveryEdit('$divID')\">Actual: <strong>$actual</strong></a></font>";
