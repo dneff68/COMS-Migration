@@ -33,7 +33,8 @@ else
 		// bigEcho("Neff: " . gettype($tankAction));
 		// die;
 //if (is_null($tankAction)) $tankAction='statusView';
-if ( empty($_SESSION['VIEWMODE']) || $tankAction == 'statusView')
+bigEcho("View Mode: " . $_SESSION['VIEWMODE']);
+if ( $_SESSION['VIEWMODE'] == '' || $tankAction == 'statusView')
 {
 	
 	if ($_SESSION['VIEWMODE'] == 'deliveryView')
@@ -186,6 +187,8 @@ $unmonFilt	  = $_SESSION['SHOWUNMONITORED'] 	== 'yes' ? '' : "and t.monitorID NO
 
 
 if ($_SESSION['VIEWMODE'] == empty($_SESSION['VIEWMODE'])) $_SESSION['VIEWMODE'] = 'statusView';
+
+bigEcho('1. View Mode: ' . $_SESSION['VIEWMODE']);
 if ($_SESSION['VIEWMODE'] == 'statusView') 
 {
 	// Get no reading count
@@ -597,9 +600,18 @@ function setmapvis()
 	{
 		$init = "&initialize=yes";
 	}
-	bigEcho($_SESSION['ROOT_URL'] . $_SESSION['VIEWMODE'] == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init");
+	if ($_SESSION['VIEWMODE'] == 'statusView')
+	{
+		$frameSRC = $_SESSION['ROOT_URL'] . 'multTankDetails.php';
+	}
+	else
+	{
+		$frameSRC = $_SESSION['ROOT_URL'] . "deliveryDetails.php$id$upd$init";
+	}
 ?>
-<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650 src="<?php echo $_SESSION['ROOT_URL'] . $_SESSION['VIEWMODE'] == 'statusView' ? 'multTankDetails.php' : "deliveryDetails.php$id$upd$init"?>" frameborder="0" ></iframe>
+
+<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650 
+		src="<?php echo $frameSRC;?>" frameborder="0" ></iframe>
 
 </center>
 <?php showSessionVars(); ?>

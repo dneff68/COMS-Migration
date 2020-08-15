@@ -1,12 +1,13 @@
 <?php
 include_once "../lib/chtFunctions.php";
 
-$_SESSION['ROOT_URL'] = "/";
+$_SESSION['ROOT_URL'] = "";
 $_SESSION['SHOWFACTORIES'] = '';
 $_SESSION['SHOWCARRIERS'] = '';
 $_SESSION['SHOWTERMINALS'] = '';
 $_SESSION['REGION_FILTER'] = '';
 $_SESSION['STATUS_FILTER'] = '';
+$_SESSION['VIEWMODE'] = '';
 $_SESSION['LEADTIME_OVERRIDE'] = '';
 
 $_SESSION['SHOWINACTIVE'] = 'yes';
