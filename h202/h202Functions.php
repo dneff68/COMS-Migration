@@ -919,8 +919,9 @@ function daysInCurrentStatus($monitorID)
 
 function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 {
-	global $debug;
-
+	$latestDose = -1;
+	$exceedcap = -1;
+	$status = '';
 	if (($statkey == 'unmon' || $statkey == '') && 	substr($monitorID, 0, 5) == 'none-')
 	{
 		return "unmon,Tank Unmonitored";
@@ -940,16 +941,6 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	}
 
 	// check for no reading EVER
-//	$query = "SELECT date as lastReading 
-//					FROM data WHERE monitorID='$monitorID'";
-//	$res = getResult($query);
-//	if (!checkResult($res))
-//	{
-//		$noreading = 1;
-//		$daysSinceLastReading = getDaysSinceLastReading($monitorID);
-//	}
-//	else // there was at least one reading, check to see if it was over 0
-//	{
 		$query = "SELECT date as lastReading 
 						FROM data WHERE monitorID='$monitorID' and value > 0 ORDER BY date DESC LIMIT 1";
 		$res = getResult($query);
@@ -1192,7 +1183,6 @@ function getDeliveryAvg($monitorID, $endDate = 'NOW()')
 	//$query = "SELECT latestDose FROM tankStats WHERE monitorID='$monitorID' AND nodose=0 and latestDose > 0 ORDER BY readingDate DESC LIMIT 5";
 
 	$query = "SELECT `readingDate`, latestDose FROM tankStats WHERE monitorID='$monitorID' AND nodose=0 and latestDose > 0 and cast(readingDate as date) <= $endDate ORDER BY readingDate DESC LIMIT 5";
-
 	$res = getResult($query);
 	if (checkResult($res))
 	{

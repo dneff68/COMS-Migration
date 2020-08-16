@@ -1,9 +1,40 @@
-<?
+<?PHP
 session_start();
-include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-include_once '/var/www/html/CHT/h202/h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
+$USERID = $_SESSION['USERID'];
+
+
+if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
+{
+	include_once 'GlobalConfig.php';
+	include_once 'h202Functions.php';
+	include_once '../lib/db_mysql.php';
+	include_once '../lib/chtFunctions.php';	
+}
+else
+{
+	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
+	include_once '/var/www/html/CHT/h202/h202Functions.php';
+	include_once 'chtFunctions.php';
+	include_once 'db_mysql.php';
+}
+
+$clearlist = false;
+if(isset($_GET['clearlist'])){
+    $clearlist = $_GET['clearlist'];
+}
+
+$zip = false;
+if(isset($_GET['zip'])){
+    $zip = $_GET['zip'];
+}
+
+$more = '';
+$inactiveFilt = '';
+$tmpShutdownFilt = '';
+$more  = '';
+$regfilt  = '';
+$unmonFilt = '';
+$custTanks = '';
 
 $david_debug = false;
 if ($david_debug)
@@ -80,7 +111,7 @@ if ($david_debug)
 </head>
 
 <body>
-<?
+<?PHP
 
 echo "<iframe id='ActionFrame'
 		 name='ActionFrame'
@@ -93,29 +124,23 @@ Location	Tank	Tank Id	Monitor Id	Error Code	Type	Reading	Reading	Reading	Reading
 */
 if ($clearlist == 'yes')
 {
-	array_splice($ZIPCOLLECTION,0);
-	unset($ZIPCOLLECTION);
-	$ZIPCOLLECTION = '';
-}
-
-if (empty($ZIPCOLLECTION))
-{
-	session_register('ZIPCOLLECTION');
-	$ZIPCOLLECTION = array();
+	array_splice($_SESSION['ZIPCOLLECTION'],0);
+	unset($_SESSION['ZIPCOLLECTION']);
+	$_SESSION['ZIPCOLLECTION'] = '';
 }
 
 if (!empty($zip))
 {
-	if (!array_key_exists($zip, $ZIPCOLLECTION))
+	if (!array_key_exists($zip, $_SESSION['ZIPCOLLECTION']))
 	{
-		$ZIPCOLLECTION[$zip] = 1; // value of 1 is just a holder
+		$_SESSION['ZIPCOLLECTION'][$zip] = 1; // value of 1 is just a holder
 	}
 }
 
-if (count($ZIPCOLLECTION) > 0)
+if (count($_SESSION['ZIPCOLLECTION']) > 0)
 {
 	$more = " and (";
-	foreach ($ZIPCOLLECTION as $key => $storedzip)
+	foreach ($_SESSION['ZIPCOLLECTION'] as $key => $storedzip)
 	{
 		$more .= "s.zip LIKE '%$key%' || ";
 	}
@@ -123,7 +148,7 @@ if (count($ZIPCOLLECTION) > 0)
 }
 
 $marr = array();
-if ($STATUS_FILTER == 'unass')
+if ($_SESSION['STATUS_FILTER'] == 'unass')
 {
 	$rowcnt = 0;
 	$rows = '';
@@ -242,9 +267,9 @@ else
 	}
 	else
 	{
-		$inactiveFilt = $SHOWINACTIVE == 'yes' ? '' : "and m.status != 'Inactive'";
-		$tmpShutdownFilt = $SHOWTEMPSHUTDOWN == 'yes' ? '' : "and m.status != 'Temporary Shutdown'";
-		$unmonFilt	  = $SHOWUNMONITORED 	== 'yes' ? '' : "and t.monitorID NOT LIKE 'none%'";
+		$inactiveFilt = $_SESSION['SHOWINACTIVE'] == 'yes' ? '' : "and m.status != 'Inactive'";
+		$tmpShutdownFilt = $_SESSION['SHOWTEMPSHUTDOWN'] == 'yes' ? '' : "and m.status != 'Temporary Shutdown'";
+		$unmonFilt	  = $_SESSION['SHOWUNMONITORED'] 	== 'yes' ? '' : "and t.monitorID NOT LIKE 'none%'";
 	}
 	
 	$query = "select 
@@ -289,7 +314,7 @@ else
 		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
-			$status = checkTankStatus($monitorID, $STATUS_FILTER);
+			$status = checkTankStatus($monitorID, $_SESSION['STATUS_FILTER']);
 	
 			list($statkey, $status) = explode(',', $status);
 			$fontColor = $statkey == 'reorder' ? '#FFFF00' : '#ffffff';
@@ -309,7 +334,7 @@ else
 				$status .= "<div style=\"color:#ff0000\">-- Inactive --</div>";
 			}
 
-			if ( empty($STATUS_FILTER) || $statkey == $STATUS_FILTER || $STATUS_FILTER == 'all')
+			if ( empty($_SESSION['STATUS_FILTER']) || $statkey == $_SESSION['STATUS_FILTER'] || $_SESSION['STATUS_FILTER'] == 'all')
 			{
 			    $mkey = str_replace('-', '_', $monitorID);
 				$href = "javascript:parent.doAction('showMap');parent.frames['mapFrame'].marker" . $mkey . ".openInfoWindowHtml(parent.frames['mapFrame'].marker" . $mkey . ".html)";
@@ -395,44 +420,33 @@ else
 				if ($_SESSION['USERTYPE'] == 'super')
 				{
 					$spaces = empty($notesStatic) ? '<br><br><br><br>' : '';
-//					if (david() || jim())
-//					{
-//						$custEmail = getCustomerSummarySites($monitorID);
-//						$custSummary = '';
-//						if ( $custEmail )
-//						{
-//							$custSummary = "<a target='_parent' href='index.php?cust=1&customerEmail=$custEmail'>Customer Summary</a>&nbsp;&nbsp;";
-//						}
-//						$staticNotes .= "<div align='right' style='font-size:smaller'>$spaces $custSummary<a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
-//					}
-//					else
 
-if (true) //david() || jim())
-{
-						$staticNotes .= $spaces;
-						$last = strtolower( $monitorID[strlen($monitorID)-1] );
-						
-						if ($last == 'x')
-						{
-							$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID'");
-							if (mysqli_num_rows($alarmRes) > 0)
-							{
-								$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID' AND cleared=0");
-								if (mysqli_num_rows($alarmRes) > 0)
-									$alarmColor = '#C00';
-								else
-									$alarmColor = '#0000ff';
-							
-								$staticNotes .= "<div style='float:left;font-size:smaller'><a style='color:$alarmColor' href='javascript:surfDialog(\"customerAlarms.php?monitorID=$monitorID\",550,300,window,false)'>alarms</a></div>";
-							}
-						}
-						$staticNotes .= "<div style='float:right;font-size:smaller'><a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
-}
-else
-{
-						$staticNotes .= "<div align='right' style='font-size:smaller'>$spaces<a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
-}
+		if (true) //david() || jim())
+		{
+			$staticNotes .= $spaces;
+			$last = strtolower( $monitorID[strlen($monitorID)-1] );
+
+			if ($last == 'x')
+			{
+				$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID'");
+				if (mysqli_num_rows($alarmRes) > 0)
+				{
+					$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID' AND cleared=0");
+					if (mysqli_num_rows($alarmRes) > 0)
+						$alarmColor = '#C00';
+					else
+						$alarmColor = '#0000ff';
+				
+					$staticNotes .= "<div style='float:left;font-size:smaller'><a style='color:$alarmColor' href='javascript:surfDialog(\"customerAlarms.php?monitorID=$monitorID\",550,300,window,false)'>alarms</a></div>";
 				}
+			}
+			$staticNotes .= "<div style='float:right;font-size:smaller'><a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
+		}
+		else
+		{
+			$staticNotes .= "<div align='right' style='font-size:smaller'>$spaces<a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
+		}
+	}
 				$processLink = '';
 				$showProcessLink = 0;
 				if ($_SESSION['USERTYPE'] == 'super' || $_SESSION['USERTYPE'] == 'service')
@@ -488,21 +502,20 @@ else
 }
 //$debug .= "number added: $rowcnt<br>";
 $rowcnt = sizeof($marr);
-//bigecho($query);
 // $cnt = mysqli_num_rows($res);
-if (count($ZIPCOLLECTION) > 0 && $STATUS_FILTER != 'unass')
+if (count($_SESSION['ZIPCOLLECTION']) > 0 && $_SESSION['STATUS_FILTER'] != 'unass')
 	$title = "<td colspan=\"4\"><div align=\"right\"><a href='multTankDetails.php?clearlist=yes'>reset list</a></div></td>";
 else
 {
-	$t2 = '&nbsp;'; //$STATUS_FILTER == 'unass' ? '&nbsp;' : 'All Tanks';
+	$t2 = '&nbsp;'; //$_SESSION['STATUS_FILTER'] == 'unass' ? '&nbsp;' : 'All Tanks';
 	$title = "<td colspan=\"4\"><div align=\"right\">$t2</div></td>";
 }
 
 ?> 
 <table width="100%" border="1" align="left" cellpadding="3" cellspacing="0" bordercolorlight="#333333">
   <tr class="spinTableBarOdd">
-    <td width="259" align='left'>Showing <?=$rowcnt?> Tanks</td>
-    <?=$title?>
+    <td width="259" align='left'>Showing <?PHP echo $rowcnt?> Tanks</td>
+    <?php echo $title?>
   </tr>
   <tr class="spinTableTitle">
    <!-- <td><div align="center" class="style1">Customer Site</div></td>
@@ -515,19 +528,18 @@ else
 	<td width="496"><div align="center" class="style1">&nbsp;</div></td>
   </tr>
   
-<?
-//=$rows
-foreach ($marr as $row)
-{
-	echo($row);
-}
-
+<?PHP
+	//=$rows
+	foreach ($marr as $row)
+	{
+		echo($row);
+	}
 ?>
 </table>
 
 </body>
 </html>
-<?
+<?PHP
 if ($david_debug)
 {
 	echo "<table><tr><td bgcolor='#FF9933'><font color='#000000'>";

@@ -33,7 +33,6 @@ else
 		// bigEcho("Neff: " . gettype($tankAction));
 		// die;
 //if (is_null($tankAction)) $tankAction='statusView';
-bigEcho("View Mode: " . $_SESSION['VIEWMODE']);
 if ( $_SESSION['VIEWMODE'] == '' || $tankAction == 'statusView')
 {
 	
@@ -188,7 +187,6 @@ $unmonFilt	  = $_SESSION['SHOWUNMONITORED'] 	== 'yes' ? '' : "and t.monitorID NO
 
 if ($_SESSION['VIEWMODE'] == empty($_SESSION['VIEWMODE'])) $_SESSION['VIEWMODE'] = 'statusView';
 
-bigEcho('1. View Mode: ' . $_SESSION['VIEWMODE']);
 if ($_SESSION['VIEWMODE'] == 'statusView') 
 {
 	// Get no reading count
