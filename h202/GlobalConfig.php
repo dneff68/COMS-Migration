@@ -1,5 +1,11 @@
 <?php
+// if (isset($_SESSION['STATUS_FILTER']))
+// 	echo("<h4>1.5: STATUS_FILTER inside GlobalConfig: STATUS FILTER IS NOT SET</h4>");
+// else
+// 	echo("<h4>1. STATUS_FILTER inside GlobalConfig: " . $_SESSION['STATUS_FILTER'] . "</h4>");
 include_once "../lib/chtFunctions.php";
+
+
 
 $_SESSION['LOCAL_DEVELOPMENT'] 	= 'yes';
 $_SESSION['ROOT_URL'] 			= "";
@@ -7,7 +13,7 @@ $_SESSION['SHOWFACTORIES'] 		= '';
 $_SESSION['SHOWCARRIERS'] 		= '';
 $_SESSION['SHOWTERMINALS'] 		= '';
 $_SESSION['REGION_FILTER'] 		= '';
-$_SESSION['STATUS_FILTER'] 		= 'Normal';
+
 $_SESSION['VIEWMODE'] 			= '';
 $_SESSION['LEADTIME_OVERRIDE'] 	= '';
 

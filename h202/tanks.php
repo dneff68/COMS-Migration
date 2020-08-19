@@ -609,6 +609,7 @@ function setmapvis()
 		//include 'multTankDetails.php';
 		bigEcho($_SESSION['STATUS_FILTER']);
 		showArray($_SESSION);
+		bigEcho(session_id());
 		$frameSRC = $_SESSION['ROOT_URL'] . "multTankDetails.php?sessionid=" . session_id();
 		//writeLog('tanks', 609, "frameURL: $frameSRC");
 	}

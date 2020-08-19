@@ -923,6 +923,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	$exceedcap = -1;
 	$status = 'Normal';
 	$normal = 1;
+	$low = 0;
 	writeLog("h202Functions", 926, "=========== statkey = $statkey");
 	if (($statkey == 'unmon' || $statkey == '') && 	substr($monitorID, 0, 5) == 'none-')
 	{

@@ -1,5 +1,18 @@
 <?PHP
+
+if(isset($_GET['sessionid']))
+{
+   $sessionid = $_GET['sessionid'];
+   session_id($sessionid);
+   //die($sessionid);
+}
 session_start();
+if (!isset($_SESSION['STATUS_FILTER']))
+{
+	$_SESSION['STATUS_FILTER'] 		= 'Normal';
+}
+
+echo("<h4>1. STATUS_FILTER before include_once calls: " . $_SESSION['STATUS_FILTER'] . "</h4>");
 
 if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
 {
@@ -22,12 +35,9 @@ else
 	include_once 'chtFunctions.php';
 	include_once 'db_mysql.php';
 }
-if(isset($_GET['sessionid']))
-{
-   $sessionid = $_GET['sessionid'];
-}
 
-bigEcho("2. " . $_SESSION['STATUS_FILTER']);
+
+bigEcho("2. STATUS_FILTER after include_once calls: " . $_SESSION['STATUS_FILTER']);
 //die;
 
 $USERID = $_SESSION['USERID'];
