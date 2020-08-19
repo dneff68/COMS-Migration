@@ -19,7 +19,6 @@ function david()
 
 function jim()
 {
-	global $_SESSION;
 	return $_SESSION['USERID'] == 'Jim';
 }
 
@@ -242,7 +241,6 @@ function generateCode($length=8)
 
 function showSessionVars()
 {
-	global $_SESSION;
 	
 	if (!david())
 	{

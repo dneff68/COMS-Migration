@@ -921,7 +921,9 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 {
 	$latestDose = -1;
 	$exceedcap = -1;
-	$status = '';
+	$status = 'Normal';
+	$normal = 1;
+	writeLog("h202Functions", 926, "=========== statkey = $statkey");
 	if (($statkey == 'unmon' || $statkey == '') && 	substr($monitorID, 0, 5) == 'none-')
 	{
 		return "unmon,Tank Unmonitored";
@@ -932,6 +934,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 				DATE_FORMAT(shutdownStartDate, '%m/%d/%Y %r') as 'shutdownStartDate', 
 				DATE_FORMAT(shutdownEndDate, '%m/%d/%Y %r') as 'shutdownEndDate' 
 			from monitor where monitorID='$monitorID' and status='Temporary Shutdown'";
+	writeLog("h202Functions", 937, $query);
 	$res = getResult($query);
 	if (checkResult($res))
 	{
@@ -939,6 +942,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 		extract($line);
 		return "TempShutdown,Temporary Shutdown ($shutdownStartDate - $shutdownEndDate)";
 	}
+
 
 	// check for no reading EVER
 		$query = "SELECT date as lastReading 
@@ -969,13 +973,14 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	{
 		updateTankStats($monitorID, 2);
 	}
-	
+
 	$res = getResult("SELECT tankStats.* FROM tankStats WHERE monitorID = '$monitorID' ORDER BY readingDate DESC LIMIT 1");
 	if (checkResult($res))
 	{
 		$line = $res->fetch_assoc();
 		extract($line);
 	}	
+
 
 	// At this point today's stats should have been generated.  We now check to see if there is a status row for today.  If not then
 	// there was no reading.
@@ -986,7 +991,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 		$noreading = 1;
 		$daysSinceLastReading = getDaysSinceLastReading($monitorID);
 	}
-	
+
 	$s = $daysSinceLastReading > 1 ? 's' : '';
 	$daysMsg = "<div class='header_1'>Normalized Dose: $latestDose";
 	$daysMsg .= $daysSinceLastReading > 0 ? "<br><font color='#$msgColor'>$daysSinceLastReading day$s since last reading</font>" : '';
@@ -1019,7 +1024,10 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 		}
 	}
 
-	if (($statkey == 'Normal' || $statkey == '') && $normal == 1)
+	writeLog("h202Functions", 1027, "if (($statkey == 'Normal' || $statkey == '') && $normal == 1)");
+//	if (($statkey == 'Normal' || $statkey == ''))
+	//if (($statkey == 'Normal' || $statkey == '') && $normal == 1)
+
 		return "Normal,Normal Reading<div class='header_1'>Normalized Dose: $latestDose";
 }
 
@@ -2796,6 +2804,11 @@ function ddie($text='')
 	{
 		die('die: ' . $text);
 	}
+}
+
+function writeLog($file, $line, $msg)
+{
+	error_log("NEFF DEBUG: $file: Line: $line: '$msg'");
 }
 
 function microtime_used($before,$after) {

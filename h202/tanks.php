@@ -1,10 +1,9 @@
 <?php
-//session_start();
 include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-
+//writeLog('tanks', 7, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
 if (empty($_SESSION['LEADTIME_OVERRIDE'])) $_SESSION['LEADTIME_OVERRIDE'] = 'default';
 if (empty($_SESSION['SHOWTEMPSHUTDOWN']))  $_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
 if (empty($_SESSION['SHOWUNMONITORED']))   $_SESSION['SHOWUNMONITORED'] = 'no';
@@ -27,7 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 else
 {
 	$tankAction='statusView';	
+	if (isset($_GET['tankAction'])) $tankAction = $_GET['tankAction'];
 }
+
 
 		// bigEcho("Neff: " . gettype($_SESSION['SHOWFACTORIES']));
 		// bigEcho("Neff: " . gettype($tankAction));
@@ -141,22 +142,27 @@ if (!empty($region))
 	}
 }		
 
+writeLog('tanks', 144, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
 if (empty($_SESSION['STATUS_FILTER']))
 {
 	$_SESSION['STATUS_FILTER'] = 'all';
 }
 
+writeLog('tanks', 150, "value of status is $status");
 if (!empty($status))
 {
 	if ( empty($_SESSION['STATUS_FILTER'])) 
 		$_SESSION['STATUS_FILTER'] = $status == 'all' ? '' : $status;
 }		
+writeLog('tanks', 156, "value of status is $status");
 
 
 if ($_SESSION['USERTYPE'] == 'customer')
 {
 	$_SESSION['VIEWMODE'] = 'deliveryView';  // this is the only view customers are allowed to see
 }
+writeLog('tanks', 163, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
+
 
 // get counts
 $normCnt	= 0;
@@ -251,6 +257,7 @@ if ($_SESSION['VIEWMODE'] == 'statusView')
 	extract($line);
 }
 
+writeLog('tanks', 259, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
 
 if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 {
@@ -270,7 +277,6 @@ else
 }
 $res = getResult($query);
 $allCnt = $res->num_rows;
-
 if ($_SESSION['VIEWMODE'] != 'statusView')
 {
 	$query = "select distinct m.monitorID 
@@ -593,25 +599,28 @@ function setmapvis()
 			$upd = "&update=1";
 		}
 	}
-	
+
 	if (!empty($init))
 	{
 		$init = "&initialize=yes";
 	}
 	if ($_SESSION['VIEWMODE'] == 'statusView')
 	{
-		$frameSRC = $_SESSION['ROOT_URL'] . 'multTankDetails.php';
+		//include 'multTankDetails.php';
+		bigEcho($_SESSION['STATUS_FILTER']);
+		showArray($_SESSION);
+		$frameSRC = $_SESSION['ROOT_URL'] . "multTankDetails.php?sessionid=" . session_id();
+		//writeLog('tanks', 609, "frameURL: $frameSRC");
 	}
 	else
 	{
 		$frameSRC = $_SESSION['ROOT_URL'] . "deliveryDetails.php$id$upd$init";
 	}
 ?>
-
-<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650 
+<iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650
 		src="<?php echo $frameSRC;?>" frameborder="0" ></iframe>
 
 </center>
-<?php showSessionVars(); ?>
+<?php //showSessionVars(); ?>
 </body>
 </html>

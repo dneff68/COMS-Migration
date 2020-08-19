@@ -1,7 +1,5 @@
 <?PHP
 session_start();
-$USERID = $_SESSION['USERID'];
-
 
 if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
 {
@@ -9,14 +7,34 @@ if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
 	include_once 'h202Functions.php';
 	include_once '../lib/db_mysql.php';
 	include_once '../lib/chtFunctions.php';	
+	/*
+	include_once('GlobalConfig.php');
+	include_once('h202Functions.php');
+	include_once('../lib/db_mysql.php');
+	include_once('../lib/chtFunctions.php');	
+	*/
 }
 else
 {
+	die("NOT LOCAL DEVELOPMENT: multiTankDetails: 13");
 	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
 	include_once '/var/www/html/CHT/h202/h202Functions.php';
 	include_once 'chtFunctions.php';
 	include_once 'db_mysql.php';
 }
+if(isset($_GET['sessionid']))
+{
+   $sessionid = $_GET['sessionid'];
+}
+
+bigEcho("2. " . $_SESSION['STATUS_FILTER']);
+//die;
+
+$USERID = $_SESSION['USERID'];
+if(isset($_GET['status'])){
+    $status = $_GET['status'];
+ 	$_SESSION['STATUS_FILTER'] = $status;
+ }
 
 $clearlist = false;
 if(isset($_GET['clearlist'])){
@@ -36,24 +54,20 @@ $regfilt  = '';
 $unmonFilt = '';
 $custTanks = '';
 
+writeLog("multiTankDetails", 39, $_SESSION['STATUS_FILTER']);
 $david_debug = false;
 if ($david_debug)
 {
 	$time_start = getmicrotime();
 
 	$debugTime = date('s');
-	session_register('time_start');
-	session_register('last_stamp');
 	$last_stamp = $time_start;
-	session_register("TOTAL_DB_TIME");
 	$TOTAL_DB_TIME = 0.0;
-	session_register("debugTime");
-	session_register("dbhitcount");
 	$dbhitcount = 0;
-	session_register("queryArray");
 	$queryArray = array();
 	timestamp('MAIN', true);
 }
+writeLog('multiTankDetails', 53, $_SESSION['STATUS_FILTER']);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -148,6 +162,7 @@ if (count($_SESSION['ZIPCOLLECTION']) > 0)
 }
 
 $marr = array();
+writeLog("multiTankDetails", 159, "VALUE OF STATUS_FILTER: " . $_SESSION['STATUS_FILTER']);
 if ($_SESSION['STATUS_FILTER'] == 'unass')
 {
 	$rowcnt = 0;
@@ -301,7 +316,8 @@ else
 				$custTanks
 			order by t.tankName";
 	
-	//bigecho($query);
+	error_log("MORE - LINE 298: " . $more);
+	error_log("STATUS_FILTER: " . $_SESSION['STATUS_FILTER']);
 	
 	$res = getResult($query);
 	
@@ -315,8 +331,21 @@ else
 		{
 			extract($line);
 			$status = checkTankStatus($monitorID, $_SESSION['STATUS_FILTER']);
-	
+			if (!isset($status))
+			{
+				die("status : $status --- monitorID:$monitorID");				
+			}
+//			$statkey = '';
+//			$status2 = '';
+//			list($statkey, $status2) = explode(',', $status);
+
+//			$status = 'Normal,Normal';
+			$status = trim($status);
+			$statkey = '';
+			writeLog("multiTankDetails", 336, "list($statkey, $status) = explode(',', $status);");
 			list($statkey, $status) = explode(',', $status);
+			writeLog("multiTankDetails", 336, "list($statkey, $status) = explode(',', $status);");
+
 			$fontColor = $statkey == 'reorder' ? '#FFFF00' : '#ffffff';
 			
 			$status = empty($status) ? '&nbsp;' : $status;
@@ -555,7 +584,7 @@ if ($david_debug)
 	echo "</font></td></tr></table>";
 	echo "<table><tr><td bgcolor='#FF9933'><font color='#000000'>";
 	echo "<hr>";
-	showSessionVars();
+	//showSessionVars();
 	echo "<hr>";
 	$queries = "";
 	foreach ($queryArray as $query)
