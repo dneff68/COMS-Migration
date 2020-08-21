@@ -246,9 +246,8 @@ function showSessionVars()
 	{
 		return;
 	}
-	
 	$a = $_SESSION;
-	
+
 	ksort($a);
 	reset($a);
 	

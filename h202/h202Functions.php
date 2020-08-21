@@ -935,8 +935,8 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 				DATE_FORMAT(shutdownStartDate, '%m/%d/%Y %r') as 'shutdownStartDate', 
 				DATE_FORMAT(shutdownEndDate, '%m/%d/%Y %r') as 'shutdownEndDate' 
 			from monitor where monitorID='$monitorID' and status='Temporary Shutdown'";
-	writeLog("h202Functions", 937, $query);
 	$res = getResult($query);
+	//die($query);
 	if (checkResult($res))
 	{
 		$line = $res->fetch_assoc();
@@ -956,15 +956,18 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 		}
 		else
 		{
-			if ($status == 'Inactive')
+			// no rows returned
+//			if ($status == 'Inactive')
 				return "Inactive,Inactive";
-			else
-				return "$status,$status";
+			// else
+			// {
+			// 	die($query);
+			// 	return "$status,$status";
+			// }
 		}
 //	}
 
-	$query = "SELECT DATE(NOW()) as today, cast(readingDate as date) as lastReadingDAY, 
-	daysSinceLastReading
+	$query = "SELECT DATE(NOW()) as today, cast(readingDate as date) as lastReadingDAY, daysSinceLastReading
 	FROM tankStats 
 	WHERE readingDate='$lastReading' AND monitorID='$monitorID' AND statGenDate = DATE(NOW()) ORDER BY statGenDate DESC LIMIT 1";
 	$res = getResult($query);

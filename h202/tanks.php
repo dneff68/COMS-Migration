@@ -3,6 +3,7 @@ include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
+
 //writeLog('tanks', 7, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
 if (empty($_SESSION['LEADTIME_OVERRIDE'])) $_SESSION['LEADTIME_OVERRIDE'] = 'default';
 if (empty($_SESSION['SHOWTEMPSHUTDOWN']))  $_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
@@ -45,6 +46,8 @@ if ( $_SESSION['VIEWMODE'] == '' || $tankAction == 'statusView')
 	}
 	$_SESSION['VIEWMODE'] = 'statusView';
 }
+
+
 
 if (!empty($tankAction))
 {
@@ -183,8 +186,12 @@ $criticalCnt = 0;
 $reorderCnt = 0;
 
 if ($_SESSION['SHOWINACTIVE'] == empty($_SESSION['SHOWINACTIVE'])) $_SESSION['SHOWINACTIVE'] = 'no';
-if ($_SESSION['SHOWTEMPSHUTDOWN'] == empty($_SESSION['SHOWTEMPSHUTDOWN'])) $_SESSION['SHOWTEMPSHUTDOWN'] = 'no';
+if ($_SESSION['SHOWTEMPSHUTDOWN'] == empty($_SESSION['SHOWTEMPSHUTDOWN']))
+{
+	$_SESSION['SHOWTEMPSHUTDOWN'] = 'no';
+} 
 if ($_SESSION['SHOWUNMONITORED'] == empty($_SESSION['SHOWUNMONITORED'])) $_SESSION['SHOWUNMONITORED'] = 'no';
+
 
 $inactiveFilt = $_SESSION['SHOWINACTIVE'] == 'yes' ? '' : "and m.status != 'Inactive'";
 $tmpshutFilt  = $_SESSION['SHOWTEMPSHUTDOWN'] 	== 'yes' ? '' : "and m.status != 'Temporary Shutdown'";
@@ -607,9 +614,6 @@ function setmapvis()
 	if ($_SESSION['VIEWMODE'] == 'statusView')
 	{
 		//include 'multTankDetails.php';
-		bigEcho($_SESSION['STATUS_FILTER']);
-		showArray($_SESSION);
-		bigEcho(session_id());
 		$frameSRC = $_SESSION['ROOT_URL'] . "multTankDetails.php?sessionid=" . session_id();
 		//writeLog('tanks', 609, "frameURL: $frameSRC");
 	}

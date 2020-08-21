@@ -7,10 +7,6 @@ if(isset($_GET['sessionid']))
    //die($sessionid);
 }
 session_start();
-if (!isset($_SESSION['STATUS_FILTER']))
-{
-	$_SESSION['STATUS_FILTER'] 		= 'Normal';
-}
 
 echo("<h4>1. STATUS_FILTER before include_once calls: " . $_SESSION['STATUS_FILTER'] . "</h4>");
 
@@ -37,8 +33,14 @@ else
 }
 
 
-bigEcho("2. STATUS_FILTER after include_once calls: " . $_SESSION['STATUS_FILTER']);
-//die;
+if (!isset($_SESSION['STATUS_FILTER']))
+{
+	$_SESSION['STATUS_FILTER'] 		= 'Normal';
+	$_SESSION['SHOWINACTIVE'] 		= 'yes';
+	$_SESSION['SHOWTEMPSHUTDOWN'] 	= 'yes';
+	$_SESSION['SHOWUNMONITORED'] 	= 'yes';
+}
+
 
 $USERID = $_SESSION['USERID'];
 if(isset($_GET['status'])){
@@ -56,12 +58,13 @@ if(isset($_GET['zip'])){
     $zip = $_GET['zip'];
 }
 
+
 $more = '';
-$inactiveFilt = '';
-$tmpShutdownFilt = '';
+$inactiveFilt = 'yes';
+$tmpShutdownFilt = 'no';
 $more  = '';
 $regfilt  = '';
-$unmonFilt = '';
+$unmonFilt = 'yes';
 $custTanks = '';
 
 writeLog("multiTankDetails", 39, $_SESSION['STATUS_FILTER']);
@@ -77,7 +80,7 @@ if ($david_debug)
 	$queryArray = array();
 	timestamp('MAIN', true);
 }
-writeLog('multiTankDetails', 53, $_SESSION['STATUS_FILTER']);
+writeLog('multiTankDetails', 80, $_SESSION['STATUS_FILTER']);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -172,7 +175,7 @@ if (count($_SESSION['ZIPCOLLECTION']) > 0)
 }
 
 $marr = array();
-writeLog("multiTankDetails", 159, "VALUE OF STATUS_FILTER: " . $_SESSION['STATUS_FILTER']);
+writeLog("multiTankDetails", 175, "VALUE OF STATUS_FILTER: " . $_SESSION['STATUS_FILTER']);
 if ($_SESSION['STATUS_FILTER'] == 'unass')
 {
 	$rowcnt = 0;
@@ -208,45 +211,45 @@ if ($_SESSION['STATUS_FILTER'] == 'unass')
 				$editLink = "<a href=\"javascript:window.parent.location = 'addTank.php?init=yes&mon=$monitorID';\">edit</a>";
 			}
 
-				$processLink = '';
-				$showProcessLink = 0;
-				if ($_SESSION['USERTYPE'] == 'super' || $_SESSION['USERTYPE'] == 'service')
-				{
-					if ($hideProcessLink == 0)	$showProcessLink = 1;
-				}
-				
-				// check for customer email login
-				$query = "SELECT email FROM customerLoginEmail WHERE email = '$USERID' and hideProcessLink=0 LIMIT 1";
-				$processRes = getResult($query);
-				if (checkResult($processRes))
-				{
-					if ($hideProcessLink == 0)	$showProcessLink = 1;
-				}
-				
-				$txt_hidden = '';
-				if (david() || jim())
-				{
-					$showProcessLink = 1;
-					$txt_hidden = $hideProcessLink == 1 ? '(hidden)' : '';
-				}
-				
-				if ($showProcessLink == 1)
-				{
-					$processLink = "
-						&nbsp;&nbsp;
-						<a href=\"javascript:surfDialog('/charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
-				}
-
-				$marr[$monitorID] = "<tr class=\"spinTableBarOdd\">
-					<td>&nbsp;</td>
-					<td>$tankName</td>
-					<td>$monOut</td>
-					<td nowrap>$status</td>
-					<td nowrap><a href=\"javascript:surfDialog('/charts/tankGraph.php?tab=2&tankID=$monitorID', 830, 430, window, false)\">graph</a>
-						$processLink
+			$processLink = '';
+			$showProcessLink = 0;
+			if ($_SESSION['USERTYPE'] == 'super' || $_SESSION['USERTYPE'] == 'service')
+			{
+				if ($hideProcessLink == 0)	$showProcessLink = 1;
+			}
+			
+			// check for customer email login
+			$query = "SELECT email FROM customerLoginEmail WHERE email = '$USERID' and hideProcessLink=0 LIMIT 1";
+			$processRes = getResult($query);
+			if (checkResult($processRes))
+			{
+				if ($hideProcessLink == 0)	$showProcessLink = 1;
+			}
+			
+			$txt_hidden = '';
+			if (david() || jim())
+			{
+				$showProcessLink = 1;
+				$txt_hidden = $hideProcessLink == 1 ? '(hidden)' : '';
+			}
+			
+			if ($showProcessLink == 1)
+			{
+				$processLink = "
 					&nbsp;&nbsp;
-						$editLink
-					<br>";
+					<a href=\"javascript:surfDialog('/charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
+			}
+
+			$marr[$monitorID] = "<tr class=\"spinTableBarOdd\">
+				<td>&nbsp;</td>
+				<td>$tankName</td>
+				<td>$monOut</td>
+				<td nowrap>$status</td>
+				<td nowrap><a href=\"javascript:surfDialog('/charts/tankGraph.php?tab=2&tankID=$monitorID', 830, 430, window, false)\">graph</a>
+					$processLink
+				&nbsp;&nbsp;
+					$editLink
+				<br>";
 
 			$marr[$monitorID] .= "<a href=''>add note</a>";
 					
@@ -325,13 +328,16 @@ else
 				$unmonFilt
 				$custTanks
 			order by t.tankName";
-	
+
+//showSessionVars();
+//die("<h4>multiTankDetails line 330: tmpShutdownFilt=$tmpShutdownFilt</h4>" . $query);
 	error_log("MORE - LINE 298: " . $more);
 	error_log("STATUS_FILTER: " . $_SESSION['STATUS_FILTER']);
 	
 	$res = getResult($query);
+	//echoResults($res);
 	
-	
+	// Result should be 'all tanks' 
 	if (checkResult($res))
 	{
 	
@@ -352,9 +358,8 @@ else
 //			$status = 'Normal,Normal';
 			$status = trim($status);
 			$statkey = '';
-			writeLog("multiTankDetails", 336, "list($statkey, $status) = explode(',', $status);");
+			//bigEcho($status);
 			list($statkey, $status) = explode(',', $status);
-			writeLog("multiTankDetails", 336, "list($statkey, $status) = explode(',', $status);");
 
 			$fontColor = $statkey == 'reorder' ? '#FFFF00' : '#ffffff';
 			
@@ -460,32 +465,32 @@ else
 				{
 					$spaces = empty($notesStatic) ? '<br><br><br><br>' : '';
 
-		if (true) //david() || jim())
-		{
-			$staticNotes .= $spaces;
-			$last = strtolower( $monitorID[strlen($monitorID)-1] );
+					if (true) //david() || jim())
+					{
+						$staticNotes .= $spaces;
+						$last = strtolower( $monitorID[strlen($monitorID)-1] );
 
-			if ($last == 'x')
-			{
-				$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID'");
-				if (mysqli_num_rows($alarmRes) > 0)
-				{
-					$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID' AND cleared=0");
-					if (mysqli_num_rows($alarmRes) > 0)
-						$alarmColor = '#C00';
+						if ($last == 'x')
+						{
+							$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID'");
+							if (mysqli_num_rows($alarmRes) > 0)
+							{
+								$alarmRes = getResult("SELECT cleared FROM flowAlarm WHERE monitorID='$monitorID' AND cleared=0");
+								if (mysqli_num_rows($alarmRes) > 0)
+									$alarmColor = '#C00';
+								else
+									$alarmColor = '#0000ff';
+							
+								$staticNotes .= "<div style='float:left;font-size:smaller'><a style='color:$alarmColor' href='javascript:surfDialog(\"customerAlarms.php?monitorID=$monitorID\",550,300,window,false)'>alarms</a></div>";
+							}
+						}
+						$staticNotes .= "<div style='float:right;font-size:smaller'><a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
+					}
 					else
-						$alarmColor = '#0000ff';
-				
-					$staticNotes .= "<div style='float:left;font-size:smaller'><a style='color:$alarmColor' href='javascript:surfDialog(\"customerAlarms.php?monitorID=$monitorID\",550,300,window,false)'>alarms</a></div>";
+					{
+						$staticNotes .= "<div align='right' style='font-size:smaller'>$spaces<a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
+					}
 				}
-			}
-			$staticNotes .= "<div style='float:right;font-size:smaller'><a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
-		}
-		else
-		{
-			$staticNotes .= "<div align='right' style='font-size:smaller'>$spaces<a href='javascript:surfDialog(\"tankNotes.php?id=$monitorID&noteAction=static_note\",600,200,window,true)'>tank note</a></div>";
-		}
-	}
 				$processLink = '';
 				$showProcessLink = 0;
 				if ($_SESSION['USERTYPE'] == 'super' || $_SESSION['USERTYPE'] == 'service')
@@ -534,7 +539,7 @@ else
 				$marr[$monitorID] .= "
 						</td>
 					  </tr>";
-					$rowcnt++;
+				$rowcnt++;
 			}
 		}
 	}
@@ -584,7 +589,6 @@ if ($david_debug)
 	echo "<table><tr><td bgcolor='#FF9933'><font color='#000000'>";
 	$s = session_id();
 	echo "-- Neff DEVELOPMENT --<br>";
-	bigecho("session id: $s");
 	$time_end = getmicrotime();
 	$time = $time_end - $time_start;
 	$time = number_format($time, 2, '.', '');
