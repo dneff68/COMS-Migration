@@ -15,6 +15,7 @@ else
 	include_once 'chtFunctions.php';
 	include_once 'db_mysql.php';
 }
+bigEcho("delivertDetails.php");
 
 $sendInvoices = 'no';
 $submitted = 'no';
@@ -34,7 +35,6 @@ extract($_POST);
 
 $USERID = $_SESSION['USERID'];
 $_SESSION['STATUS_FILTER'] = '';
-
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

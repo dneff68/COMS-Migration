@@ -9,7 +9,6 @@ include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
 
-writeLog('index.php', 12, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER']);
 $search = 0;
 $customerView = 0; 
 $delivery = 0;

@@ -1,5 +1,4 @@
 <?PHP
-
 if(isset($_GET['sessionid']))
 {
    $sessionid = $_GET['sessionid'];
@@ -31,6 +30,8 @@ else
 	include_once 'db_mysql.php';
 }
 
+bigEcho("multiTankDetails.php");
+
 if (!isset($_SESSION['STATUS_FILTER']))
 {
 	$_SESSION['STATUS_FILTER'] 		= 'Normal';
@@ -38,13 +39,14 @@ if (!isset($_SESSION['STATUS_FILTER']))
 	$_SESSION['SHOWTEMPSHUTDOWN'] 	= 'no';
 	$_SESSION['SHOWUNMONITORED'] 	= 'no';
 }
-
+bigEcho($_SESSION['STATUS_FILTER']);
 
 $USERID = $_SESSION['USERID'];
 if(isset($_GET['status'])){
     $status = $_GET['status'];
  	$_SESSION['STATUS_FILTER'] = $status;
  }
+bigEcho($_SESSION['STATUS_FILTER']);
 
 $clearlist = false;
 if(isset($_GET['clearlist'])){
@@ -65,7 +67,6 @@ $regfilt  = '';
 $unmonFilt = 'yes';
 $custTanks = '';
 
-writeLog("multiTankDetails", 39, $_SESSION['STATUS_FILTER']);
 $david_debug = false;
 if ($david_debug)
 {
@@ -78,7 +79,6 @@ if ($david_debug)
 	$queryArray = array();
 	timestamp('MAIN', true);
 }
-writeLog('multiTankDetails', 80, $_SESSION['STATUS_FILTER']);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -173,7 +173,6 @@ if (count($_SESSION['ZIPCOLLECTION']) > 0)
 }
 
 $marr = array();
-writeLog("multiTankDetails", 175, "VALUE OF STATUS_FILTER: " . $_SESSION['STATUS_FILTER']);
 if ($_SESSION['STATUS_FILTER'] == 'unass')
 {
 	$rowcnt = 0;

@@ -4,16 +4,30 @@ include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-//die('here');
-//writeLog('tanks', 7, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
-if (!isset($_SESSION['STATUS_FILTER']))
+
+if (!isset($_SESSION['VIEWMODE']))
 {
 	$_SESSION['STATUS_FILTER'] 		= 'Normal';
 	$_SESSION['SHOWINACTIVE'] 		= 'no';
 	$_SESSION['SHOWTEMPSHUTDOWN'] 	= 'no';
 	$_SESSION['SHOWUNMONITORED'] 	= 'no';
+	$_SESSION['SHOWFACTORIES'] 		= '';
+	$_SESSION['SHOWCARRIERS'] 		= '';
+	$_SESSION['SHOWTERMINALS'] 		= '';
+	$_SESSION['REGION_FILTER'] 		= '';
+	$_SESSION['LEADTIME_OVERRIDE'] 	= '';
+	$_SESSION['VIEWMODE']			= 'deliveryView';
 }
 
+
+if(isset($_GET['status']))
+{	
+    $status = $_GET['status'];
+ 	$_SESSION['STATUS_FILTER'] = $status;
+ }
+
+ bigEcho("STATUS_FILTER == " . $_SESSION['STATUS_FILTER']);
+ bigEcho("VIEWMODE == " . $_SESSION['VIEWMODE']);
 
 if (empty($_SESSION['LEADTIME_OVERRIDE'])) $_SESSION['LEADTIME_OVERRIDE'] = 'default';
 //if (empty($_SESSION['SHOWTEMPSHUTDOWN']))  $_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
@@ -45,17 +59,29 @@ else
 		// bigEcho("Neff: " . gettype($tankAction));
 		// die;
 //if (is_null($tankAction)) $tankAction='statusView';
-if ( $_SESSION['VIEWMODE'] == '' || $tankAction == 'statusView')
+if (isset($_GET['tankAction']))
 {
-	
+	$_SESSION['VIEWMODE'] = $_GET['tankAction'];
 	if ($_SESSION['VIEWMODE'] == 'deliveryView')
 	{
 		// switching, reset filter
 		$ZIPCOLLECTION = 0;
 		$status = 'all';
 	}
-	$_SESSION['VIEWMODE'] = 'statusView';
 }
+
+// if ( !isset($_SESSION['VIEWMODE']) == '' || $tankAction == 'statusView')
+// {
+	
+// 	if ($_SESSION['VIEWMODE'] == 'deliveryView')
+// 	{
+// 		// switching, reset filter
+// 		$ZIPCOLLECTION = 0;
+// 		$status = 'all';
+// 	}
+
+// 	//$_SESSION['VIEWMODE'] = 'statusView';
+// }
 
 
 
@@ -159,7 +185,6 @@ if (empty($_SESSION['STATUS_FILTER']))
 {
 	$_SESSION['STATUS_FILTER'] = 'all';
 }
-
 if (!empty($status))
 {
 	if ( empty($_SESSION['STATUS_FILTER'])) 
@@ -613,6 +638,7 @@ function setmapvis()
 	$id = '';
 	$upd = '';
 	$init = '';
+	$status = isset($status) ? "&status=$status" : '';
 	if (!empty($deliveryID))
 	{
 		$id = "?id=$deliveryID";
@@ -630,12 +656,13 @@ function setmapvis()
 	{
 		//include 'multTankDetails.php';
 		$frameSRC = $_SESSION['ROOT_URL'] . "multTankDetails.php?sessionid=" . session_id();
+		$_SESSION["TANK_PAGE"] = "MULTI_TANK_DETAILS";
 		//writeLog('tanks', 609, "frameURL: $frameSRC");
 	}
 	else
 	{
+		$_SESSION["TANK_PAGE"] = "DELIVERY_DETAILS";
 		$frameSRC = $_SESSION['ROOT_URL'] . "deliveryDetails.php$id$upd$init";
-		//die($frameSRC);
 	}
 ?>
 <iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650
