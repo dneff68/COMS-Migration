@@ -924,6 +924,7 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	$status = 'Normal';
 	$normal = 1;
 	$low = 0;
+	$high = 0;
 	writeLog("h202Functions", 926, "=========== statkey = $statkey");
 	if (($statkey == 'unmon' || $statkey == '') && 	substr($monitorID, 0, 5) == 'none-')
 	{
@@ -1193,6 +1194,13 @@ function getDeliveryAvg($monitorID, $endDate = 'NOW()')
 {
 	// get a weighted average from the dose falue from the statistics table 
 	//$query = "SELECT latestDose FROM tankStats WHERE monitorID='$monitorID' AND nodose=0 and latestDose > 0 ORDER BY readingDate DESC LIMIT 5";
+		$high = -1;
+		$low = 0;
+		$sum = 0;
+		$loopCtr = 1;
+		$sumOfLastTwoValues = 0;
+		$firstVal = 0;
+		$secondVal = 0;
 
 	$query = "SELECT `readingDate`, latestDose FROM tankStats WHERE monitorID='$monitorID' AND nodose=0 and latestDose > 0 and cast(readingDate as date) <= $endDate ORDER BY readingDate DESC LIMIT 5";
 	$res = getResult($query);
@@ -1207,13 +1215,6 @@ function getDeliveryAvg($monitorID, $endDate = 'NOW()')
 			return $latestDose;
 		}
 		
-		$high = -1;
-		$low = 0;
-		$sum = 0;
-		$loopCtr = 1;
-		$sumOfLastTwoValues = 0;
-		$firstVal = 0;
-		$secondVal = 0;
 		while ($line = $res->fetch_assoc())
 		{
 			extract($line);
@@ -1279,7 +1280,7 @@ function generateAllStats()
 
 function generateStats($monitorID, $statdate='NOW()', $notify=1)
 {
-	global $debug, $database;
+//	global $debug, $database;
 	$updateStat = $statdate == 'NOW()' ? false : true;
 	executeQuery("DELETE FROM NoReadings WHERE monitorID='$monitorID'");
 

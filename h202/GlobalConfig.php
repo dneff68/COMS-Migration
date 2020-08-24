@@ -6,7 +6,6 @@
 include_once "../lib/chtFunctions.php";
 
 
-
 $_SESSION['LOCAL_DEVELOPMENT'] 	= 'yes';
 $_SESSION['ROOT_URL'] 			= "";
 $_SESSION['SHOWFACTORIES'] 		= '';

@@ -1,13 +1,23 @@
 <?php
+session_start();
 include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-
+//die('here');
 //writeLog('tanks', 7, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
+if (!isset($_SESSION['STATUS_FILTER']))
+{
+	$_SESSION['STATUS_FILTER'] 		= 'Normal';
+	$_SESSION['SHOWINACTIVE'] 		= 'no';
+	$_SESSION['SHOWTEMPSHUTDOWN'] 	= 'no';
+	$_SESSION['SHOWUNMONITORED'] 	= 'no';
+}
+
+
 if (empty($_SESSION['LEADTIME_OVERRIDE'])) $_SESSION['LEADTIME_OVERRIDE'] = 'default';
-if (empty($_SESSION['SHOWTEMPSHUTDOWN']))  $_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
-if (empty($_SESSION['SHOWUNMONITORED']))   $_SESSION['SHOWUNMONITORED'] = 'no';
+//if (empty($_SESSION['SHOWTEMPSHUTDOWN']))  $_SESSION['SHOWTEMPSHUTDOWN'] = 'yes';
+//if (empty($_SESSION['SHOWUNMONITORED']))   $_SESSION['SHOWUNMONITORED'] = 'no';
 
 if (!isLoggedIn())
 {
@@ -145,26 +155,23 @@ if (!empty($region))
 	}
 }		
 
-writeLog('tanks', 144, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
 if (empty($_SESSION['STATUS_FILTER']))
 {
 	$_SESSION['STATUS_FILTER'] = 'all';
 }
 
-writeLog('tanks', 150, "value of status is $status");
 if (!empty($status))
 {
 	if ( empty($_SESSION['STATUS_FILTER'])) 
 		$_SESSION['STATUS_FILTER'] = $status == 'all' ? '' : $status;
 }		
-writeLog('tanks', 156, "value of status is $status");
 
+if (!isset($_SESSION['USERTYPE']))	$_SESSION['USERTYPE'] = 'customer';
 
 if ($_SESSION['USERTYPE'] == 'customer')
 {
 	$_SESSION['VIEWMODE'] = 'deliveryView';  // this is the only view customers are allowed to see
 }
-writeLog('tanks', 163, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
 
 
 // get counts
@@ -216,9 +223,16 @@ if ($_SESSION['VIEWMODE'] == 'statusView')
 	$nrCnt = $res->num_rows;
 	
 	$inac = $_SESSION['SHOWINACTIVE'] != 'yes' ? " && m.status != 'Inactive'" : '';
-	$tmpshut = $_SESSION['SHOWTEMPSHUTDOWN'] == 'yes' ? '' : " && m.status != 'Temporary Shutdown'";
-	
-	$tmpshut = " && m.status != 'Temporary Shutdown'";
+	if ($_SESSION['SHOWTEMPSHUTDOWN'] == 'yes')
+	{
+		$tmpshut = " && m.status != 'Temporary Shutdown'";	
+	}
+	else
+	{
+		$tmpshut = '';
+	}
+	// $tmpshut = $_SESSION['SHOWTEMPSHUTDOWN'] == 'yes' ? '' : " && m.status != 'Temporary Shutdown'";	
+	// $tmpshut = " && m.status != 'Temporary Shutdown'";
 	
 	
 	$query = "select t.tankID, t.tankName from monitor m, tank t where t.monitorID=m.monitorID and m.monitorID LIKE 'none-%' $inac $tmpshut";
@@ -230,9 +244,11 @@ if ($_SESSION['VIEWMODE'] == 'statusView')
 	extract($tsLine);
 	
 	$sess = session_id();
+	showSessionVars();
+//	die("session id = " . $sess);
 	$foo = executeQuery("CREATE TABLE $sess SELECT max(readingDate) as readingDate, monitorID 
 				FROM tankStats GROUP BY monitorID", "CREATE");
-
+//die("CREATE TABLE $sess SELECT max(readingDate) as readingDate, monitorID FROM tankStats GROUP BY monitorID");
 	$query = "SELECT sum(ts.high) as HdoseCnt, sum(ts.low) as LdoseCnt, sum(ts.normal) as normalCnt, 
 				sum(ts.unass) as unassCnt, sum(ts.exceedcap) as ecCnt 
 				FROM monitor m, tankStats ts, $sess gd
@@ -264,7 +280,6 @@ if ($_SESSION['VIEWMODE'] == 'statusView')
 	extract($line);
 }
 
-writeLog('tanks', 259, "value of _SESSION['STATUS_FILTER'] is " .  $_SESSION['STATUS_FILTER'] . " and value of status is $status");
 
 if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 {
@@ -531,15 +546,15 @@ function setmapvis()
     <td nowrap="nowrap"><select name="status" class="spinNormalText" id="status" onchange="setStatusFilter(this.value)">
 	<?php if ($_SESSION['VIEWMODE'] == 'statusView') : ?>	
 	      <option value="all" <?php echo$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?php echo$allCnt?>)</option>
-	      <option value="Normal" <?php echo$_SESSION['STATUS_FILTER']=='Normal' ? 'Selected' : ''?>>Normal (<?php echo$normalCnt?>)</option>
+	      <option id="onormalCnt" value="Normal" <?php echo$_SESSION['STATUS_FILTER']=='Normal' ? 'Selected' : ''?>>Normal (<?php echo$normalCnt?>)</option>
 	      <option value="NoReading" <?php echo$_SESSION['STATUS_FILTER']=='NoReading' ? 'Selected' : ''?>>No Reading (<?php echo$nrCnt?>)</option>
 	      <option value="ExceedCap" <?php echo$_SESSION['STATUS_FILTER']=='ExceedCap' ? 'Selected' : ''?>>Exceed Capacity (<?php echo$ecCnt?>)</option>
 	      <option value="TempShutdown" <?php echo$_SESSION['STATUS_FILTER']=='TempShutdown' ? 'Selected' : ''?>>Temporary Shutdown (<?php echo$tsCnt?>)</option>
-	      <option value="H_Dose" <?php echo$_SESSION['STATUS_FILTER']=='H_Dose' ? 'Selected' : ''?>>High Dose (<?php echo$HdoseCnt?>)</option>
+	      <option id="oHdoseCnt" value="H_Dose" <?php echo$_SESSION['STATUS_FILTER']=='H_Dose' ? 'Selected' : ''?>>High Dose (<?php echo$HdoseCnt?>)</option>
 	      <option value="L_Dose" <?php echo$_SESSION['STATUS_FILTER']=='L_Dose' ? 'Selected' : ''?>>Low Dose (<?php echo$LdoseCnt?>)</option>
 	      <option value="unmon" <?php echo$_SESSION['STATUS_FILTER']=='unmon' ? 'Selected' : ''?>>Unmonitored Tanks (<?php echo$unmonCnt?>)</option>
 	      <option value="unass" <?php echo$_SESSION['STATUS_FILTER']=='unass' ? 'Selected' : ''?>>Unassociated Readings (<?php echo$unassCnt?>)</option>
-	<? else : ?>
+	<?php else : ?>
 	      <option value="all" <?php echo$_SESSION['STATUS_FILTER']=='all' ? 'Selected' : ''?>>All (<?php echo$allCnt?>)</option>
 	      <option value="Ok" <?php echo$_SESSION['STATUS_FILTER']=='Ok' ? 'Selected' : ''?>>Ok (<?php echo$okCnt?>)</option>
 	      <option value="Reorder" <?php echo$_SESSION['STATUS_FILTER']=='Reorder' ? 'Selected' : ''?>>Reorder (<?php echo$reorderCnt?>)</option>
@@ -589,7 +604,7 @@ function setmapvis()
 
 <?php if ($_COOKIE['mapVisible'] == 1): ?>
 	<iframe frameborder="0" align="top" name="mapFrame" id="mapFrame" width="750" height=440 src="map.php" style="border-style:ridge"></iframe><br />
-<? else: ?>
+<?php else: ?>
 	<iframe frameborder="0" align="top" name="mapFrame" id="mapFrame" width="750" height=0  style="border-style:none"></iframe><br />
 <?php endif; ?>
 
@@ -620,6 +635,7 @@ function setmapvis()
 	else
 	{
 		$frameSRC = $_SESSION['ROOT_URL'] . "deliveryDetails.php$id$upd$init";
+		//die($frameSRC);
 	}
 ?>
 <iframe align="middle" name="detailsFrame" id="detailsFrame" width="900" height=650

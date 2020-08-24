@@ -75,7 +75,7 @@ function getResult($query, $handleError=false)
 		if (!$handleError)
 		{
 			if (david() || jim())
-				die($query);
+				die("Error in Query: " . $query);
 			else
 				die ("We're sorry, there was problem with the last operation.  Please try again.<br>");
 		}

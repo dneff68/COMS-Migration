@@ -33,6 +33,8 @@ $truckCaps = '';
 extract($_POST);
 
 $USERID = $_SESSION['USERID'];
+$_SESSION['STATUS_FILTER'] = '';
+
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -510,7 +512,6 @@ elseif (sizeof($_SESSION['DELIVERY_TANKS']) == 1)
 
 if (sizeof($_SESSION['DELIVERY_TANKS']) > 0)
 {
-
 	if (!empty($supplierID))
 	{
 		$DELIVERY_DATA['deliverySupplierID'] = $supplierID;
@@ -974,7 +975,6 @@ $query = "select s.siteID, s.siteLocationName as 'Location', s.city as City,
 		where 
 		t.monitorID=m.monitorID and
 		m.siteID = s.siteID $custTanks $inac $tmpshut $unmonFilt $more $regfilt order by t.tankName";
-
 
 $res = getResult($query);
 if (checkResult($res))

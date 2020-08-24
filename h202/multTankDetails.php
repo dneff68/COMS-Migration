@@ -8,7 +8,6 @@ if(isset($_GET['sessionid']))
 }
 session_start();
 
-echo("<h4>1. STATUS_FILTER before include_once calls: " . $_SESSION['STATUS_FILTER'] . "</h4>");
 
 if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
 {
@@ -32,13 +31,12 @@ else
 	include_once 'db_mysql.php';
 }
 
-
 if (!isset($_SESSION['STATUS_FILTER']))
 {
 	$_SESSION['STATUS_FILTER'] 		= 'Normal';
-	$_SESSION['SHOWINACTIVE'] 		= 'yes';
-	$_SESSION['SHOWTEMPSHUTDOWN'] 	= 'yes';
-	$_SESSION['SHOWUNMONITORED'] 	= 'yes';
+	$_SESSION['SHOWINACTIVE'] 		= 'no';
+	$_SESSION['SHOWTEMPSHUTDOWN'] 	= 'no';
+	$_SESSION['SHOWUNMONITORED'] 	= 'no';
 }
 
 
@@ -329,11 +327,7 @@ else
 				$custTanks
 			order by t.tankName";
 
-//showSessionVars();
-//die("<h4>multiTankDetails line 330: tmpShutdownFilt=$tmpShutdownFilt</h4>" . $query);
-	error_log("MORE - LINE 298: " . $more);
-	error_log("STATUS_FILTER: " . $_SESSION['STATUS_FILTER']);
-	
+//die($query);
 	$res = getResult($query);
 	//echoResults($res);
 	
@@ -349,7 +343,7 @@ else
 			$status = checkTankStatus($monitorID, $_SESSION['STATUS_FILTER']);
 			if (!isset($status))
 			{
-				die("status : $status --- monitorID:$monitorID");				
+				//die("status : $status --- monitorID:$monitorID");				
 			}
 //			$statkey = '';
 //			$status2 = '';
