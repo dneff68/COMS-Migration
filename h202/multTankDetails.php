@@ -14,12 +14,6 @@ if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
 	include_once 'h202Functions.php';
 	include_once '../lib/db_mysql.php';
 	include_once '../lib/chtFunctions.php';	
-	/*
-	include_once('GlobalConfig.php');
-	include_once('h202Functions.php');
-	include_once('../lib/db_mysql.php');
-	include_once('../lib/chtFunctions.php');	
-	*/
 }
 else
 {

@@ -1,9 +1,20 @@
-<?
+<?php
 session_start();
-include_once 'GlobalConfig.php';
-include_once 'h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
+if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
+{
+	include_once 'GlobalConfig.php';
+	include_once 'h202Functions.php';
+	include_once '../lib/db_mysql.php';
+	include_once '../lib/chtFunctions.php';	
+}
+else
+{
+	die("NOT LOCAL DEVELOPMENT: multiTankDetails: 13");
+	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
+	include_once '/var/www/html/CHT/h202/h202Functions.php';
+	include_once 'chtFunctions.php';
+	include_once 'db_mysql.php';
+}
 
 
 if (david())
@@ -14,11 +25,11 @@ if (david())
 
 if (!empty($key))
 {
-	if (empty( $KEY_CODE ))
-	{
-		session_register('KEY_CODE');
-	}
-	$KEY_CODE = $key;
+	// if (!isset( $_SESSION['KEY_CODE'] ))
+	// {
+	// 	session_register('KEY_CODE');
+	// }
+	$_SESSION['KEY_CODE'] = $key;
 	
 	$query = "SELECT DATE_FORMAT(creationDate, '%m/%d/%Y')  as update_date, committed, complete FROM newCustomerForm WHERE keyCode='$key' LIMIT 1";
 	$res = getResult($query);
@@ -37,12 +48,11 @@ if (!empty($key))
 }
 else
 {
-	session_register('KEY_CODE');
-	$KEY_CODE = generateCode();
+//	session_register('KEY_CODE');
+	$_SESSION['KEY_CODE'] = generateCode();
 }
 
-session_register('CURRENT_PAGE');
-$CURRENT_PAGE = 1;
+$_SESSION['CURRENT_PAGE'] = 1;
 
 ?>
 <!DOCTYPE html>
@@ -68,7 +78,7 @@ var validate = false;
 
 $(document).ready(function() {
 	
-<?	if (empty($USERID) && $st != 1) : ?>
+<?php	if (!isset($_SESSION["USERID"]) && $st != 1) : ?>
 
 		$("#thank_you").html("<h3>Your Session Has Expired</h3><br /><br />Please login to COMS to add or edit a customer form.");
 		$("#section_1").hide();
@@ -93,7 +103,7 @@ $(document).ready(function() {
 			}
 		}
 	};
-	<? elseif ($st != 1): ?>
+	<?php elseif ($st != 1): ?>
 	window.onunload = function() 
 	{
 		if ( $("#thank_you").css('display') == 'none' )
@@ -107,7 +117,7 @@ $(document).ready(function() {
 	}
 	<?php endif;?>		
 	
-	var st=<?= empty($st) ? 3 : $st?>;
+	var st=<?php echo empty($st) ? 3 : $st?>;
 	
 	if (st==1) // read only
 	{
@@ -188,7 +198,7 @@ $(document).ready(function() {
 	
 	</script>
 <script type="text/javascript">
-<? include_once "newCustomer.php"; ?>
+<?php include_once "newCustomer.php"; ?>
 </script>
 <style>
 .newCustomerDiv {
@@ -324,14 +334,14 @@ $(document).ready(function() {
       <div class='label-field-right'>
         <div class='label'>Updated By:</div>
         <div class='field' style="width:150px">
-          <?=$USERID?>
-          <input name="updated_by" type="hidden" id="updated_by" value="<?=$USERID?>">
+          <?php echo $USERID?>
+          <input name="updated_by" type="hidden" id="updated_by" value="<?php echo $USERID?>">
         </div>
       </div>
       <div class='label-field-right'>
         <div class='label'>Date Updated:</div>
         <div class='field' style="width:150px">
-          <?= $update_date ?>
+          <?php echo $update_date ?>
         </div>
       </div>
       <div style="clear:both"></div>
@@ -372,7 +382,7 @@ $(document).ready(function() {
           <div class='label'>State:</div>
           <div style="width:600px">
             <select name="sel_state" id='sel_state' onChange="copySelValue('sel_state', 'sel_site_state')">
-              <? include 'stateOptions.php' ?>
+              <?php include 'stateOptions.php' ?>
             </select>
           </div>
           <div class='label'>Zip:</div>
@@ -401,7 +411,7 @@ $(document).ready(function() {
           <div class='label'>State:</div>
           <div style="width:600px">
             <select name="sel_accounts_pay_state" id="sel_accounts_pay_state">
-              <? include 'stateOptions.php' ?>
+              <?php include 'stateOptions.php' ?>
             </select>
           </div>
           <div class='label'>Zip:</div>
@@ -651,7 +661,7 @@ $(document).ready(function() {
           <tr>
             <td><select class='selectObj' id="sel_usp_team_mgr" name="sel_usp_team_mgr" onChange="setEmail('usp_team_mgr')">
                 <option value="---select---" selected>---select---</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
               </select></td>
             <td nowrap>EES Project Mgr</td>
             <td><input id="usp_team_mgr_email" name="usp_team_mgr_email" type="text" size="17" maxlength="50"></td>
@@ -662,7 +672,7 @@ $(document).ready(function() {
           <tr>
             <td><select class='selectObj' id="sel_usp_team_applications" name="sel_usp_team_applications" onChange="setEmail('usp_team_applications')">
                 <option value="---select---" selected>---select---</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
               </select></td>
             <td nowrap>Applications / BD</td>
             <td><input id="usp_team_applications_email" name="usp_team_applications_email" type="text" size="17" maxlength="50"></td>
@@ -673,7 +683,7 @@ $(document).ready(function() {
           <tr>
             <td><select class='selectObj' id="sel_usp_team_sales" name="sel_usp_team_sales" onChange="setEmail('usp_team_sales')">
                 <option value="---select---" selected>---select---</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
               </select></td>
             <td nowrap>Sales</td>
             <td><input id="usp_team_sales_email" name="usp_team_sales_email" type="text" size="17" maxlength="50"></td>
@@ -684,7 +694,7 @@ $(document).ready(function() {
           <tr>
             <td><select class='selectObj' id="sel_usp_team_installer1" name="sel_usp_team_installer1" onChange="setEmail('usp_team_installer1')">
                 <option value="---select---" selected>---select---</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
               </select></td>
             <td nowrap>Installer 1</td>
             <td><input id="usp_team_installer1_email" name="usp_team_installer1_email" type="text" size="17" maxlength="50"></td>
@@ -695,7 +705,7 @@ $(document).ready(function() {
           <tr>
             <td><select class='selectObj' id="sel_usp_team_installer2" name="sel_usp_team_installer2" onChange="setEmail('usp_team_installer2')">
                 <option value="---select---" selected>---select---</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
               </select></td>
             <td nowrap>Installer 2</td>
             <td><input id="usp_team_installer2_email" name="usp_team_installer2_email" type="text" size="17" maxlength="50"></td>
@@ -774,7 +784,7 @@ $(document).ready(function() {
             <td width="174"><span class="field">
               <select id="sel_site_info_supplier_1" class='selectObj required' name="sel_site_info_supplier_1">
                 <option value="-select-" selected>-select-</option>
-<?
+<?php
 	$query = "SELECT supplierID, supplierName FROM supplier WHERE supplierName NOT LIKE \"%test%\" and supplierName != '' order by SupplierName";
 	$res = getResult($query);
 	if (checkResult($res))
@@ -820,14 +830,14 @@ $(document).ready(function() {
             <td width="137"><span class="field">
               <select name="sel_site_info_product_2" id="sel_site_info_product_2" >
                 <option value="---select---" selected>---select---</option>
-                <?=$productList?>
+                <?php echo $productList?>
               </select>
               </span></td>
             <td width="112"><input id="site_info_dose_2" name="site_info_dose_2" type="text" size="10" maxlength="5"></td>
             <td width="174"><span class="field">
               <select id="sel_site_info_supplier_2" name="sel_site_info_supplier_2">
                 <option value="---select---" selected>---select---</option>
-				<?=$supplierList?>
+				<?php echo $supplierList?>
               </select>
               </span></td>
             <td width="87"><input id="site_info_storage_2" name="site_info_storage_2" type="text" size="10" maxlength="5" onkeypress="return numbersonly(this, event)"></td>
@@ -838,14 +848,14 @@ $(document).ready(function() {
             <td width="137"><span class="field">
               <select name="sel_site_info_product_3" id="sel_site_info_product_3" >
                 <option value="---select---" selected>---select---</option>
-                <?=$productList?>
+                <?php echo $productList?>
               </select>
               </span></td>
             <td width="112"><input id="site_info_dose_3" name="site_info_dose_3" type="text" size="10" maxlength="5"></td>
             <td width="174"><span class="field">
               <select id="sel_site_info_supplier_3" name="sel_site_info_supplier_3">
                 <option value="---select---" selected>---select---</option>
-				<?=$supplierList?>
+				<?php echo $supplierList?>
               </select>
               </span></td>
             <td width="87"><input id="site_info_storage_3" name="site_info_storage_3" type="text" size="10" maxlength="5" onkeypress="return numbersonly(this, event)"></td>
@@ -856,14 +866,14 @@ $(document).ready(function() {
             <td width="137"><span class="field">
               <select name="sel_site_info_product_4" id="sel_site_info_product_4" >
                 <option value="---select---" selected>---select---</option>
-                <?=$productList?>
+                <?php echo $productList?>
               </select>
               </span></td>
             <td width="112"><input id="site_info_dose_4" name="site_info_dose_4" type="text" size="10" maxlength="5"></td>
             <td width="174"><span class="field">
               <select id="sel_site_info_supplier_4" name="sel_site_info_supplier_4">
                 <option value="---select---" selected>---select---</option>
-				<?=$supplierList?>
+				<?php echo $supplierList?>
               </select>
               </span></td>
             <td width="87"><input id="site_info_storage_4" name="site_info_storage_4" type="text" size="10" maxlength="5" onkeypress="return numbersonly(this, event)"></td>
@@ -909,21 +919,21 @@ $(document).ready(function() {
             <td>
             <select class='selectObj' id="sel_training_usp_engineer_1" name="sel_training_usp_engineer_1">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
 
             <td>
             <select class='selectObj' id="sel_training_usp_fst_1" name="sel_training_usp_fst_1">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
 
             <td>
             <select class='selectObj' id="sel_training_usp_sales_1" name="sel_training_usp_sales_1">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
 
@@ -937,21 +947,21 @@ $(document).ready(function() {
             <td>
             <select class='selectObj' id="sel_training_usp_engineer_2" name="sel_training_usp_engineer_2">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
 
             <td>
             <select class='selectObj' id="sel_training_usp_fst_2" name="sel_training_usp_fst_2">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
 
             <td>
             <select class='selectObj' id="sel_training_usp_sales_2" name="sel_training_usp_sales_2">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
           </tr>
@@ -964,21 +974,21 @@ $(document).ready(function() {
             <td>
             <select class='selectObj' id="sel_training_usp_engineer_3" name="sel_training_usp_engineer_3">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
 
             <td>
             <select class='selectObj' id="sel_training_usp_fst_3" name="sel_training_usp_fst_3">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
 
             <td>
             <select class='selectObj' id="sel_training_usp_sales_3" name="sel_training_usp_sales_3">
             <option value="---select---" selected>---select---</option>
-            <?= $comsContacts?>
+            <?php echo $comsContacts?>
             </select>
             </td>
           </tr>
@@ -1004,7 +1014,7 @@ $(document).ready(function() {
 
 <!-- SECTION 2 START -->
 <div id='section_2' class='newCustomerDiv' style="display:inline">
-  <input name="updated_by" type="hidden" id="updated_by" value="<?=$USERID?>">
+  <input name="updated_by" type="hidden" id="updated_by" value="<?php echo $USERID?>">
   <div class='sectionHeader2'>Section 2 - Chemical Delivery and Safety Information<br />
     (Sales/BD -EES)</div>
   <div class='sectionBlock'>
@@ -1035,7 +1045,7 @@ $(document).ready(function() {
           <div class='label'>State:</div>
           <div style="width:600px">
             <select class='required' name="sel_site_state" id='sel_site_state'>
-              <? include 'stateOptions.php' ?>
+              <?php include 'stateOptions.php' ?>
             </select>
           </div>
           <div class='label'>Zip:</div>
@@ -1062,7 +1072,7 @@ $(document).ready(function() {
       
           <select class='selectObj required' id="sel_product_grade" name="sel_product_grade">
             <option value="--select--" selected>--select--</option>
-            <?
+            <?php
               	$query = "SELECT prodID, value as prodDesc FROM product ORDER BY value";
 				$res = getResult($query);
 				if (checkResult($res))
@@ -1265,7 +1275,7 @@ $(document).ready(function() {
         
         <select class='selectObj' id="sel_usp_contact" name="sel_usp_contact" onChange="setEmail('usp_contact')">
         <option value="---select---" selected>---select---</option>
-        <?= $comsContacts?>
+        <?php echo $comsContacts?>
         </select>      
       </div>
       <div style="clear:both"></div>
@@ -1432,7 +1442,7 @@ $(document).ready(function() {
 
             <td><select name="sel_manifest_usp_contact_name1" class='required' id="sel_manifest_usp_contact_name1" onChange="setEmail('manifest_usp_contact_name1')">
                 <option value="-select-" selected>-select-</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
           </select></td>
 
 
@@ -1446,7 +1456,7 @@ $(document).ready(function() {
 
             <td><select class='selectObj' id="sel_manifest_usp_contact_name2" name="sel_manifest_usp_contact_name2" onChange="setEmail('manifest_usp_contact_name2')">
                 <option value="---select---" selected>---select---</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
               </select></td>
 
         <td><input id="manifest_usp_role2" name="manifest_usp_role2" type="text" size="17" maxlength="50"></td>
@@ -1458,7 +1468,7 @@ $(document).ready(function() {
       <tr>
             <td><select class='selectObj' id="sel_manifest_usp_contact_name3" name="sel_manifest_usp_contact_name3" onChange="setEmail('manifest_usp_contact_name3')">
                 <option value="---select---" selected>---select---</option>
-                <?= $comsContacts?>
+                <?php echo $comsContacts?>
               </select></td>
         <td><input id="manifest_usp_role3" name="manifest_usp_role3" type="text" size="17" maxlength="50"></td>
         <td><input id="manifest_usp_contact_name3_email" name="manifest_usp_contact_name3_email" type="text" size="17" maxlength="50"></td>
@@ -1542,7 +1552,7 @@ $(document).ready(function() {
 
 <!-- SECTION 3 START -->
 <div id='section_3' class='newCustomerDiv' style="display:inline">
-  <input name="updated_by" type="hidden" id="updated_by" value="<?=$USERID?>">
+  <input name="updated_by" type="hidden" id="updated_by" value="<?php echo $USERID?>">
   <div class='sectionHeader3'>Section 3 - Dose Information - EES</div>
   <div class='sectionBlock'>
     <div class='sectionBlockTitle'>Dose Site</div>
@@ -2070,7 +2080,7 @@ $(document).ready(function() {
 <div id="dialog" title="Message"></div>
 <div style="float:left">
   <div id='customerLogin' style="visibility:hidden">
-    <?=$CUSTOMER_EMAIL?>
+    <?php echo $CUSTOMER_EMAIL?>
   </div>
 </div>
 <div id='debugDiv'></div>

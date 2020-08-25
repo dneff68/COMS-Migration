@@ -440,10 +440,10 @@ function doAction(action)
 	}
 	else if (action == 'newCustomerForm')
 	{
-		alert("here");
+		//alert("here");
 		selObj = document.getElementById('selAction');
 		selObj.selectedIndex = 0;
-		surfDialog($_SESSION['ROOT_URL'] . "newCustomerForm.php", 900, 700, window, false);
+		surfDialog("<?php echo $_SESSION['ROOT_URL'] ?>newCustomerForm.php", 900, 700, window, false);
 	}
 	else if (action == 'anomalyReport')
 	{
