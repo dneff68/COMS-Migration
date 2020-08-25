@@ -1,10 +1,20 @@
-<?
+<?php
 session_start();
-include_once 'GlobalConfig.php';
-include_once 'h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
-
+if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
+{
+	include_once 'GlobalConfig.php';
+	include_once 'h202Functions.php';
+	include_once '../lib/db_mysql.php';
+	include_once '../lib/chtFunctions.php';	
+}
+else
+{
+	die("NOT LOCAL DEVELOPMENT: multiTankDetails: 13");
+	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
+	include_once '/var/www/html/CHT/h202/h202Functions.php';
+	include_once 'chtFunctions.php';
+	include_once 'db_mysql.php';
+}
 
 if (david())
 {
@@ -18,7 +28,7 @@ if (empty($customerID))
 }
 
 $js = '';
-if (empty($USERID))
+if (empty($_SESSION["USERID"]))
 {
 	$js = "alert('Your session has expired');\n window.close();\n";
 }
@@ -43,7 +53,7 @@ if (empty($USERID))
 
 
 <script type="text/javascript">
-<?
+<?php
 	echo($js);
 ?>
 
@@ -156,7 +166,7 @@ a {
  <td width="135">Updated By</td>
  <td width="211">&nbsp;</td>
  </tr>
-<?
+<?php
 	$query = "SELECT keyCode, section1, DATE_FORMAT(creationDate, '%m/%d/%Y') as creationDate FROM newCustomerForm WHERE complete=0 ORDER BY creationDate"; 
 	$res = getResult($query);
 	if (checkResult($res))
@@ -207,7 +217,7 @@ a {
  <td width="135">Updated By</td>
  <td width="211">&nbsp;</td>
  </tr>
-<?
+<?php
 	$query = "SELECT keyCode, section1, creationDate FROM newCustomerForm WHERE committed=1 AND complete=1 order by creationDate desc"; 
 	$res = getResult($query);
 	if (checkResult($res))

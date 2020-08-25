@@ -436,7 +436,7 @@ function doAction(action)
 	{
 		selObj = document.getElementById('selAction');
 		selObj.selectedIndex = 0;
-		surfDialog("http://h202.customhostingtools.com/newCustomerList.php", 850, 600, window, false);
+		surfDialog("<?php echo $_SESSION['ROOT_URL'] ?>newCustomerList.php", 850, 600, window, false);
 	}
 	else if (action == 'newCustomerForm')
 	{

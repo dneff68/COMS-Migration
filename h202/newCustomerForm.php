@@ -23,12 +23,18 @@ if (david())
 	ini_set("display_errors", 1); 		
 }
 
-if (!empty($key))
+if (isset($_GET['st']))
+{
+	$st = $_GET['st'];
+}
+//if (!empty($key))
+if (isset($_GET['key']))
 {
 	// if (!isset( $_SESSION['KEY_CODE'] ))
 	// {
 	// 	session_register('KEY_CODE');
 	// }
+	$key = $_GET['key'];
 	$_SESSION['KEY_CODE'] = $key;
 	
 	$query = "SELECT DATE_FORMAT(creationDate, '%m/%d/%Y')  as update_date, committed, complete FROM newCustomerForm WHERE keyCode='$key' LIMIT 1";
@@ -117,7 +123,7 @@ $(document).ready(function() {
 	}
 	<?php endif;?>		
 	
-	var st=<?php echo empty($st) ? 3 : $st?>;
+	var st=<?php echo isset($st) ? 3 : $st?>;
 	
 	if (st==1) // read only
 	{
