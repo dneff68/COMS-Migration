@@ -850,7 +850,6 @@ function checkTankLevel($monitorID, $statDate='')
 	$query = "SELECT levelStat from tankStats where monitorID='$monitorID' $more ORDER BY readingDate DESC LIMIT 1";
 	$res = getResult($query);
 	
-	
 	if (checkResult($res))
 	{
 		$line = $res->fetch_assoc();

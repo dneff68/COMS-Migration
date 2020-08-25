@@ -8,19 +8,10 @@ include_once "../lib/chtFunctions.php";
 
 $_SESSION['LOCAL_DEVELOPMENT'] 	= 'yes';
 $_SESSION['ROOT_URL'] 			= "";
-
 $_SESSION['CUSTOMER_EMAIL'] 	= '';
-
-
 $_SESSION['JUMP'] = '';
 $_SESSION['DELIVERY_COMMITTED'] = '';
 $_SESSION['USED_PO_CODES'] = '';
-
-$_SESSION['DELIVERY_NOTES'] = '';
-$_SESSION['DELIVERY_TANKS'] = array();
-
-$_SESSION['TANK_DETAILS'] = array();			
-
 $_SESSION['ZIPCOLLECTION'] = array();
 $_SESSION['CONVERTED_QUANTITIES'] = array();
 

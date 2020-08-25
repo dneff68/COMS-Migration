@@ -15,7 +15,7 @@ else
 	include_once 'chtFunctions.php';
 	include_once 'db_mysql.php';
 }
-bigEcho("delivertDetails.php");
+bigEcho("deliveryDetails.php");
 
 $sendInvoices = 'no';
 $submitted = 'no';

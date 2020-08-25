@@ -17,6 +17,9 @@ if (!isset($_SESSION['VIEWMODE']))
 	$_SESSION['REGION_FILTER'] 		= '';
 	$_SESSION['LEADTIME_OVERRIDE'] 	= '';
 	$_SESSION['VIEWMODE']			= 'deliveryView';
+	$_SESSION['DELIVERY_NOTES'] 	= '';
+	$_SESSION['DELIVERY_TANKS'] 	= array();
+	$_SESSION['TANK_DETAILS'] 		= array();			
 }
 
 
@@ -332,7 +335,6 @@ if ($_SESSION['VIEWMODE'] != 'statusView')
 			where 
 			t.monitorID=m.monitorID and
 			m.siteID = s.siteID $inactiveFilt $unmonFilt $tmpshutFilt";
-			
 	$res = getResult($query);
 	
 	$lowCnt = 0;
@@ -438,9 +440,10 @@ function doAction(action)
 	}
 	else if (action == 'newCustomerForm')
 	{
+		alert("here");
 		selObj = document.getElementById('selAction');
 		selObj.selectedIndex = 0;
-		surfDialog("http://h202.customhostingtools.com/newCustomerForm.php", 900, 700, window, false);
+		surfDialog($_SESSION['ROOT_URL'] . "newCustomerForm.php", 900, 700, window, false);
 	}
 	else if (action == 'anomalyReport')
 	{
