@@ -1,6 +1,8 @@
 <?php
 session_start();
 include_once '../lib/chtFunctions.php';
+
+//include_once $_SESSION['SYSTEM_LIB_PATH'] . "chtFunctions.php";
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';

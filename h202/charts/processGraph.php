@@ -1,38 +1,51 @@
-<?
+<?php
 session_start();
-include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-include_once '/var/www/html/CHT/h202/h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
-include("/var/www/html/CHT/h202/FusionCharts/Code/PHP/Includes/FusionCharts.php");
+
+if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
+{
+	include_once $_SESSION['SYSTEM_ROOT_PATH'] . '/GlobalConfig.php';
+	include_once $_SESSION['SYSTEM_ROOT_PATH'] . '/h202Functions.php';
+	include_once $_SESSION['SYSTEM_LIB_PATH'] . '/db_mysql.php';
+	//include_once $_SESSION['SYSTEM_LIB_PATH'] . '/chtFunctions.php';	
+	include($_SESSION['SYSTEM_ROOT_PATH'] . "FusionCharts/Code/PHP/Includes/FusionCharts.php");
+}
+else
+{
+	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
+	include_once '/var/www/html/CHT/h202/h202Functions.php';
+	include_once 'chtFunctions.php';
+	include_once 'db_mysql.php';
+	include("/var/www/html/CHT/h202/FusionCharts/Code/PHP/Includes/FusionCharts.php");
+}
+
 error_log('process graph');
 
 if (empty($PROCESS_CATEGORIES) || empty($TEMPERATURE_DATASET))
 {
-	session_register('PROCESS_CATEGORIES');
-	session_register('TEMPERATURE_DATASET');
-	session_register('DAYS_PLOTTED');
-	session_register('PPM_DATASET');
-	session_register('PROCESS_START_DATE');
-	session_register('PROCESS_END_DATE');
-	session_register('GRAPH_START_DATE');
-	session_register('LEFT_Y_MAX');
-	session_register('LEFT_Y_MIN');
-	session_register('FLOW_DATASET');
-	session_register('FLOW_AVERAGE');
-	session_register('PROCESS_TARGET_ARRAY');
-	session_register('PROCESS_START_DATE_FMT');
-	session_register('FLOW_TARGET');
-	session_register('LABEL_STEP');
-	session_register('FLOW_AVERAGE');
+	$_SESSION['PROCESS_CATEGORIES'] = '';
+	$_SESSION['TEMPERATURE_DATASET'] = '';
+	$_SESSION['DAYS_PLOTTED'] = '';
+	$_SESSION['PPM_DATASET'] = '';
+	$_SESSION['PROCESS_START_DATE'] = '';
+	$_SESSION['PROCESS_END_DATE'] = '';
+	$_SESSION['GRAPH_START_DATE'] = '';
+	$_SESSION['LEFT_Y_MAX'] = '';
+	$_SESSION['LEFT_Y_MIN'] = '';
+	$_SESSION['FLOW_DATASET'] = '';
+	$_SESSION['FLOW_AVERAGE'] = '';
+	$_SESSION['PROCESS_TARGET_ARRAY'] = '';
+	$_SESSION['PROCESS_START_DATE_FMT'] = '';
+	$_SESSION['FLOW_TARGET'] = '';
+	$_SESSION['LABEL_STEP'] = '';
+	$_SESSION['FLOW_AVERAGE'] = '';
 }
 	
 if (empty($SELECTED_TANK))
 {
-	session_register('SELECTED_TANK');
-	session_register('SELECTED_TANK_NAME');
-	session_register('SELECTED_SAMPLE_POINT');
-	session_register('PROCESS_TARGET');
+	$_SESSION['SELECTED_TANK'] = '';
+	$_SESSION['SELECTED_TANK_NAME'] = '';
+	$_SESSION['SELECTED_SAMPLE_POINT'] = '';
+	$_SESSION['PROCESS_TARGET'] = '';
 }
 
 $SELECTED_TANK = empty($monitorID) ? $SELECTED_TANK : $monitorID;
@@ -64,7 +77,7 @@ if ($_POST)
 			$PROCESS_TARGET_ARRAY = array();
 		}
 	}
-	header('Location: /charts/processGraph.php');
+	header('Location: ' . $_SESSION['ROOT_URL'] . 'charts/processGraph.php');
 	exit;
 }
 
@@ -136,18 +149,18 @@ if (!empty($PROCESS_START_DATE))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Process</title>
-<link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/jquery.js'></SCRIPT>
-<script language="JavaScript" src="/datetimepicker.js"></script>
-<SCRIPT LANGUAGE="Javascript" SRC="/FusionCharts/Code/FusionCharts/FusionCharts.js"></SCRIPT>
-<SCRIPT LANGUAGE="Javascript" SRC="/FusionCharts/Code/FusionCharts/FusionChartsExportComponent.js"></SCRIPT>
+<link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['ROOT_URL']?>lib/admin.js'></SCRIPT>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['ROOT_URL']?>lib/jquery.js'></SCRIPT>
+<script language="JavaScript" src="<?php echo $_SESSION['ROOT_URL']?>datetimepicker.js"></script>
+<SCRIPT LANGUAGE="Javascript" SRC="<?php echo $_SESSION['ROOT_URL']?>FusionCharts/Code/FusionCharts/FusionCharts.js"></SCRIPT>
+<SCRIPT LANGUAGE="Javascript" SRC="<?php echo $_SESSION['ROOT_URL']?>FusionCharts/Code/FusionCharts/FusionChartsExportComponent.js"></SCRIPT>
 
 <?php if (david() || jim()) : ?>
 	<link rel="stylesheet" href="../ui_theme/themes/base/jquery.ui.all.css"> 
-	<script src="../ui_theme/ui/jquery.ui.core.js"></script> 
-	<script src="../ui_theme/ui/jquery.ui.widget.js"></script> 
-	<script src="../ui_theme/ui/jquery.ui.datepicker.js"></script> 
+	<script src="<?php echo $_SESSION['ROOT_URL']?>ui_theme/ui/jquery.ui.core.js"></script> 
+	<script src="<?php echo $_SESSION['ROOT_URL']?>ui_theme/ui/jquery.ui.widget.js"></script> 
+	<script src="<?php echo $_SESSION['ROOT_URL']?>ui_theme/ui/jquery.ui.datepicker.js"></script> 
     <script language="javascript" type="text/javascript">
 	$(function() {
 		var dates = $( "#startDate, #endDate" ).datepicker({
@@ -171,7 +184,7 @@ if (!empty($PROCESS_START_DATE))
 <?php endif; ?>
 
 <script language="javascript">
-<?=$jsClose?>
+<?php echo $jsClose?>
 
 function setTarget()
 {
@@ -325,7 +338,7 @@ var httpObject = null;
 </script>
 </head>
 
-<body <?=$PROCESS_END_DATE == $PROCESS_START_DATE ? 'onload="refreshView();"' : ''?>>
+<body <?php echo $PROCESS_END_DATE == $PROCESS_START_DATE ? 'onload="refreshView();"' : ''?>>
 
 <table width='600' class="spinNormalText">
   <tr valign="top" class="spinTableBarEven">
@@ -333,15 +346,15 @@ var httpObject = null;
       <td width="466" valign="middle" nowrap="nowrap">
 <?php if (david() || jim()) : ?>
     <label for="from">From</label> 
-    <input type="text" id="startDate" name="startDate" value="<?=$PROCESS_START_DATE?>"/> 
+    <input type="text" id="startDate" name="startDate" value="<?php echo $PROCESS_START_DATE?>"/> 
     <label for="to">to</label> 
-    <input type="text" id="endDate" name="endDate" value="<?=$PROCESS_END_DATE?>"/> 
-<? else : ?>
+    <input type="text" id="endDate" name="endDate" value="<?php echo $PROCESS_END_DATE?>"/> 
+<?php else : ?>
       	<div align="left">Start Date: 
-        <input readonly name='startDate' id="startDate" type="text" size="10" value="<?=$PROCESS_START_DATE?>">
+        <input readonly name='startDate' id="startDate" type="text" size="10" value="<?php echo $PROCESS_START_DATE?>">
         <a href="javascript:NewCal('startDate','yyyymmdd')"> <img src="/images/calbtn.gif" width="16" height="16" border="0" alt="Pick a start date"></a>
         &nbsp;&nbsp;End Date: 
-        <input readonly name='endDate' id="endDate" type="text" size="10" value="<?=$PROCESS_END_DATE?>">
+        <input readonly name='endDate' id="endDate" type="text" size="10" value="<?php echo $PROCESS_END_DATE?>">
         <a href="javascript:NewCal('endDate','yyyymmdd')"> <img src="/images/calbtn.gif" width="16" height="16" border="0" alt="Pick an end date"></a>
 <?php endif; ?>
         
@@ -366,26 +379,26 @@ var httpObject = null;
 	$LAG_TIME_FMT = $hrs . 'hr ' . $min . 'min';
 ?>      
       <td width="159" height="20" align="right" valign="middle" nowrap="nowrap"><select name="lagHours" id="lagHours">
-		  <option value="0" <?= $hrs == 0 ? 'selected' : ''?>>0</option>
-    	  <option value="1" <?= $hrs == 1 ? 'selected' : ''?>>1</option>
-          <option value="2" <?= $hrs == 2 ? 'selected' : ''?>>2</option>
-          <option value="3" <?= $hrs == 3 ? 'selected' : ''?>>3</option>
-          <option value="4" <?= $hrs == 4 ? 'selected' : ''?>>4</option>
-          <option value="5" <?= $hrs == 5 ? 'selected' : ''?>>5</option>
-          <option value="6" <?= $hrs == 6 ? 'selected' : ''?>>6</option>
-          <option value="7" <?= $hrs == 7 ? 'selected' : ''?>>7</option>
-          <option value="8" <?= $hrs == 8 ? 'selected' : ''?>>8</option>
-          <option value="9" <?= $hrs == 9 ? 'selected' : ''?>>9</option>
-          <option value="10" <?= $hrs == 10 ? 'selected' : ''?>>10</option>
-          <option value="11" <?= $hrs == 11 ? 'selected' : ''?>>11</option>
-          <option value="12" <?= $hrs == 12 ? 'selected' : ''?>>12</option>
+		  <option value="0" <?php echo  $hrs == 0 ? 'selected' : ''?>>0</option>
+    	  <option value="1" <?php echo  $hrs == 1 ? 'selected' : ''?>>1</option>
+          <option value="2" <?php echo  $hrs == 2 ? 'selected' : ''?>>2</option>
+          <option value="3" <?php echo  $hrs == 3 ? 'selected' : ''?>>3</option>
+          <option value="4" <?php echo  $hrs == 4 ? 'selected' : ''?>>4</option>
+          <option value="5" <?php echo  $hrs == 5 ? 'selected' : ''?>>5</option>
+          <option value="6" <?php echo  $hrs == 6 ? 'selected' : ''?>>6</option>
+          <option value="7" <?php echo  $hrs == 7 ? 'selected' : ''?>>7</option>
+          <option value="8" <?php echo  $hrs == 8 ? 'selected' : ''?>>8</option>
+          <option value="9" <?php echo  $hrs == 9 ? 'selected' : ''?>>9</option>
+          <option value="10" <?php echo  $hrs == 10 ? 'selected' : ''?>>10</option>
+          <option value="11" <?php echo  $hrs == 11 ? 'selected' : ''?>>11</option>
+          <option value="12" <?php echo  $hrs == 12 ? 'selected' : ''?>>12</option>
       </select>
         hr&nbsp;&nbsp;
         <select name="lagMinutes" id="lagMinutes">
-          <option value="0" <?= $min == 0 ? 'selected' : ''?>>0</option>
-          <option value="15" <?= $min == 15 ? 'selected' : ''?>>15</option>
-          <option value="30" <?= $min == 30 ? 'selected' : ''?>>30</option>
-          <option value="45" <?= $min == 45 ? 'selected' : ''?>>45</option>
+          <option value="0" <?php echo  $min == 0 ? 'selected' : ''?>>0</option>
+          <option value="15" <?php echo  $min == 15 ? 'selected' : ''?>>15</option>
+          <option value="30" <?php echo  $min == 30 ? 'selected' : ''?>>30</option>
+          <option value="45" <?php echo  $min == 45 ? 'selected' : ''?>>45</option>
       </select>
         min      </td>
       <td width="103" align="center" valign="middle" nowrap="nowrap"><input type="submit" name="button" id="button" value="Set Lag" onclick="setLagtime()" /></td>
@@ -394,7 +407,7 @@ var httpObject = null;
   <?php if (true) : ?>
   <tr valign="top" class="spinTableBarEven">
     <td height="20" colspan="2" align="right" valign="middle" nowrap="nowrap">Process Target:</td>
-    <td height="20" align="left" valign="middle" nowrap="nowrap">&nbsp;&nbsp;<input value="<?=$PROCESS_TARGET?>" name="txt_processTarget" type="text" id="txt_processTarget" size="4" maxlength="4" onkeypress="return numbersonly(this, event)" /></td>
+    <td height="20" align="left" valign="middle" nowrap="nowrap">&nbsp;&nbsp;<input value="<?php echo $PROCESS_TARGET?>" name="txt_processTarget" type="text" id="txt_processTarget" size="4" maxlength="4" onkeypress="return numbersonly(this, event)" /></td>
     <td align="center" valign="middle" nowrap="nowrap"><input type="submit" name="button2" id="button2" value="Set Target" onclick="setProcessTarget()" /></td>
   </tr>
   <?php endif; ?>
@@ -404,8 +417,8 @@ var httpObject = null;
     <td colspan="4">
     <table width="800" border="0" align="center" cellpadding="5" cellspacing="1">
       <tr align="center" class="spinTableTitle" style="font-size:larger">
-        <td height="44" colspan="3">Update Process Targets For: <?=$SELECTED_TANK?><br /><font size="-1">Note: Targets will be applied from <?=$PROCESS_START_DATE_FMT?> forward</font>
-          <?=$tankName?></td>
+        <td height="44" colspan="3">Update Process Targets For: <?php echo $SELECTED_TANK?><br /><font size="-1">Note: Targets will be applied from <?php echo $PROCESS_START_DATE_FMT?> forward</font>
+          <?php echo $tankName?></td>
       </tr>
       <tr class="spinTableBarOdd">
         <td width="189" align="center" valign="top">Starting Hour</td>
@@ -732,7 +745,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 </script>
 
 <script type="text/javascript">	
-	var chart_Process = new FusionCharts("/FusionCharts/Charts/<?=$singleDayGraph == 1? 'MSBar2D.swf' : 'MSCombiDY2D.swf'?>", "Process", "800", "<?=$singleDayGraph == 1 ? '1800' : '400'?>", "0", "1");
+	var chart_Process = new FusionCharts("/FusionCharts/Charts/<?php echo $singleDayGraph == 1? 'MSBar2D.swf' : 'MSCombiDY2D.swf'?>", "Process", "800", "<?php echo $singleDayGraph == 1 ? '1800' : '400'?>", "0", "1");
 	chart_Process.setTransparent("false");
 	chart_Process.setDataURL("processData.php");	
 	chart_Process.render("ProcessDiv");
@@ -768,7 +781,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 
 	//Render the exporter SWF in our DIV fcexpDiv
 	ProcessExportComponent.Render("processExportDiv");
-<?=$js_reposition?>
+<?php echo $js_reposition?>
 </script>
 </body>
 </html>

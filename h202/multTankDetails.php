@@ -228,7 +228,7 @@ if ($_SESSION['STATUS_FILTER'] == 'unass')
 			{
 				$processLink = "
 					&nbsp;&nbsp;
-					<a href=\"javascript:surfDialog('/charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
+					<a href=\"javascript:surfDialog('" . $_SESSION['ROOT_URL'] . "charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
 			}
 
 			$marr[$monitorID] = "<tr class=\"spinTableBarOdd\">
@@ -236,7 +236,7 @@ if ($_SESSION['STATUS_FILTER'] == 'unass')
 				<td>$tankName</td>
 				<td>$monOut</td>
 				<td nowrap>$status</td>
-				<td nowrap><a href=\"javascript:surfDialog('/charts/tankGraph.php?tab=2&tankID=$monitorID', 830, 430, window, false)\">graph</a>
+				<td nowrap><a href=\"javascript:surfDialog('" . $_SESSION['ROOT_URL'] . "charts/tankGraph.php?tab=2&tankID=$monitorID', 830, 430, window, false)\">graph</a>
 					$processLink
 				&nbsp;&nbsp;
 					$editLink
@@ -504,7 +504,7 @@ else
 				{
 					$processLink = "
 						&nbsp;&nbsp;
-						<a id='processLink_$monitorID' href=\"javascript:surfDialog('/charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
+						<a id='processLink_$monitorID' href=\"javascript:surfDialog('" . $_SESSION['ROOT_URL'] . "charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
 				}
 				
 				$marr[$monitorID] = "<tr class=\"spinTableBarOdd\">
@@ -513,7 +513,7 @@ else
 					<td>$monitorID $ts_check $process_check</td>
 					<td align='center'>$targetDoseLink</td>
 					<td align='center' nowrap bgcolor='#F2F2F2'>$status</td>
-					<td><a href=\"javascript:surfDialog('/charts/tankGraph.php?tab=2&tankID=$monitorID', 830, 430, window, false)\">graph</a>
+					<td><a href=\"javascript:surfDialog('" . $_SESSION['ROOT_URL'] . "charts/tankGraph.php?tab=2&tankID=$monitorID', 830, 430, window, false)\">graph</a>
 					$processLink
 					&nbsp;&nbsp;
 					$editLink &nbsp;&nbsp;&nbsp;$noteLink

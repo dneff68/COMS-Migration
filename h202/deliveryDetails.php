@@ -619,13 +619,13 @@ if ($tankAction == 'showEmailDist')
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Tank Details</title>
-<link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
-<link rel="stylesheet" href="../ui_theme/themes/base/jquery.ui.all.css"> 
+<link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
+<link rel="stylesheet" href="ui_theme/themes/base/jquery.ui.all.css">
 
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/admin.js'></SCRIPT>
 <script language="JavaScript" src="datetimepicker.js"></script>
-<script src="http://www.customhostingtools.com/lib/jquery.js" type="text/javascript"></script>
-<script src="http://www.customhostingtools.com/lib/jquery-ui.custom.min.js" type="text/javascript"></script>
+<script src="<?php echo $_SESSION['LIB_URL']?>/jquery.js" type="text/javascript"></script>
+<script src="<?php echo $_SESSION['LIB_URL']?>/jquery-ui.custom.min.js" type="text/javascript"></script>
 
 <script language="javascript" type="text/javascript">
 
@@ -1522,11 +1522,11 @@ if (checkResult($res))
 			{
 				$processLink = "
 					&nbsp;&nbsp;
-					<a id='processLink_$monitorID' href=\"javascript:surfDialog('/charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
+					<a id='processLink_$monitorID' href=\"javascript:surfDialog('<?php echo $_SESSION['ROOT_URL']?>charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
 			}
 			
 			
-			$group = $_SESSION['USERTYPE'] == 'customer' ? '' : "<a href='/deliveryDetails.php?zip=$zippart'>group</a>&nbsp;";
+			$group = $_SESSION['USERTYPE'] == 'customer' ? '' : "<a href='<?php echo $_SESSION['ROOT_URL']?>deliveryDetails.php?zip=$zippart'>group</a>&nbsp;";
 			$tankNameOut = $_SESSION['USERTYPE'] == 'customer' ? "<strong>$Location</strong>" : "<a href=\"$href\">$Location</a>";
 			
 			// add link to customer page 

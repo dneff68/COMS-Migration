@@ -16,6 +16,11 @@ else
 	include_once 'db_mysql.php';
 }
 
+if (isLoggedIn())
+{
+	$USERID = $_SESSION["USERID"];
+}
+
 
 if (david())
 {
@@ -67,16 +72,16 @@ $_SESSION['CURRENT_PAGE'] = 1;
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>COMS - New Customer Form</title>
-<link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
+<link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
 <link rel="stylesheet" TYPE="text/css" href="planning.css" >
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/helper.js'></SCRIPT>
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/newCustomer.js'></SCRIPT>
-<script src="http://www.customhostingtools.com/lib/jquery.js" type="text/javascript"></script>
-<link rel="stylesheet" href="/ui_theme/themes/base/jquery.ui.all.css">
-<script src="/ui_theme/ui/jquery.ui.core.js"></script>
-<script src="/ui_theme/ui/jquery.ui.widget.js"></script>
-<script src="/ui_theme/ui/jquery.ui.datepicker.js"></script>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/helper.js'></SCRIPT>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/admin.js'></SCRIPT>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/newCustomer.js'></SCRIPT>
+<script src="<?php echo $_SESSION['LIB_URL']?>/jquery.js" type="text/javascript"></script>
+<link rel="stylesheet" href="ui_theme/themes/base/jquery.ui.all.css">
+<script src="ui_theme/ui/jquery.ui.core.js"></script>
+<script src="ui_theme/ui/jquery.ui.widget.js"></script>
+<script src="ui_theme/ui/jquery.ui.datepicker.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script language="javascript" type="text/javascript">
 var validate = false;

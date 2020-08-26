@@ -24,7 +24,8 @@ function jim()
 
 function isLoggedIn()
 {
-	return empty($USERID) || empty($_SESSION['USERTYPE']);
+//	return empty($USERID) || empty($_SESSION['USERTYPE']);
+	return isset($_SESSION["USERID"]) || empty($_SESSION['USERTYPE']);
 }
 
 function fixSingleQuotes($str)

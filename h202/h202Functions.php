@@ -924,7 +924,6 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 	$normal = 1;
 	$low = 0;
 	$high = 0;
-	writeLog("h202Functions", 926, "=========== statkey = $statkey");
 	if (($statkey == 'unmon' || $statkey == '') && 	substr($monitorID, 0, 5) == 'none-')
 	{
 		return "unmon,Tank Unmonitored";
@@ -1028,7 +1027,6 @@ function checkTankStatus($monitorID, $statkey='', $msgColor='ff0000')
 		}
 	}
 
-	writeLog("h202Functions", 1027, "if (($statkey == 'Normal' || $statkey == '') && $normal == 1)");
 //	if (($statkey == 'Normal' || $statkey == ''))
 	//if (($statkey == 'Normal' || $statkey == '') && $normal == 1)
 
