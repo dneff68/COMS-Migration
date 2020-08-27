@@ -1,6 +1,6 @@
 <?
 session_start();
-if (empty($USERID))
+if (empty($_SESSION["USERID"]))
 {
 	echo "
 	<script language='javascript'>

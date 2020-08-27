@@ -22,7 +22,8 @@ function executeQuery($query, $type="")
 	//mysql_select_db($database, $connection) or die ("Couldn't select database");
 	$database = mysqli_select_db($connection, "h2o2");
 	// $result = mysql_query($query, $connection);
-	$result = $connection->query($query);
+	//$result = $connection->query($query);
+	$result = mysqli_query($connection, $query);
 
 
 //	$connection = mysqli_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
@@ -30,7 +31,7 @@ function executeQuery($query, $type="")
 //	$result = mysql_unbuffered_query($query, $connection);
 	if ($type == "CREATE")
 	{
-		return 1;
+		return $result;
 	}
 	if (!$result)
 	{
@@ -69,7 +70,10 @@ function getResult($query, $handleError=false)
 	//mysql_select_db($database, $connection) or die ("Couldn't select database");
 	$database = mysqli_select_db($connection, "h2o2");
 	// $result = mysql_query($query, $connection);
-	$result = $connection->query($query);
+//	$result = $connection->query($query);
+	$result = mysqli_query($connection, $query);
+
+
 	if (!$result)
 	{
 		if (!$handleError)

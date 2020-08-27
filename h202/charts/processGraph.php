@@ -5,7 +5,7 @@ if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
 {
 	include_once $_SESSION['SYSTEM_ROOT_PATH'] . '/GlobalConfig.php';
 	include_once $_SESSION['SYSTEM_ROOT_PATH'] . '/h202Functions.php';
-	include_once $_SESSION['SYSTEM_LIB_PATH'] . '/db_mysql.php';
+	include_once 'db_mysql.php';
 	//include_once $_SESSION['SYSTEM_LIB_PATH'] . '/chtFunctions.php';	
 	include($_SESSION['SYSTEM_ROOT_PATH'] . "FusionCharts/Code/PHP/Includes/FusionCharts.php");
 }
@@ -17,6 +17,11 @@ else
 	include_once 'db_mysql.php';
 	include("/var/www/html/CHT/h202/FusionCharts/Code/PHP/Includes/FusionCharts.php");
 }
+
+$jsClose = '';
+
+if (!isset($PROCESS_TARGET)) $PROCESS_TARGET = 0;
+$invalidDate = false;
 
 error_log('process graph');
 
@@ -40,7 +45,15 @@ if (empty($PROCESS_CATEGORIES) || empty($TEMPERATURE_DATASET))
 	$_SESSION['FLOW_AVERAGE'] = '';
 }
 	
-if (empty($SELECTED_TANK))
+$SELECTED_TANK = '';
+
+if (isset($_GET['monitorID']))
+{
+	$monitorID = $_GET['monitorID'];
+	$SELECTED_TANK = $monitorID;
+} 
+
+if (!isset($SELECTED_TANK))
 {
 	$_SESSION['SELECTED_TANK'] = '';
 	$_SESSION['SELECTED_TANK_NAME'] = '';
@@ -48,7 +61,8 @@ if (empty($SELECTED_TANK))
 	$_SESSION['PROCESS_TARGET'] = '';
 }
 
-$SELECTED_TANK = empty($monitorID) ? $SELECTED_TANK : $monitorID;
+//$SELECTED_TANK = empty($monitorID) ? $SELECTED_TANK : $monitorID;
+$PROCESS_START_DATE = isset($PROCESS_START_DATE) ? $PROCESS_START_DATE : '';
 
 if (!empty($endDate))
 {
@@ -363,7 +377,7 @@ var httpObject = null;
             </td>
             </form>
       <td width="60" height="20" align="right" valign="middle" nowrap="nowrap">Lag Time:</td>
-<?
+<?php
 	if ($LAG_MINUTES > 0)
 	{
 		$hrs = $LAG_MINUTES / 60;
@@ -474,7 +488,7 @@ var httpObject = null;
 </TR>
 
 </table>
-<?
+<?php
 
 if (empty($PROCESS_START_DATE) || $invalidDate == 1)
 {
@@ -507,20 +521,23 @@ $loopStartDate = $PROCESS_START_DATE;
 $hourlyTargets = '';
 $flowTarget = '';
 
-// create a temp table that will be used to reflect lag time						
+// create a temp table that will be used to reflect lag time
+executeQuery("DROP TABLE IF EXISTS tmp_processData");
+//$debug = "00";
 $query = "
-	CREATE TEMPORARY TABLE tmp_processData SELECT *  , DATE_ADD( date, INTERVAL -$LAG_MINUTES
+	CREATE  TABLE tmp_processData SELECT *  , DATE_ADD( date, INTERVAL -$LAG_MINUTES
 	MINUTE ) AS lagDate
 	FROM processData
 	WHERE 
 	 monitorID='$SELECTED_TANK' and
-	date > DATE_ADD( '$PROCESS_START_DATE', INTERVAL -3 DAY )
+	date > DATE_ADD( '$PROCESS_START_DATE', INTERVAL -3$debug DAY )
 	AND date < DATE_ADD( '$PROCESS_END_DATE', INTERVAL 3 DAY )";
 
-
-executeQuery($query);
+executeQuery($query, "CREATE");
 $res = getResult("SELECT * FROM tmp_processData");
 echoResults($res);
+$foo = executeQuery("drop table tmp_processData");
+
 
 // Get monitor process target
 $PROCESS_TARGET = 0;
@@ -781,7 +798,7 @@ for ($i = $DAYS_PLOTTED; $i > 0; $i--)
 
 	//Render the exporter SWF in our DIV fcexpDiv
 	ProcessExportComponent.Render("processExportDiv");
-<?php echo $js_reposition?>
+<?php //echo $js_reposition?>
 </script>
 </body>
 </html>

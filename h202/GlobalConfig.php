@@ -3,6 +3,7 @@
 // 	echo("<h4>1.5: STATUS_FILTER inside GlobalConfig: STATUS FILTER IS NOT SET</h4>");
 // else
 // 	echo("<h4>1. STATUS_FILTER inside GlobalConfig: " . $_SESSION['STATUS_FILTER'] . "</h4>");
+$pwd = getcwd();
 if (strpos($pwd, 'charts') !== false)
 	include_once "../../lib/chtFunctions.php";
 else

@@ -18,7 +18,7 @@ if (empty($customerID))
 }
 
 $js = '';
-if (empty($USERID))
+if (empty($_SESSION["USERID"]))
 {
 	$js = "alert('Your session has expired');\n window.close();\n";
 }

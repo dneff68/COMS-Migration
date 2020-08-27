@@ -1,11 +1,24 @@
-<?
+<?php
 session_start();
-include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-include_once '/var/www/html/CHT/h202/h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
-include("/var/www/html/CHT/h202/FusionCharts/Code/PHP/Includes/FusionCharts.php");
+if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
+{
+	include_once $_SESSION['SYSTEM_ROOT_PATH'] . '/GlobalConfig.php';
+	include_once $_SESSION['SYSTEM_ROOT_PATH'] . '/h202Functions.php';
+	include_once $_SESSION['SYSTEM_LIB_PATH'] . '/db_mysql.php';
+	//include_once $_SESSION['SYSTEM_LIB_PATH'] . '/chtFunctions.php';	
+	include($_SESSION['SYSTEM_ROOT_PATH'] . "FusionCharts/Code/PHP/Includes/FusionCharts.php");
+}
+else
+{
+	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
+	include_once '/var/www/html/CHT/h202/h202Functions.php';
+	include_once 'chtFunctions.php';
+	include_once 'db_mysql.php';
+	include("/var/www/html/CHT/h202/FusionCharts/Code/PHP/Includes/FusionCharts.php");
+}
 
+
+if (!isset($PROCESS_TARGET)) $PROCESS_TARGET = 0;
 
 if (empty($PROCESS_CATEGORIES) || empty($TEMPERATURE_DATASET))
 {
@@ -303,7 +316,7 @@ var httpObject = null;
             </td>
             </form>
       <td width="60" height="20" align="right" valign="middle" nowrap="nowrap">Lag Time:</td>
-<?
+<?php
 	if ($LAG_MINUTES > 0)
 	{
 		$hrs = $LAG_MINUTES / 60;
@@ -346,7 +359,7 @@ var httpObject = null;
   </tr>
   <?php if (true) : ?>
  <tr valign="top" class="spinTableBarEven">
-      <?
+      <?php
 			$los = getLevelOfService($SELECTED_TANK, $PROCESS_START_DATE, $PROCESS_END_DATE);  
 			// Get monitor process target
 			$PROCESS_TARGET = 0;
@@ -428,7 +441,7 @@ var httpObject = null;
 </td>
 </TR>
 </table>
-<?
+<?php
 
 if (empty($PROCESS_START_DATE) || $invalidDate == 1)
 {
@@ -851,7 +864,7 @@ $varianceXML .= "</chart>";
 
 	//Render the exporter SWF in our DIV fcexpDiv
 	ProcessExportComponent.Render("processExportDiv");
-<?=$js_reposition?>
+<?php // echo $js_reposition?>
 </script>
 </body>
 </html>
