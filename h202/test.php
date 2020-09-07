@@ -1,7 +1,7 @@
 <?php
 session_start();
+die("this is test.php");
 phpinfo();
-die;
   include_once 'GlobalConfig.php';
   include_once 'h202Functions.php';
   include_once 'db_mysql.php';
