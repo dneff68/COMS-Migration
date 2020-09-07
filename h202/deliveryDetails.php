@@ -1136,7 +1136,7 @@ if (checkResult($res))
 					extract($line2);
 					$cntRes = getResult("SELECT deliveryID FROM deliveryEmailLog WHERE deliveryID=$deliveryID");
 					$totCnt = mysqli_num_rows($cntRes);
-					$cntRes = getResult("SELECT deliveryID FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived != '0000-00-00 00:00:00'");
+					$cntRes = getResult("SELECT deliveryID FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived IS NOT NULL");
 					$readCnt = mysqli_num_rows($cntRes);
 					
 					
@@ -1145,12 +1145,12 @@ if (checkResult($res))
 					$cntRes1 = getResult($query1);
 					if (checkResult($cntRes1))
 					{
-						$query2 = "SELECT category FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived != '0000-00-00 00:00:00' AND category='supplier'";
+						$query2 = "SELECT category FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived IS NOT NULL AND category='supplier'";
 						$cntRes2 = getResult($query2);
 					}
 					else
 					{
-						$query = "SELECT category FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived != '0000-00-00 00:00:00' AND category='carrier'";
+						$query = "SELECT category FROM deliveryEmailLog WHERE deliveryID=$deliveryID AND dateReceived IS NOT NULL AND category='carrier'";
 						$cntRes2 = getResult($query);
 					}
 					
@@ -1520,13 +1520,13 @@ if (checkResult($res))
 			
 			if ($showProcessLink == 1)
 			{
-				$processLink = "
-					&nbsp;&nbsp;
-					<a id='processLink_$monitorID' href=\"javascript:surfDialog('<?php echo $_SESSION['ROOT_URL']?>charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
+
+
+				$processLink = "&nbsp;&nbsp;<a id='processLink_$monitorID' href=\"javascript:surfDialog('<?php echo " . $_SESSION['ROOT_URL'] . "?>charts/processGraph.php?monitorID=$monitorID', 835, 550, window, false)\">process $txt_hidden</a>";
 			}
 			
 			
-			$group = $_SESSION['USERTYPE'] == 'customer' ? '' : "<a href='<?php echo $_SESSION['ROOT_URL']?>deliveryDetails.php?zip=$zippart'>group</a>&nbsp;";
+			$group = $_SESSION['USERTYPE'] == 'customer' ? '' : "<a href='<?php echo " . $_SESSION['ROOT_URL'] . "?>deliveryDetails.php?zip=$zippart'>group</a>&nbsp;";
 			$tankNameOut = $_SESSION['USERTYPE'] == 'customer' ? "<strong>$Location</strong>" : "<a href=\"$href\">$Location</a>";
 			
 			// add link to customer page 

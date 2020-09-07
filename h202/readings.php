@@ -1,12 +1,48 @@
-THIS FILE HAS BEEN RELOCATED TO 
-etc/smrsh/readings.php
-#!/usr/bin/php -q
-<?
-include_once '/var/www/html/CHT/h202/h202Functions.php';
-$hostname='localhost';
-$dbuser = 'phpuser';
-$dbpass = 'fog9stOol';
-$database = 'h202';
+<?php
+//die("here");
+//die($_SERVER['HTTP_HOST']);
+
+function isRemote()
+{
+	// return true if David Neff is the client
+	//return false;
+	$debug = false;
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+
+	return $_SERVER['HTTP_HOST'] == '72.32.58.210';
+}
+
+if (isRemote())
+{
+//die("Migration Server: readings.php");
+	$comsDir = '/var/www/html';
+	$david_debug = false;
+	$hostname='localhost';
+	$dbuser = 'root';
+	$dbpass = '5aowCao7mvbw';
+	$database = 'h202';
+}
+else
+{
+die("david");
+	$comsDir = '/Library/WebServer/Documents/COMS-Migration';
+	$david_debug = true;
+	$hostname="127.0.0.1";
+	$dbuser = 'root';
+	$dbpass = 'smap0tCfl';
+	$database = 'h202';
+	die("LOCAL Development Server");
+}
+
+
+// THIS FILE HAS BEEN RELOCATED TO 
+// etc/smrsh/readings.php
+// #!/usr/bin/php -q
+
+//include_once '/var/www/html/CHT/h202/h202Functions.php';
+include_once $comsDir . '/h202Functions.php';  // Migration Server
 
 error_log('entering readings.php', 0, '/var/log/httpd/error_log');
 
@@ -69,7 +105,7 @@ function roundToNextQuarterHour($datetime)
 function executeQuery($query, $type="")
 {
 	global $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
-
+die('execute query');
 	// connect and execute query
 	$connection = mysql_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
 	mysql_select_db($database, $connection) or die ("Couldn't select database");
@@ -93,6 +129,7 @@ result set.
 --------------------------------------*/
 function getResult($query, $handleError=false)
 {
+die('getResult');
 	global $REQUEST_URI,$HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
 
 	// connect and execute query
@@ -116,6 +153,7 @@ function getResult($query, $handleError=false)
 
 function checkResult($result)
 {
+die('checkResult');
 	if ($result)
 	{
 		if (mysqli_num_rows($result) > 0)
@@ -128,6 +166,8 @@ function checkResult($result)
 
 function sendMail($fromName, $fromEmail, $toEmail, $subject, $msg, $toName="", $content_type="html")
 {
+die('sendMail');
+
 	if (empty($fromName))
 	{
 		$fromName = "CHT Services";

@@ -19,7 +19,7 @@ function david()
 
 function jim()
 {
-	return $_SESSION['USERID'] == 'Jim';
+	return false; //$_SESSION['USERID'] == 'Jim';
 }
 
 function isLoggedIn()

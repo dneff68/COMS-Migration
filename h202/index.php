@@ -30,6 +30,7 @@ else
 //if ($_POST['debug'] = 1) showArray($_SESSION);
 
 //if (david()) generateAllStats();
+date_default_timezone_set('America/Los_Angeles');
 $_SESSION['TOTAL_DB_TIME'] 	= 0.0;
 if ($david_debug)
 {

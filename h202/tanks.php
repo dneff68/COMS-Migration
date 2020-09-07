@@ -24,6 +24,10 @@ if (!isset($_SESSION['VIEWMODE']))
 	$_SESSION['TANK_DETAILS'] 		= array();			
 }
 
+if (!isset($_COOKIE['mapVisible']))
+{
+	$_COOKIE['mapVisible'] = 0;
+}
 
 if(isset($_GET['status']))
 {	
@@ -274,7 +278,7 @@ if ($_SESSION['VIEWMODE'] == 'statusView')
 	extract($tsLine);
 	
 	$sess = session_id();
-	showSessionVars();
+//	showSessionVars();
 //	die("session id = " . $sess);
 	$foo = executeQuery("CREATE TABLE $sess SELECT max(readingDate) as readingDate, monitorID 
 				FROM tankStats GROUP BY monitorID", "CREATE");
