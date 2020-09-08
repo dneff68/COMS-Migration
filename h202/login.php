@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Peroxide Management</title>
-<link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
+<link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/admin.js'></SCRIPT>
 <style type="text/css">
 <!--
 .style1 {font-size: xx-large}
