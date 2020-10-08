@@ -1,6 +1,27 @@
-<?
+<?php
 session_start();
 $result= getResult("SHOW COLUMNS FROM monitor LIKE 'status'");
+
+$Type = '';
+$deliveryUnits = '';
+$units = '';
+$status = '';
+$height = '';
+$diameter = '';
+$dosage = '';
+$volume = '';
+$pumpCapacity = '';
+$monitorID = '';
+$nomonitor = '';
+$multiple = '';
+$orientation = '';
+$prodID = '';
+$prodid = '';
+$value = '';
+$concentration = '';
+
+
+
 if( checkResult( $result ) )
 {
 	$line = mysqli_fetch_assoc($result);
@@ -12,7 +33,7 @@ if( checkResult( $result ) )
 }
 ?>
 
-<script language="javascript">
+<script>
 function checkPage()
 {
 	// validate fields
@@ -148,7 +169,7 @@ function monitorCheck(val)
 -->
 </style>
 
-<?
+<?php
 //die("if ( empty($tankName) && !empty($editMonitor))");
 	if ( empty($tankName) && !empty($editMonitor))
 	{
@@ -182,13 +203,16 @@ function monitorCheck(val)
 		{
 			$line = $res->fetch_assoc();
 			extract($line);
-			
-			session_register('originalUnits');
-			session_register('originalDeliveryUnits');
-			session_register('originalStatus');
-			$originalDeliveryUnits = $deliveryUnits;
-			$originalUnits = $units;
-			$originalStatus = $status;
+
+			$_SESSION['originalUnits'] = '';
+            $_SESSION['originalDeliveryUnits'] = '';
+            $_SESSION['originalStatus'] = '';
+			//session_register('originalUnits');
+			//session_register('originalDeliveryUnits');
+			//session_register('originalStatus');
+            $_SESSION['originalDeliveryUnits'] = $deliveryUnits;
+			$_SESSION['originalUnits'] = $units;
+            $_SESSION['originalStatus'] = $status;
 			
 			$height = (string)$height;
 			list($height, $height2) = explode('.', $height);
@@ -216,9 +240,9 @@ function monitorCheck(val)
 <input type="hidden" name="page" value='2' />
 <input type="hidden" name="gotopage" value='' />
 <input name="capacity" id="capacity" type="hidden" />
-<input type="hidden" name="editMonitor" value='<?=$editMonitor?>' />
+<input type="hidden" name="editMonitor" value='<?php echo  $editMonitor?>' />
 
-<? //showArray($ADDTANK2); ?>
+<?php //showArray($ADDTANK2); ?>
 
 <table width="700" border="1" align="center" cellpadding="5" cellspacing="1" class="spinTableBarOdd">
   <tr valign="top" class="spinMedTitle">
@@ -229,20 +253,20 @@ function monitorCheck(val)
       <label class="header_3"></label>
     </div></td>
     <td colspan="2" valign="middle" nowrap="nowrap" class="spinTableBarEven"><span class="header_3">
-	<?
+	<?php
 		if (strpos($monitorID, 'none') !== false || $nomonitor == 'none')
 			$nomon = 'checked';
 		else
 			$nomon = '';
 	?>
-      <input name="nomonitor" id="nomonitor" type="checkbox" onclick="monitorCheck(this.checked)" value="none" <?=$nomon ?> />
+      <input name="nomonitor" id="nomonitor" type="checkbox" onclick="monitorCheck(this.checked)" value="none" <?php echo  $nomon ?> />
 unmonitored</span></td>
     <td colspan="2" valign="middle" nowrap="nowrap" class="spinTableBarEven">&nbsp;</td>
   </tr>
   <tr>
     <td width="171" valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Monitor ID </div></td>
     <td colspan="4"><label>
-      <input name="monitorID" type="text" id="monitorID" size="10" maxlength="10" value='<?=$monitorID?>' />
+      <input name="monitorID" type="text" id="monitorID" size="10" maxlength="10" value='<?php echo  $monitorID?>' />
     </label></td>
   </tr>
    <tr>
@@ -266,8 +290,8 @@ unmonitored</span></td>
     <div style="float:left">
     <label>
       <select name="units" id="units">
-        <option value="Gallons" <?= $units == 'Gallons' ? 'SELECTED' : ''?> >Gallons</option>
-        <option value="Inches" <?= $units == 'Inches' ? 'SELECTED' : ''?>>Inches</option>
+        <option value="Gallons" <?php echo   $units == 'Gallons' ? 'SELECTED' : ''?> >Gallons</option>
+        <option value="Inches" <?php echo   $units == 'Inches' ? 'SELECTED' : ''?>>Inches</option>
       </select>
     </label>
     </div>
@@ -275,17 +299,17 @@ unmonitored</span></td>
     <span style="padding-left:10px" class=''>Delivery Units: </span>
      <label>
       <select name="deliveryUnits" id="deliveryUnits">
-        <option value="Gallons" <?= $deliveryUnits == 'Gallons' ? 'SELECTED' : ''?> >Gallons</option>
-        <option value="Pounds" <?= $deliveryUnits == 'Pounds' ? 'SELECTED' : ''?> >Pounds</option>
-        <option value="Ton_Metric" <?= $deliveryUnits == 'Ton_Metric' ? 'SELECTED' : ''?> >Ton (Metric)</option>
-        <option value="Ton_US" <?= $deliveryUnits == 'Ton_US' ? 'SELECTED' : ''?>>Ton (short, US)</option>
-        <option value="Kilogram" <?= $deliveryUnits == 'Kilogram' ? 'SELECTED' : ''?>>Kilogram</option>
-        <option value="Liters" <?= $deliveryUnits == 'Liters' ? 'SELECTED' : ''?>>Liters</option>
-        <option value="Tote_300" <?= $deliveryUnits == 'Tote_300' ? 'SELECTED' : 'Tote_300'?>>Tote (300)</option>
-        <option value="Tote_320" <?= $deliveryUnits == 'Tote_320' ? 'SELECTED' : 'Tote_320'?>>Tote (320)</option>
-        <option value="Tote_330" <?= $deliveryUnits == 'Tote_330' ? 'SELECTED' : 'Tote_330'?>>Tote (330)</option>
-        <option value="Drum" <?= $deliveryUnits == 'Drum' ? 'SELECTED' : ''?>>Drum</option>
-        <option value="Unit" <?= $deliveryUnits == 'Unit' ? 'SELECTED' : ''?>>Unit</option>
+        <option value="Gallons" <?php echo   $deliveryUnits == 'Gallons' ? 'SELECTED' : ''?> >Gallons</option>
+        <option value="Pounds" <?php echo   $deliveryUnits == 'Pounds' ? 'SELECTED' : ''?> >Pounds</option>
+        <option value="Ton_Metric" <?php echo   $deliveryUnits == 'Ton_Metric' ? 'SELECTED' : ''?> >Ton (Metric)</option>
+        <option value="Ton_US" <?php echo   $deliveryUnits == 'Ton_US' ? 'SELECTED' : ''?>>Ton (short, US)</option>
+        <option value="Kilogram" <?php echo   $deliveryUnits == 'Kilogram' ? 'SELECTED' : ''?>>Kilogram</option>
+        <option value="Liters" <?php echo   $deliveryUnits == 'Liters' ? 'SELECTED' : ''?>>Liters</option>
+        <option value="Tote_300" <?php echo   $deliveryUnits == 'Tote_300' ? 'SELECTED' : 'Tote_300'?>>Tote (300)</option>
+        <option value="Tote_320" <?php echo   $deliveryUnits == 'Tote_320' ? 'SELECTED' : 'Tote_320'?>>Tote (320)</option>
+        <option value="Tote_330" <?php echo   $deliveryUnits == 'Tote_330' ? 'SELECTED' : 'Tote_330'?>>Tote (330)</option>
+        <option value="Drum" <?php echo   $deliveryUnits == 'Drum' ? 'SELECTED' : ''?>>Drum</option>
+        <option value="Unit" <?php echo   $deliveryUnits == 'Unit' ? 'SELECTED' : ''?>>Unit</option>
       </select>
     </label>
     </div>
@@ -295,55 +319,55 @@ unmonitored</span></td>
 
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Tank Name  </div></td>
-    <td colspan="4"><input name="tankName" type="text" id="tankName" value='<?=$tankName?>' size="30" maxlength="40" /></td>
+    <td colspan="4"><input name="tankName" type="text" id="tankName" value='<?php echo  $tankName?>' size="30" maxlength="40" /></td>
   </tr>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Height (inches) </div></td>
-    <td colspan="2"><input   name="height" value='<?=$height?>' type="text" id="height" size="5" maxlength="5" onblur="setCapacity()" onkeypress="return numbersonly(this, event, 'height2')"/>
+    <td colspan="2"><input   name="height" value='<?php echo  $height?>' type="text" id="height" size="5" maxlength="5" onblur="setCapacity()" onkeypress="return numbersonly(this, event, 'height2')"/>
       <strong>.
-      <input name="height2" value='<?=$height2?>' type="text" id="height2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)" onblur="setCapacity()"/>
+      <input name="height2" value='<?php echo  $height2?>' type="text" id="height2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)" onblur="setCapacity()"/>
       </strong></td>
     <td colspan="2" rowspan="2"><div align="center"><span class="spinMedTitle"><div id="capacityDiv">&nbsp;</div></span></div></td>
   </tr>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Diameter (inches) </div></td>
-    <td colspan="2"><input   name="diameter" value='<?=$diameter?>' type="text" id="diameter" size="5" maxlength="5" onkeypress="return numbersonly(this, event, 'diameter2')"  onblur="setCapacity()"/>
+    <td colspan="2"><input   name="diameter" value='<?php echo  $diameter?>' type="text" id="diameter" size="5" maxlength="5" onkeypress="return numbersonly(this, event, 'diameter2')"  onblur="setCapacity()"/>
       <strong>.
-      <input name="diameter2" value='<?=$diameter2?>' type="text" id="diameter2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)" onblur="setCapacity()"/>
+      <input name="diameter2" value='<?php echo  $diameter2?>' type="text" id="diameter2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)" onblur="setCapacity()"/>
       </strong></td>
     </tr>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Multiple </div></td>
     <td colspan="4"><select name="multiple" id="multiple">
-	  	<option value="1" <?=$multiple == '1' ? 'SELECTED' : ''?>>1</option>
-	  	<option value="2" <?=$multiple == '2' ? 'SELECTED' : ''?>>2</option>
-	  	<option value="3" <?=$multiple == '3' ? 'SELECTED' : ''?>>3</option>
-	  	<option value="4" <?=$multiple == '4' ? 'SELECTED' : ''?>>4</option>
+	  	<option value="1" <?php echo  $multiple == '1' ? 'SELECTED' : ''?>>1</option>
+	  	<option value="2" <?php echo  $multiple == '2' ? 'SELECTED' : ''?>>2</option>
+	  	<option value="3" <?php echo  $multiple == '3' ? 'SELECTED' : ''?>>3</option>
+	  	<option value="4" <?php echo  $multiple == '4' ? 'SELECTED' : ''?>>4</option>
     </select></td>
   </tr>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Orientation</div></td>
     <td colspan="4"><label>
       <select name="orientation" size="1" id="orientation">
-        <option value="horizontal" <?= $orientation == 'horizontal' ? 'SELECTED' : ''?>>Horizontal</option>
-        <option value="vertical" <?=empty($orientation) || $orientation == 'vertical' ? 'SELECTED' : ''?>>Vertical</option>
+        <option value="horizontal" <?php echo   $orientation == 'horizontal' ? 'SELECTED' : ''?>>Horizontal</option>
+        <option value="vertical" <?php echo  empty($orientation) || $orientation == 'vertical' ? 'SELECTED' : ''?>>Vertical</option>
       </select>
     </label></td>
   </tr>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Usable Volume </div></td>
-    <td colspan="4"><input name="volume" value='<?=$volume?>' type="text" id="volume" size="5" maxlength="5" onkeypress="return numbersonly(this, event, 'volume2')"/>
+    <td colspan="4"><input name="volume" value='<?php echo  $volume?>' type="text" id="volume" size="5" maxlength="5" onkeypress="return numbersonly(this, event, 'volume2')"/>
       <strong>.
-      <input name="volume2" value='<?=$volume2?>' type="text" id="volume2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)"/>
+      <input name="volume2" value='<?php echo  $volume2?>' type="text" id="volume2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)"/>
       </strong></td>
   </tr>
   
   
 <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Pump Capacity</div></td>
-    <td colspan="4"><input name="pumpCapacity" value='<?=$pumpCapacity?>' type="text" id="pumpCapacity" size="5" maxlength="5" onkeypress="return numbersonly(this, event, 'pumpCapacity2')"/>
+    <td colspan="4"><input name="pumpCapacity" value='<?php echo  $pumpCapacity?>' type="text" id="pumpCapacity" size="5" maxlength="5" onkeypress="return numbersonly(this, event, 'pumpCapacity2')"/>
       <strong>.
-      <input name="pumpCapacity2" value='<?=$pumpCapacity2?>' type="text" id="pumpCapacity2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)"/>
+      <input name="pumpCapacity2" value='<?php echo  $pumpCapacity2?>' type="text" id="pumpCapacity2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)"/>
       </strong></td>
 </tr>
   
@@ -357,31 +381,31 @@ unmonitored</span></td>
   <?php if (empty($editMonitor)) : ?>
     <td rowspan="2" valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Dosage Criteria </div></td>
     <td width="42" rowspan="2">Target</td>
-    <td width="168" rowspan="2"><input name="dosage" value='<?=empty($dosage) ? 0 : $dosage?>' type="text" id="dosage" size="5" maxlength="5" 
+    <td width="168" rowspan="2"><input name="dosage" value='<?php echo  empty($dosage) ? 0 : $dosage?>' type="text" id="dosage" size="5" maxlength="5"
 	onkeypress="return numbersonly(this, event, 'dosage2')"/>
     <input name="dosage2" type='hidden' value='0' id="dosage2" />
 	<!--
       <strong>.
-      <input name="dosage2" value='<?=$dosage2?>' type="text" id="dosage2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)"/>
+      <input name="dosage2" value='<?php echo  $dosage2?>' type="text" id="dosage2" size="2" maxlength="2" onkeypress="return numbersonly(this, event)"/>
       </strong>
 	 --> 
 	  </td>
     <td width="105">Deviation + </td>
     <td width="146">
-	<input   name="deviation_plus" value='<?=$deviation_plus?>' type="text" id="deviation_plus" size="5" maxlength="5" onblur="setCapacity()" onkeypress="return numbersonly(this, event, 'height2')"/>
+	<input   name="deviation_plus" value='<?php echo  $deviation_plus?>' type="text" id="deviation_plus" size="5" maxlength="5" onblur="setCapacity()" onkeypress="return numbersonly(this, event, 'height2')"/>
 	</td>
   </tr>
   <tr>
     <td>Deviation - </td>
     <td>
-	<input   name="deviation_minus" value='<?=$deviation_minus?>' type="text" id="deviation_minus" size="5" maxlength="5" onblur="setCapacity()" onkeypress="return numbersonly(this, event, 'height2')"/>
+	<input   name="deviation_minus" value='<?php echo  $deviation_minus?>' type="text" id="deviation_minus" size="5" maxlength="5" onblur="setCapacity()" onkeypress="return numbersonly(this, event, 'height2')"/>
 	<input type='hidden' name="dosage_days" id='dosage_days' value="0" />
 	</td>
   <? else : ?>
   <input type="hidden" name="dosage" value="0" id="dosage"  />
   <input type="hidden" name="dosage2" value="0" id="dosage2"  />
-  <input type="hidden" name="deviation_plus" value='<?=$deviation_plus?>' id="deviation_plus"  />
-  <input type="hidden" name="deviation_minus" value='<?=$deviation_minus?>' id="deviation_minus"  />
+  <input type="hidden" name="deviation_plus" value='<?php echo  $deviation_plus?>' id="deviation_plus"  />
+  <input type="hidden" name="deviation_minus" value='<?php echo  $deviation_minus?>' id="deviation_minus"  />
   <input type='hidden' name="dosage_days" id='dosage_days' value="0" />
   <?php endif; ?>  
   </tr>
@@ -403,7 +427,7 @@ unmonitored</span></td>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Concentration</div></td>
     <td colspan="4"><!-- 
-<input   name="concentration" value='<?=$concentration?>' type="text" id="concentration" size="3" maxlength="3" onkeypress="return numbersonly(this, event)"/>
+<input   name="concentration" value='<?php echo  $concentration?>' type="text" id="concentration" size="3" maxlength="3" onkeypress="return numbersonly(this, event)"/>
  <strong>
       %</strong>
 -->	
@@ -411,52 +435,52 @@ unmonitored</span></td>
 ?>
       <select name="concentration">
         <option value=''>---</option>
-		<?= strpos($concentration, '%') === false ? "<option value='$concentration' 'SELECTED'>$concentration</option>" : '' ?>
-        <option value="12%" <?= $concentration == '12%' ? 'SELECTED' : ''?>>12%</option>
-        <option value="15% ref" <?= $concentration == '15% reg' ? 'SELECTED' : ''?>>15% reg</option>
-        <option value="15% std" <?= $concentration == '15 std%' ? 'SELECTED' : ''?>>15% std</option>
-        <option value="22% Hydrochloric Acid" <?= $concentration == '22% Hydrochloric Acid' ? 'SELECTED' : ''?>>22% Hydrochloric Acid</option>
-        <option value="22% PAA" <?= $concentration == '22% PAA' ? 'SELECTED' : ''?>>22% PAA</option>
-        <option value="23% PAA" <?= $concentration == '23% PAA' ? 'SELECTED' : ''?>>23% PAA</option>
-        <option value="25%" <?= $concentration == '25%' ? 'SELECTED' : ''?>>25%</option>
-        <option value="27%" <?= $concentration == '27%' ? 'SELECTED' : ''?>>27%</option>
-        <option value="27% B-Cap" <?= $concentration == '27% B-Cap' ? 'SELECTED' : ''?>>27% B-Cap</option>
-        <option value="27% NSF" <?= $concentration == '27% NSF' ? 'SELECTED' : ''?>>27% NSF</option>
-        <option value="27% Standard" <?= $concentration == '27% Standard' ? 'SELECTED' : ''?>>27% Standard</option>
-        <option value="28% FeCl2" <?= $concentration == '28% FeCl2' ? 'SELECTED' : ''?>>28% FeCl2</option>
-        <option value="30% Endimal" <?= $concentration == '30% Endimal' ? 'SELECTED' : ''?>>30% Endimal</option>
-        <option value="30% Standard" <?= $concentration == '30% Standard' ? 'SELECTED' : ''?>>30% Standard</option>
-        <option value="30% FeCl2" <?= $concentration == '30% FeCl2' ? 'SELECTED' : ''?>>30% FeCl2</option>
-        <option value="31% Endimal" <?= $concentration == '31% Endimal' ? 'SELECTED' : ''?>>31% Endimal</option>
-        <option value="31% Sodium Chlorite" <?= $concentration == '31% Sodium Chlorite' ? 'SELECTED' : ''?>>31% Sodium Chlorite</option>
-        <option value="31% USP-OC31M" <?= $concentration == '31% USP-OC31M' ? 'SELECTED' : ''?>>31% USP-OC31M</option>
-        <option value="31% USP-OC31E" <?= $concentration == '31% USP-OC31E' ? 'SELECTED' : ''?>>31% USP-OC31E</option>
-        <option value="32% FeCl2" <?= $concentration == '32% FeCl2' ? 'SELECTED' : ''?>>32% FeCl2</option>
-        <option value="33% Solution SD" <?= $concentration == '33% Solution SD' ? 'SELECTED' : ''?>>33% Solution SD</option>
-        <option value="34% Standard" <?= $concentration == '34% Standard' ? 'SELECTED' : ''?>>34% Standard</option>
-        <option value="35% FeCl2" <?= $concentration == '35% FeCl2' ? 'SELECTED' : ''?>>35% FeCl2</option>
-        <option value="35% ASG Valsterane" <?= $concentration == '35% ASG Valsterane' ? 'SELECTED' : ''?>>35% ASG Valsterane</option>
-        <option value="22% Precursor" <?= $concentration == '22% Precursor' ? 'SELECTED' : ''?>>22% Precursor</option>
-        <option value="40% Activator" <?= $concentration == '40% Activator' ? 'SELECTED' : ''?>>40% Activator</option>
-        <option value="35% NSF Grade" <?= $concentration == '35% NSF Grade' ? 'SELECTED' : ''?>>35% NSF Grade</option>
-        <option value="35% Food Grade" <?= $concentration == '35% Food Grade' ? 'SELECTED' : ''?>>35% Food Grade</option>
-        <option value="35% Standard" <?= $concentration == '35% Standard' ? 'SELECTED' : ''?>>35% Standard</option>
-        <option value="35% Hi-Ox" <?= $concentration == '35% Hi-Ox' ? 'SELECTED' : ''?>>35% Hi-Ox</option>
-        <option value="35% Oxypure" <?= $concentration == '35% Oxypure' ? 'SELECTED' : ''?>>35% Oxypure</option>
-        <option value="42% FeCl3" <?= $concentration == '42% FeCl3' ? 'SELECTED' : ''?>>42% FeCl3</option>
-        <option value="50% B-Cap" <?= $concentration == '50% B-Cap' ? 'SELECTED' : ''?>>50% B-Cap</option>
-        <option value="50% Food Grade" <?= $concentration == '50% Food Grade' ? 'SELECTED' : ''?>>50% Food Grade</option>
-        <option value="50% Standard" <?= $concentration == '50% Standard' ? 'SELECTED' : ''?>>50% Standard</option>
-        <option value="50% NSF Grade" <?= $concentration == '50% NSF Grade' ? 'SELECTED' : ''?>>50% NSF Grade</option>
-        <option value="60% Ferric Sulfate" <?= $concentration == '60% Ferric Sulfate' ? 'SELECTED' : ''?>>60% Ferric Sulfate</option>
-        <option value="70% Standard" <?= $concentration == '70% Standard' ? 'SELECTED' : ''?>>70% Standard</option>
-        <option value="85%" <?= $concentration == '85%' ? 'SELECTED' : ''?>>85%</option>
+		<?php echo   strpos($concentration, '%') === false ? "<option value='$concentration' 'SELECTED'>$concentration</option>" : '' ?>
+        <option value="12%" <?php echo   $concentration == '12%' ? 'SELECTED' : ''?>>12%</option>
+        <option value="15% ref" <?php echo   $concentration == '15% reg' ? 'SELECTED' : ''?>>15% reg</option>
+        <option value="15% std" <?php echo   $concentration == '15 std%' ? 'SELECTED' : ''?>>15% std</option>
+        <option value="22% Hydrochloric Acid" <?php echo   $concentration == '22% Hydrochloric Acid' ? 'SELECTED' : ''?>>22% Hydrochloric Acid</option>
+        <option value="22% PAA" <?php echo   $concentration == '22% PAA' ? 'SELECTED' : ''?>>22% PAA</option>
+        <option value="23% PAA" <?php echo   $concentration == '23% PAA' ? 'SELECTED' : ''?>>23% PAA</option>
+        <option value="25%" <?php echo   $concentration == '25%' ? 'SELECTED' : ''?>>25%</option>
+        <option value="27%" <?php echo   $concentration == '27%' ? 'SELECTED' : ''?>>27%</option>
+        <option value="27% B-Cap" <?php echo   $concentration == '27% B-Cap' ? 'SELECTED' : ''?>>27% B-Cap</option>
+        <option value="27% NSF" <?php echo   $concentration == '27% NSF' ? 'SELECTED' : ''?>>27% NSF</option>
+        <option value="27% Standard" <?php echo   $concentration == '27% Standard' ? 'SELECTED' : ''?>>27% Standard</option>
+        <option value="28% FeCl2" <?php echo   $concentration == '28% FeCl2' ? 'SELECTED' : ''?>>28% FeCl2</option>
+        <option value="30% Endimal" <?php echo   $concentration == '30% Endimal' ? 'SELECTED' : ''?>>30% Endimal</option>
+        <option value="30% Standard" <?php echo   $concentration == '30% Standard' ? 'SELECTED' : ''?>>30% Standard</option>
+        <option value="30% FeCl2" <?php echo   $concentration == '30% FeCl2' ? 'SELECTED' : ''?>>30% FeCl2</option>
+        <option value="31% Endimal" <?php echo   $concentration == '31% Endimal' ? 'SELECTED' : ''?>>31% Endimal</option>
+        <option value="31% Sodium Chlorite" <?php echo   $concentration == '31% Sodium Chlorite' ? 'SELECTED' : ''?>>31% Sodium Chlorite</option>
+        <option value="31% USP-OC31M" <?php echo   $concentration == '31% USP-OC31M' ? 'SELECTED' : ''?>>31% USP-OC31M</option>
+        <option value="31% USP-OC31E" <?php echo   $concentration == '31% USP-OC31E' ? 'SELECTED' : ''?>>31% USP-OC31E</option>
+        <option value="32% FeCl2" <?php echo   $concentration == '32% FeCl2' ? 'SELECTED' : ''?>>32% FeCl2</option>
+        <option value="33% Solution SD" <?php echo   $concentration == '33% Solution SD' ? 'SELECTED' : ''?>>33% Solution SD</option>
+        <option value="34% Standard" <?php echo   $concentration == '34% Standard' ? 'SELECTED' : ''?>>34% Standard</option>
+        <option value="35% FeCl2" <?php echo   $concentration == '35% FeCl2' ? 'SELECTED' : ''?>>35% FeCl2</option>
+        <option value="35% ASG Valsterane" <?php echo   $concentration == '35% ASG Valsterane' ? 'SELECTED' : ''?>>35% ASG Valsterane</option>
+        <option value="22% Precursor" <?php echo   $concentration == '22% Precursor' ? 'SELECTED' : ''?>>22% Precursor</option>
+        <option value="40% Activator" <?php echo   $concentration == '40% Activator' ? 'SELECTED' : ''?>>40% Activator</option>
+        <option value="35% NSF Grade" <?php echo   $concentration == '35% NSF Grade' ? 'SELECTED' : ''?>>35% NSF Grade</option>
+        <option value="35% Food Grade" <?php echo   $concentration == '35% Food Grade' ? 'SELECTED' : ''?>>35% Food Grade</option>
+        <option value="35% Standard" <?php echo   $concentration == '35% Standard' ? 'SELECTED' : ''?>>35% Standard</option>
+        <option value="35% Hi-Ox" <?php echo   $concentration == '35% Hi-Ox' ? 'SELECTED' : ''?>>35% Hi-Ox</option>
+        <option value="35% Oxypure" <?php echo   $concentration == '35% Oxypure' ? 'SELECTED' : ''?>>35% Oxypure</option>
+        <option value="42% FeCl3" <?php echo   $concentration == '42% FeCl3' ? 'SELECTED' : ''?>>42% FeCl3</option>
+        <option value="50% B-Cap" <?php echo   $concentration == '50% B-Cap' ? 'SELECTED' : ''?>>50% B-Cap</option>
+        <option value="50% Food Grade" <?php echo   $concentration == '50% Food Grade' ? 'SELECTED' : ''?>>50% Food Grade</option>
+        <option value="50% Standard" <?php echo   $concentration == '50% Standard' ? 'SELECTED' : ''?>>50% Standard</option>
+        <option value="50% NSF Grade" <?php echo   $concentration == '50% NSF Grade' ? 'SELECTED' : ''?>>50% NSF Grade</option>
+        <option value="60% Ferric Sulfate" <?php echo   $concentration == '60% Ferric Sulfate' ? 'SELECTED' : ''?>>60% Ferric Sulfate</option>
+        <option value="70% Standard" <?php echo   $concentration == '70% Standard' ? 'SELECTED' : ''?>>70% Standard</option>
+        <option value="85%" <?php echo   $concentration == '85%' ? 'SELECTED' : ''?>>85%</option>
       </select>
 </td>
   </tr>
   <tr>
     <td valign="middle" nowrap="nowrap" class="spinTableTitle"><div align="right">Tolerance </div></td>
-    <td colspan="4"><input   name="tolerence" type="text" id="tolerence" value='<?=empty($tolerence) ? '10' : $tolerence?>' size="3" maxlength="2" onkeypress="return numbersonly(this, event)"/> 
+    <td colspan="4"><input   name="tolerence" type="text" id="tolerence" value='<?php echo  empty($tolerence) ? '10' : $tolerence?>' size="3" maxlength="2" onkeypress="return numbersonly(this, event)"/>
       <strong>%</strong></td>
   </tr>
   

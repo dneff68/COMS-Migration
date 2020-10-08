@@ -1,0 +1,9 @@
+From: David Neff <dneff68@gmail.com>
+Date: Thu, 8 Oct 2020 14:52:51 -0700
+Message-ID: <CAETaFz5nKZ57xRAVK3B2udEZ2+Q2MEXHPXTLVJyVgRBbXCOzQQ@mail.gmail.com>
+Subject: Boom Boom Boom
+To: readings@neffhost.com
+Content-Type: text/plain; charset="UTF-8"
+
+"test1212",10/06/2020 10:23:06,871
+Out while loop. Total Lines 43

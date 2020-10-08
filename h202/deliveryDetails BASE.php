@@ -54,11 +54,11 @@ if (!empty($id))
 	$modifyDeliveryID = $id;
 
 	// allow for adding tanks to a delivery
-	$aTankNotes 	= $TANK_NOTES;
+	$aTankNotes 	= $_SESSION['TANK_NOTES'];
 	$aDeliveryTanks = $_SESSION['DELIVERY_TANKS'];
 	$aTankDetails 	= $_SESSION['TANK_DETAILS'];
 
-	$TANK_NOTES 	= array();
+	$_SESSION['TANK_NOTES'] 	= array();
 	$_SESSION['DELIVERY_TANKS'] = array();
 	$_SESSION['TANK_DETAILS'] 	= array();
 	
@@ -75,7 +75,7 @@ if (!empty($id))
 			$_SESSION['TANK_DETAILS'][$monitorID]['time'] = $time;
 			$_SESSION['TANK_DETAILS'][$monitorID]['quantity'] = $quantity; 
 			$_SESSION['TANK_DETAILS'][$monitorID]['deliveryUnitQuantity'] = $deliveryUnitQuantity; 
-			$TANK_NOTES[$monitorID] = $notes;
+			$_SESSION['TANK_NOTES'][$monitorID] = $notes;
 			$cnt++;
 		}
 	}
@@ -91,7 +91,7 @@ if (!empty($id))
 				$_SESSION['TANK_DETAILS'][$tmp_tankName]['time'] = $aTankDetails[$tmp_tankName]['time'];
 				$_SESSION['TANK_DETAILS'][$tmp_tankName]['quantity'] = $aTankDetails[$tmp_tankName]['quantity']; 
 				$_SESSION['TANK_DETAILS'][$tmp_tankName]['deliveryUnitQuantity'] = $aTankDetails[$tmp_tankName]['deliveryUnitQuantity']; 
-				$TANK_NOTES[$tmp_tankName] = $aTankNotes[$tmp_tankName];
+				$_SESSION['TANK_NOTES'][$tmp_tankName] = $aTankNotes[$tmp_tankName];
 			}
 		}
 	}
@@ -122,7 +122,7 @@ if ($sendInvoices == 'yes')
 {
 	sendDeliveryEmails($modifyDeliveryID);
 	$_SESSION['DELIVERY_NOTES'] = '';
-	$TANK_NOTES = false;
+	$_SESSION['TANK_NOTES'] = false;
 	$_SESSION['DELIVERY_TANKS'] = array(); //false
 	$_SESSION['TANK_DETAILS'] = false;
 	$DELIVERY_DATA = false;
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$_SESSION['DELIVERY_COMMITTED'] = '';
 		$_SESSION['DELIVERY_NOTES'] = '';
-		$TANK_NOTES = false;
+		$_SESSION['TANK_NOTES'] = false;
 		$CONVERTED_QUANTITIES = false;
 		$_SESSION['DELIVERY_TANKS'] = array(); //false;
 		$_SESSION['TANK_DETAILS'] = false;
@@ -399,7 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				<a href=\"javascript:window.parent.location='/tanks.php?tankAction=deliveryView&deliveryID=$deliveryID&update=1'\">Modify Delivery</a>
 				&nbsp;<a href='/deliveryDetails.php?sendInvoices=yes&submitted=yes&id=$deliveryID'>Email Delivery Requests Now</a></br>");
 
-			$TANK_NOTES = false;
+			$_SESSION['TANK_NOTES'] = false;
 			$CONVERTED_QUANTITIES = false;
 			$_SESSION['DELIVERY_TANKS'] = array(); //false;
 			$_SESSION['TANK_DETAILS'] = false;
@@ -428,7 +428,7 @@ if (!empty($tankAction))
 		{
 			array_push($_SESSION['DELIVERY_TANKS'], $tankid);
 			
-			$STATUS_FILTER = '';
+			$_SESSION['STATUS_FILTER'] = '';
 			$reloadParent = "window.parent.location='/index.php?deliveryID=$modifyDeliveryID&status=all';\n";
 		}
 	}	
@@ -932,9 +932,9 @@ bigEcho("marr is type: " . gettype($marr));
 
 
 $regfilt = '';
-if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
+if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 {	
-	$regfilt = "and s.regionID=$REGION_FILTER";
+	$regfilt = "and s.regionID=" . $_SESSION['REGION_FILTER'];
 	if (true)
 	{
 		$regfilt = getRegionFilter();
@@ -1032,7 +1032,7 @@ if (checkResult($res))
 		// If this is a reorder filter and a leadtime override value
 		// has been selected, override whatever checkTankLevel() returned
 		// since it gets it's value from the stats table.
-		if ($STATUS_FILTER=='Reorder' && $LEADTIME_OVERRIDE != 'default')
+		if ($_SESSION['STATUS_FILTER']=='Reorder' && $LEADTIME_OVERRIDE != 'default')
 		{
 			$reorderData = reorderInfo($monitorID);
 			if ($reorderData['daysToDelivery'] <= $LEADTIME_OVERRIDE)
@@ -1055,7 +1055,7 @@ if (checkResult($res))
 
 		$inSelection = array_search($monitorID, $_SESSION['DELIVERY_TANKS']) !== false;
 		
-		if ( empty($STATUS_FILTER) || $statkey == $STATUS_FILTER || $STATUS_FILTER == 'all' || $inSelection)
+		if ( empty($_SESSION['STATUS_FILTER']) || $statkey == $_SESSION['STATUS_FILTER'] || $_SESSION['STATUS_FILTER'] == 'all' || $inSelection)
 		{
 			$mkey = str_replace('-', '_', $monitorID);
 			$href = "javascript:parent.doAction('showMap');parent.frames['mapFrame'].marker" . $mkey . ".openInfoWindowHtml(parent.frames['mapFrame'].marker" . $mkey . ".html)";
@@ -1307,7 +1307,7 @@ else
 				  <option value='pm' $pm>pm</option>
 					</select>";
 				
-				$notes = empty($TANK_NOTES[$monitorID]) ? $notes : $TANK_NOTES[$monitorID];
+				$notes = empty($_SESSION['TANK_NOTES'][$monitorID]) ? $notes : $_SESSION['TANK_NOTES'][$monitorID];
 				$notesOut = "\n<input type=\"hidden\" id=\"note_$monitorOut\" name=\"note_$monitorOut\" value=\"$notes\" />\n";
 
 				if (empty($notes))
@@ -1569,13 +1569,13 @@ else
 
 bigEcho("marr size: " . sizeof($marr));
 $rowcnt = sizeof($marr);
-if (count($_SESSION['ZIPCOLLECTION']) > 0) // && $STATUS_FILTER != 'unass')
+if (count($_SESSION['ZIPCOLLECTION']) > 0) // && $_SESSION['STATUS_FILTER'] != 'unass')
 {
 	$title = "<td colspan=\"3\"><div align=\"right\"><a href='deliveryDetails.php?clearlist=yes'>reset list</a></div></td>";
 }
 else
 {
-	$t2 = '&nbsp;'; //$STATUS_FILTER == 'unass' ? '&nbsp;' : 'All Tanks';
+	$t2 = '&nbsp;'; //$_SESSION['STATUS_FILTER'] == 'unass' ? '&nbsp;' : 'All Tanks';
 	$title = "<td colspan=\"3\"><div align=\"right\">$t2</div></td>";
 }
 

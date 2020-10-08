@@ -1,14 +1,26 @@
-<?
+<?php
 	$markerArray = array();
+    $siteID = '';
+    $monitorID = '';
+    $lat = '';
+    $lng = '';
+    $zip = '';
+    $units = '';
+    $siteLocationName = '';
+    $tankID = '';
+    $contact = '';
+    $contactPhone = '';
+    $address = '';
+    $city = '';
+    $state = '';
 
-	if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
+	if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 	{
-		$regfilt = "and s.regionID=$REGION_FILTER";
+		$regfilt = "and s.regionID=" . $_SESSION['REGION_FILTER'];
 		if (true)
 		{
 			$regfilt = getRegionFilter();
 		}
-		
 	}
 	$query = "select DISTINCT s.siteID, s.siteLocationName, s.address, s.city, s.state, s.contact, s.contactPhone, s.contactEmail, s.zip, z.lat, z.lng 
 	from site s, monitor m, zipcodes z where s.zip=z.zip and m.siteID=s.siteID $regfilt";
@@ -25,26 +37,26 @@
 		{
 			extract($line);
 			
-			if ($STATUS_FILTER == 'unmon')
+			if ($_SESSION['STATUS_FILTER'] == 'unmon')
 			{
 				$query = "select t.tankID, t.tankName, t.capacity, m.monitorID, m.units from monitor m, tank t where t.monitorID=m.monitorID and m.siteID=$siteID and m.monitorID LIKE 'none-%'";
 			}
 			else
 			{
 				$hideInactiveOnMap = '';	
-				if ($SHOWINACTIVE != 'yes')
+				if ($_SESSION['SHOWINACTIVE'] != 'yes')
 				{
 					$hideInactiveOnMap = "m.status != 'Inactive' and";	
 				}
 
 				$hideTmpShutdownOnMap = '';	
-				if ($SHOWTEMPSHUTDOWN != 'yes')
+				if ($_SESSION['SHOWTEMPSHUTDOWN'] != 'yes')
 				{
 					$hideTmpShutdownOnMap = "m.status != 'Temporary Shutdown' and";	
 				}
 
 				$hideUnmonitoredOnMap = '';	
-				if ($SHOWUNMONITORED != 'yes')
+				if ($_SESSION['SHOWUNMONITORED'] != 'yes')
 				{
 					$hideUnmonitoredOnMap = "t.monitorID NOT LIKE 'none%' and";	
 				}
@@ -61,8 +73,8 @@
 
 					// Filter out based on status
 					$debug .= substr($monitorID, 0, 5) . '<br>';
-					$stat = checkTankStatus($monitorID, $STATUS_FILTER);
-					//$debug .= "$STATUS_FILTER == $stat<BR>";
+					$stat = checkTankStatus($monitorID, $_SESSION['STATUS_FILTER']);
+					//$debug .= "$_SESSION['STATUS_FILTER'] == $stat<BR>";
 					$allow = true;
 					$mkrcolor = 'green';
 
@@ -94,11 +106,11 @@
 						$mkrcolor = 'black';
 					}					
 					
-					if (!empty($STATUS_FILTER))
+					if (!empty($_SESSION['STATUS_FILTER']))
 					{
 						// need to pars the result if not 0.  check for each stat key
-						//$debug .= "$monitorID : $statkey == $STATUS_FILTER<br>";
-						$allow = $statkey == $STATUS_FILTER;
+						//$debug .= "$monitorID : $statkey == $_SESSION['STATUS_FILTER']<br>";
+						$allow = $statkey == $_SESSION['STATUS_FILTER'];
 					}
 					
 					$html = '';
@@ -129,7 +141,7 @@
 						}
 
 //						$html = str_replace("'", "&#039;", "<div style=\"width:200\"><!--<b>$tankName<br>Monitor: $monitorID</b><br>Site: $siteLocationName<br>-->Contact: $contact&nbsp;&nbsp;(<a href=\"javascript:surfDialog(\'tankGraph.php?tab=2&tankID=$tankID\', 725, 600, window, false)\">graph</a>&nbsp;<a href=\"multTankDetails.php?zip=$zippart\" target=\"detailsFrame\">list</a>)<br>$contactPhone$email<hr>$address<br>$city, $state $zip<br><b>$lastRead$statmsg</b></div>");
-						$html = str_replace("'", "&#039;", "<div style=\"width:300\">Site: $siteLocationName (<a href=\"javascript:surfDialog(\'/charts/tankGraph.php?tab=2&tankID=$tankID\', 725, 600, window, false)\">graph</a>&nbsp;<a href=\"deliveryDetails.php?zip=$zippart\" target=\"detailsFrame\">group</a>)<br>Contact: $contact<br>$contactPhone$email<hr>$address<br>$city, $state $zip<br><b>$lastRead$statmsg</b></div>");
+						$html = str_replace("'", "&#039;", "<div style=\"width:300px\">Site: $siteLocationName (<a href=\"javascript:surfDialog(\'/charts/tankGraph.php?tab=2&tankID=$tankID\', 725, 600, window, false)\">graph</a>&nbsp;<a href=\"deliveryDetails.php?zip=$zippart\" target=\"detailsFrame\">group</a>)<br>Contact: $contact<br>$contactPhone$email<hr>$address<br>$city, $state $zip<br><b>$lastRead$statmsg</b></div>");
 					    $mkey = str_replace('-', '_', $monitorID);
 						$marker .= "marker" . $mkey . " = createMarker(point, '$zippart', '$html', $mkrcolor" . "icon);\n";
 						$marker .= "marker" . $mkey . ".tankID = \"$zippart\";\n";

@@ -65,7 +65,7 @@ $marr2 = array();
 $marr3 = array();
 $marr4 = array();
 
-if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
+if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 {
 	$regfilt = getRegionFilter();
 }
@@ -223,11 +223,11 @@ if (checkResult($res))
 	}
 }
 $rowcnt = sizeof($marr1) + sizeof($marr2) + sizeof($marr3) + sizeof($marr1) ;
-if (count($ZIPCOLLECTION) > 0 && $STATUS_FILTER != 'unass')
+if (count($ZIPCOLLECTION) > 0 && $_SESSION['STATUS_FILTER'] != 'unass')
 	$title = "<td colspan=\"4\"><div align=\"right\"><a href='multTankDetails.php?clearlist=yes'>reset list</a></div></td>";
 else
 {
-	$t2 = '&nbsp;'; //$STATUS_FILTER == 'unass' ? '&nbsp;' : 'All Tanks';
+	$t2 = '&nbsp;'; //$_SESSION['STATUS_FILTER'] == 'unass' ? '&nbsp;' : 'All Tanks';
 	$title = "<td colspan=\"4\"><div align=\"right\">$t2</div></td>";
 }
 

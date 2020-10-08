@@ -1,3 +1,6 @@
+			<?php
+			    if (!isset($state)) {$state = "noneSelected";}
+			?>
 				<option value="noneSelected" <?= $state=='noneSelected' ? 'selected' : ''?>> Select a state</option>
 				<option value="AL" <?= $state=='AL' ? 'selected' : ''?>> Alabama </option>                    
 				<option value="AK" <?= $state=='AK' ? 'selected' : ''?>> Alaska </option>

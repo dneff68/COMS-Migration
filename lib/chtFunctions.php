@@ -12,7 +12,7 @@ function david()
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
 
-	$s = $REMOTE_ADDR == "68.5.60.170";
+	$s = $REMOTE_ADDR == "68.96.88.124";
 	$s = $s || "::1";
 	return $s;
 }
@@ -21,6 +21,21 @@ function jim()
 {
 	return false; //$_SESSION['USERID'] == 'Jim';
 }
+
+function isRemote()
+{
+	//bigEcho("isRemote: " . $_SERVER['HTTP_HOST']);
+	// return true if David Neff is the client
+	//return false;
+	$debug = false;
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+
+	$readingsCall = trim($_SERVER['HTTP_HOST']) == "";
+	return $readingsCall || $_SERVER['HTTP_HOST'] == '72.32.58.210' || $_SERVER['HTTP_HOST'] == 'neffhost.com'  || $_SERVER['HTTP_HOST'] == 'h2o2.neffhost.com'; // 72.32.58.210
+}
+
 
 function isLoggedIn()
 {
@@ -70,6 +85,7 @@ function first($array) {
 
 function bigEcho($txt)
 {
+    //return;
 	if (jim() || david())
 	{
 		echo("<h4>$txt</h4>");
@@ -177,7 +193,7 @@ function sendMail($fromName, $fromEmail, $toEmail, $subject, $msg, $toName="", $
 		
 		$message = $msg;
 
-		$headers .= "MIME-Version: 1.0\n";
+		$headers = "MIME-Version: 1.0\n";
 		$headers .= "Content-type: text/" . $content_type . "; charset=iso-8859-1\n";
 		$headers .= "From: ".$from_name." <".$from_address.">\n";
 		$headers .= "Reply-To: ".$from_name." <".$from_address.">\n";

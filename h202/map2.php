@@ -23,8 +23,8 @@ include_once 'db_mysql.php';
     //<![CDATA[
 
 
-      if (GBrowserIsCompatible()) {
-	  
+      if (true) {
+	  // GBrowserIsCompatible()
       function createMarker(point,zip,iconObj) 
 	  {
         var marker = new GMarker(point, iconObj);
@@ -79,9 +79,9 @@ include_once 'db_mysql.php';
 		<?
 			$markerArray = array();
 		
-			if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
+			if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 			{
-				$regfilt = "and s.regionID=$REGION_FILTER";
+				$regfilt = "and s.regionID=" . $_SESSION['REGION_FILTER'];
 			}
 			$query = "select s.siteID, s.siteLocationName, s.zip, z.lat, z.lng from site s, monitor m, zipcodes z where s.zip=z.zip and m.siteID=s.siteID $regfilt";
 			$res = getResult($query);
@@ -103,13 +103,13 @@ include_once 'db_mysql.php';
 						$allow = true;
 						$stat = checkTankStatus($monitorID);
 						$mkrcolor = $stat === 0 ? 'blue' : 'red';
-						if (!empty($STATUS_FILTER) && $STATUS_FILTER != 'all')
+						if (!empty($_SESSION['STATUS_FILTER']) && $_SESSION['STATUS_FILTER'] != 'all')
 						{
 							// need to pars the result if not 0.  check for each stat key
 							if ($stat !== 0)
 							{
 								list($statkey, $statmsg) = explode(',', $stat);
-								$allow = $statkey == $STATUS_FILTER;
+								$allow = $statkey == $_SESSION['STATUS_FILTER'];
 							}
 						}
 						

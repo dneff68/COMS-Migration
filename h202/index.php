@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -8,14 +9,28 @@ include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
+if (isRemote()) {
+	bigEcho("REMOTE SERVER");
+}
+else{
+	bigEcho("LOCAL SERVER");
+}
 
 $search = 0;
 $customerView = 0; 
 $delivery = 0;
 $status = 'all';
+
+$logout = 'no';
+if(isset($_GET['logout']))
+{
+	$logout = $_GET['logout'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	extract($_POST);
+
 }
 else
 {
@@ -23,7 +38,6 @@ else
 	{
     	$_SESSION['STATUS_FILTER'] = $_GET['status'];
     	$status = $_SESSION['STATUS_FILTER'];
-    	//die($_SESSION['STATUS_FILTER']);
 	}
 }
 
@@ -32,6 +46,7 @@ else
 //if (david()) generateAllStats();
 date_default_timezone_set('America/Los_Angeles');
 $_SESSION['TOTAL_DB_TIME'] 	= 0.0;
+if (!isset($david_debug)) $david_debug = false;
 if ($david_debug)
 {
 	$current_timestamp = microtime(true);
@@ -43,15 +58,12 @@ if ($david_debug)
 	timestamp('MAIN', true);
 }
 
-if (is_null($_SESSION['logout'])) $_SESSION['logout'] = 'no'; 
-//if (typeof($_SESSION['logout']) == '')
-if ($_SESSION['logout'] == 'yes')
+if ($logout == 'yes')
 {
 	error_log('SESSION WAS LOGGED OUT');
 	$_SESSION['USERID'] = '';
 	$_SESSION['USERTYPE'] = '';
 }
-
 
 if ($_SESSION["USERID"] == '' || $_SESSION["USERTYPE"] == '')
 {
@@ -82,8 +94,8 @@ else
 //		bigEcho(gettype($custres));
 		if (checkResult($custres))
 		{
-			session_register('CUSTOMER_EMAIL');
-			$CUSTOMER_EMAIL = $customerEmail;
+			//session_register('CUSTOMER_EMAIL';
+			$CUSTOMER_EMAIL = $_SESSION["USERID"]; //$customerEmail;
 			$customerView = 1;
 		}
 	}
@@ -91,7 +103,7 @@ else
 	if (strpos($_SESSION['CUSTOMER_EMAIL'], '@') > 0)
 	{
 		// USP is clicking into the customer summary area
-		$_SESSION['CUSTOMER_EMAIL'] = $customerEmail;
+		$_SESSION['CUSTOMER_EMAIL'] = $_SESSION["USERID"]; //$customerEmail;
 		$customerView = 1;
 	}
 	

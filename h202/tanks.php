@@ -16,13 +16,24 @@ if (!isset($_SESSION['VIEWMODE']))
 	$_SESSION['SHOWFACTORIES'] 		= '';
 	$_SESSION['SHOWCARRIERS'] 		= '';
 	$_SESSION['SHOWTERMINALS'] 		= '';
-	$_SESSION['REGION_FILTER'] 		= '';
+	//$_SESSION['REGION_FILTER'] 		= '';
 	$_SESSION['LEADTIME_OVERRIDE'] 	= '';
 	$_SESSION['VIEWMODE']			= 'deliveryView';
 	$_SESSION['DELIVERY_NOTES'] 	= '';
 	$_SESSION['DELIVERY_TANKS'] 	= array();
 	$_SESSION['TANK_DETAILS'] 		= array();			
 }
+$setOn = '';
+if(isset($_GET['region']))
+{
+    $region = $_GET['region'];
+}
+
+	if(isset($_GET['setOn']))
+    {
+        $setOn = $_GET['setOn'];
+    }
+error_log("setOn value: " . $setOn);
 
 if (!isset($_COOKIE['mapVisible']))
 {
@@ -167,12 +178,10 @@ if (!empty($tankAction))
 
 if (!empty($region))
 {
-	bigEcho($region . " tanks.php 109");
-	if (empty($_SESSION['REGION_FILTER']))
-	{
-		$_SESSION['REGION_FILTER'] = '';
-	}
-	
+//	if (empty($_SESSION['REGION_FILTER']))
+//	{
+//		$_SESSION['REGION_FILTER'] = '';
+//	}
 	list($var, $regID) = explode('_', $region);
 	if ($setOn == 'true')
 	{
@@ -188,7 +197,10 @@ if (!empty($region))
 			$_SESSION['REGION_FILTER'] = str_replace(":$regID", '', $_SESSION['REGION_FILTER']);
 		}
 	}
-}		
+    error_log("region = " . $region);
+    error_log("REGION_FILTER = " . $_SESSION['REGION_FILTER']);
+//die;
+}
 
 if (empty($_SESSION['STATUS_FILTER']))
 {
@@ -277,22 +289,26 @@ if ($_SESSION['VIEWMODE'] == 'statusView')
 	$tsLine = $tsRes->fetch_assoc();
 	extract($tsLine);
 	
-	$sess = session_id();
+	$sess = substr(session_id(), 0, 6);
+
+
 //	showSessionVars();
 //	die("session id = " . $sess);
-	$foo = executeQuery("CREATE TABLE $sess SELECT max(readingDate) as readingDate, monitorID 
-				FROM tankStats GROUP BY monitorID", "CREATE");
-//die("CREATE TABLE $sess SELECT max(readingDate) as readingDate, monitorID FROM tankStats GROUP BY monitorID");
-	$query = "SELECT sum(ts.high) as HdoseCnt, sum(ts.low) as LdoseCnt, sum(ts.normal) as normalCnt, 
+//die("CREATE TABLE $sess SELECT max(readingDate) as readingDate, monitorID 	FROM tankStats GROUP BY monitorID");
+// DavidNeff --> $sess
+    //executeQuery("DROP TABLE IF EXISTS tempReadingInfo", "UPDATE");
+
+    $query1 ="CREATE TABLE tempReadingInfo SELECT max(readingDate) as readingDate, monitorID FROM tankStats GROUP BY monitorID;";
+    $query2 = "SELECT sum(ts.high) as HdoseCnt, sum(ts.low) as LdoseCnt, sum(ts.normal) as normalCnt, 
 				sum(ts.unass) as unassCnt, sum(ts.exceedcap) as ecCnt 
-				FROM monitor m, tankStats ts, $sess gd
+				FROM monitor m, tankStats ts, tempReadingInfo gd
 				where m.monitorID=ts.monitorID and ts.readingDate=gd.readingDate 
 				and ts.monitorID=gd.monitorID $tmpshut $inac";
 				
-	$res = getResult($query);
+	$res = executeAndSelect($query1, $query2);
 	$line = $res->fetch_assoc();
 	extract($line);
-	$foo = executeQuery("drop table $sess");
+	//$foo = executeQuery("drop table $sess");
 
 	$query = "select DISTINCT m.monitorID 
 			from monitor m, tank t, site s
@@ -387,8 +403,8 @@ if ($_SESSION['VIEWMODE'] != 'statusView')
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Inventory Tank Management</title>
-<link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
+<link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='js/admin.js'></SCRIPT>
 <style type="text/css">
 <!--
 .style1 {font-size: xx-large}
@@ -529,20 +545,20 @@ function setmapvis()
         <table width="381" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="64">Regions:</td>
-            <td width="84"><input <?php echo strpos($_SESSION['USERID'], '1') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_1" id="reg_1" />
+            <td width="84"><input <?php echo strpos($_SESSION['REGION_FILTER'], '1') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_1" id="reg_1" />
               North</td>
-            <td width="85"><input <?php echo strpos($_SESSION['USERID'], '3') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_3" id="reg_3" /> 
+            <td width="85"><input <?php echo strpos($_SESSION['REGION_FILTER'], '3') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_3" id="reg_3" />
             East
         </td>
-            <td width="100"><input <?php echo strpos($_SESSION['USERID'], '5') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_5" id="reg_5" />
+            <td width="100"><input <?php echo strpos($_SESSION['REGION_FILTER'], '5') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_5" id="reg_5" />
             S. West</td>
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td><input <?php echo strpos($_SESSION['USERID'], '2') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_2" id="reg_2" /> 
+            <td><input <?php echo strpos($_SESSION['REGION_FILTER'], '2') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_2" id="reg_2" />
               S. East
         </td>
-            <td><input <?php echo strpos($_SESSION['USERID'], '4') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_4" id="reg_4" /> 
+            <td><input <?php echo strpos($_SESSION['REGION_FILTER'], '4') !== false ? 'checked' : ''  ?> onchange="setRegion(this)" type="checkbox" name="reg_4" id="reg_4" />
             West
         </td>
             <td>&nbsp;<!-- <input type="checkbox" name="reg_all" id="reg_all" /> 

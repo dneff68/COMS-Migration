@@ -1,28 +1,16 @@
 <?PHP
+session_start();
 if(isset($_GET['sessionid']))
 {
    $sessionid = $_GET['sessionid'];
    session_id($sessionid);
-   //die($sessionid);
+   //die("sessionid: " . $sessionid);
 }
-session_start();
 
-
-if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
-{
-	include_once 'GlobalConfig.php';
-	include_once 'h202Functions.php';
-	include_once '../lib/db_mysql.php';
-	include_once '../lib/chtFunctions.php';	
-}
-else
-{
-	die("NOT LOCAL DEVELOPMENT: multiTankDetails: 13");
-	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-	include_once '/var/www/html/CHT/h202/h202Functions.php';
-	include_once 'chtFunctions.php';
-	include_once 'db_mysql.php';
-}
+include_once '../lib/chtFunctions.php';
+include_once '../lib/db_mysql.php';
+include_once 'GlobalConfig.php';
+include_once 'h202Functions.php';
 
 bigEcho("multiTankDetails.php");
 
@@ -34,6 +22,8 @@ if (!isset($_SESSION['STATUS_FILTER']))
 	$_SESSION['SHOWUNMONITORED'] 	= 'no';
 }
 bigEcho($_SESSION['STATUS_FILTER']);
+
+$tankName = '';
 
 $USERID = $_SESSION['USERID'];
 if(isset($_GET['status'])){
@@ -80,8 +70,8 @@ if ($david_debug)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Tank Details</title>
-<link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
+<link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/admin.js'></SCRIPT>
 <script language="javascript">
 		// Get the HTTP Object
 		function getHTTPObject()
@@ -270,9 +260,9 @@ if ($_SESSION['STATUS_FILTER'] == 'unass')
 }
 else
 {
-	if (!empty($REGION_FILTER) && $REGION_FILTER != 'all')
+	if (!empty($_SESSION['REGION_FILTER']) && $_SESSION['REGION_FILTER'] != 'all')
 	{
-		$regfilt = "and s.regionID=$REGION_FILTER";
+		$regfilt = "and s.regionID=" . $_SESSION['REGION_FILTER'];
 		if (true)
 		{
 			$regfilt = getRegionFilter();
@@ -446,7 +436,7 @@ else
 
 				$notesStatic = strlen($notesStatic) > 62 ? substr($notesStatic, 0, 60) . '...' : $notesStatic;
 				$notesStatic = !empty($notesStatic) ? "notes: $notesStatic" : '';
-				$staticNotes = "<div style='font-size:-1'>$notesStatic</div>";
+				$staticNotes = "<div style='font-size:1'>$notesStatic</div>";
 				
 				if ($_SESSION['USERTYPE'] == 'super')
 				{

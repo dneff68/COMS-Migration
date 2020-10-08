@@ -3,7 +3,7 @@
 	<div align="right"><a style="color:#FFFFFF" href='index.php?logout=yes'>logout</a>&nbsp;</div>
 <?php endif;?>
 <p align="center" class="banner1"><span class="banner2">Chemical Ordering Management Sys </span></p>
-<?php if (!empty($USERID) && ($_SESSION['USERTYPE'] != 'customer')) : ?>
+<?php if (!empty($_SESSION["USERID"]) && ($_SESSION['USERTYPE'] != 'customer')) : ?>
 	<table width="600" border="0" align="center" cellpadding="6" cellspacing="3">
 	  <tr>
 	    <td width="200" valign="middle"><div align="center"><a href='/index.php'><img border="0" onMouseOver="this.src='images/reportsBtn_over.gif'" onMouseOut="this.src='images/reportsBtn.gif'" 

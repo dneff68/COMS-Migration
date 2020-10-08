@@ -11,7 +11,7 @@ if (!empty($id))
 	$res = getResult($query);
 	$line = $res->fetch_assoc();
 	extract($line);
-	$notes = empty($TANK_NOTES[$id]) ? $notes : $TANK_NOTES[$id];
+	$notes = empty($_SESSION['TANK_NOTES'][$id]) ? $notes : $_SESSION['TANK_NOTES'][$id];
 }
 elseif (!empty($delID))
 {
@@ -39,13 +39,13 @@ if ($REQUEST_METHOD == 'POST')
 //ddie('pose');
 	if (!empty($monitorID))
 	{
-		if (empty($TANK_NOTES))
+		if (empty($_SESSION['TANK_NOTES']))
 		{
 			session_register('TANK_NOTES');
-			$TANK_NOTES = array();	
+			$_SESSION['TANK_NOTES'] = array();
 		}
 		
-		$TANK_NOTES[$monitorID] = $noteText;
+		$_SESSION['TANK_NOTES'][$monitorID] = $noteText;
 		$jsClose = "window.opener.document.deliveryForm.submit();\nwindow.close();\n";
 	}
 	elseif (!empty($delID))

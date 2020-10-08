@@ -1,10 +1,11 @@
 <?php
   	function getRegionFilter()
   	{
-		global $REGION_FILTER;
+//		global $_SESSION['REGION_FILTER'];
 		
 		$result = '';
-		$arr = explode(':', $REGION_FILTER);
+		error_log("Region Filter in H202Functions.php line 7: " . $_SESSION['REGION_FILTER']);
+		$arr = explode(':', $_SESSION['REGION_FILTER']);
 		foreach ($arr as $regID)
 		{
 			if (!empty($regID))
@@ -1279,7 +1280,7 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 {
 //	global $debug, $database;
 	$updateStat = $statdate == 'NOW()' ? false : true;
-	executeQuery("DELETE FROM NoReadings WHERE monitorID='$monitorID'");
+	executeQuery("DELETE FROM NoReadings WHERE monitorID='$monitorID'", "UPDATE");
 
 	// Check to see if the date passed in has a corresponding reading for that day.  If not we need to back out.
 	$query = "SELECT date FROM data WHERE cast(date as date) = cast($statdate as date) AND monitorID='$monitorID'";	
@@ -1287,8 +1288,8 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 	if (!checkResult($res))
 	{
 		// No reading was received for this day so delete whatever stat may be there and bail ouy
-		executeQuery("INSERT INTO NoReadings (monitorID, date) VALUES ('$monitorID', NOW())");
-		executeQuery("DELETE FROM tankStats WHERE monitorID='$monitorID' AND cast(readingDate as date) = cast($statdate as date)");
+		executeQuery("INSERT INTO NoReadings (monitorID, date) VALUES ('$monitorID', NOW())", "INSERT");
+		executeQuery("DELETE FROM tankStats WHERE monitorID='$monitorID' AND cast(readingDate as date) = cast($statdate as date)", 'DELETE');
 		return;
 	}
 
@@ -1385,10 +1386,10 @@ function generateStats($monitorID, $statdate='NOW()', $notify=1)
 			$unassMonitor = 1;
 			$daysSinceLast = 'NULL';
 			// delete any stats that have already been generating for today
-			executeQuery("DELETE FROM tankStats WHERE monitorID='$monitorID' AND readingDate = DATE(NOW())");
+			executeQuery("DELETE FROM tankStats WHERE monitorID='$monitorID' AND readingDate = DATE(NOW())", 'DELETE');
 			executeQuery("INSERT INTO tankStats 
 			(monitorID, daysSinceLastReading, readingDate, latestDose, avgDose, exceedcap, high, low, nodose, normal, unass, noreading, high_low_message, statGenDate) VALUES
-			('$monitorID', $daysSinceLast, '$fulldate', 0, 0, 0, 0, 0, 0, 0, 1, $noReading, '', NOW() )");
+			('$monitorID', $daysSinceLast, '$fulldate', 0, 0, 0, 0, 0, 0, 0, 1, $noReading, '', NOW() )", 'INSERT');
 		}
 	
 		return;

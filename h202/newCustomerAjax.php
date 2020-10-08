@@ -1,13 +1,55 @@
-<?
+<?php
 session_start();
 include_once 'GlobalConfig.php';
 include_once 'h202Functions.php';
-include_once 'chtFunctions.php';
-include_once 'db_mysql.php';
+include_once '../lib/chtFunctions.php';
+include_once '../lib/db_mysql.php';
 
-error_log("action: $action");
-if ($REQUEST_METHOD == 'POST')
-{
+//error_log("action: $action");
+$REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
+if (!isset($action)) $action = '';
+if (!isset($keyCode)) $keyCode = '';
+if (!isset($section1)) $section1 = '';
+
+if (!isset($email)) $email = '';
+if (!isset($database)) $database = '';
+if (!isset($emailTo)) $emailTo = '';
+if (!isset($emailAddresses)) $emailAddresses = '';
+if (!isset($KEY_CODE)) $KEY_CODE = '';
+if (!isset($section)) $section = '';
+if (!isset($Name)) $Name = '';
+if (!isset($phone)) $phone = '';
+if (!isset($cell)) $cell = '';
+if (!isset($fax)) $fax = '';
+if (!isset($section2)) $section2 = '';
+if (!isset($section3)) $section3 = '';
+if (!isset($customer_name_formal)) $customer_name_formal = '';
+if (!isset($tmp_siteID)) $tmp_siteID = '';
+if (!isset($cust_contact_primary)) $cust_contact_primary = '';
+if (!isset($site_address)) $site_address = '';
+if (!isset($site_city)) $site_city = '';
+if (!isset($sel_site_state)) $sel_site_state = '';
+if (!isset($site_zipcode)) $site_zipcode = '';
+if (!isset($cust_contact_primary_phone)) $cust_contact_primary_phone = '';
+if (!isset($cust_contact_primary_email)) $cust_contact_primary_email = '';
+if (!isset($sel_site_info_supplier_1)) $sel_site_info_supplier_1 = '';
+if (!isset($site_info_sitename_1)) $site_info_sitename_1 = '';
+if (!isset($directions_to_site)) $directions_to_site = '';
+
+if (!isset($preferred_delivery_days)) $preferred_delivery_days = '';
+if (!isset($preferred_delivery_hours)) $preferred_delivery_hours = '';
+if (!isset($sel_site_info_product_1)) $sel_site_info_product_1 = '';
+if (!isset($tank_details_height)) $tank_details_height = '';
+if (!isset($tank_inner_diameter)) $tank_inner_diameter = '';
+if (!isset($CURRENT_PAGE)) $CURRENT_PAGE = 1;
+if (!isset($updated_by)) $updated_by = '';
+$KEY_CODE = $_SESSION['KEY_CODE'];
+if ($REQUEST_METHOD == 'POST') {
+    error_log("Posted KEY_CODE: " . $KEY_CODE);
+    error_log("Action is $action");
+    error_log("Posted Action: " . $_POST['action']);
+    $action = $_POST['action'];
+    $section = $_POST['section'];
 	if ($action == 'sendEmail')
 	{
 		// get value of sel_site_info_supplier_1
@@ -19,7 +61,7 @@ if ($REQUEST_METHOD == 'POST')
 		{
 			$line = $res->fetch_assoc();
 			extract($line);
-			$values = json_decode($section1);
+			$values = json_decode($section1, true);
 			$supplierID = $values->{'sel_site_info_supplier_1'};
 			$errFlag = empty($supplierID); // setting to 0 clears error flag
 		}
@@ -63,19 +105,23 @@ if ($REQUEST_METHOD == 'POST')
 	}
 	elseif ($action == 'setPage')
 	{
-		if (empty($currentPage)) return;
+		if (empty($_SESSION['CURRENT_PAGE'])) return;
 		if (empty($CURRENT_PAGE))
 		{
-			session_register('CURRENT_PAGE');
+			$_SESSION['CURRENT_PAGE']=1;
 		}
-		$CURRENT_PAGE = $currentPage;
+		$CURRENT_PAGE = $_SESSION['CURRENT_PAGE'];
 	}
 	elseif ($action == 'getSection')
 	{
+	    // check this query
 		$query = "SELECT section$section as sectionVals FROM newCustomerForm WHERE keyCode = '$KEY_CODE' LIMIT 1";
+        error_log("In the post to newCustomerAjax.php.  action is $action and the query is $query");
+        //die($query);
 		$res = getResult($query);
 		if (checkResult($res))
 		{
+		    //error_log("Positive responce from checkResult()");
 			$line = $res->fetch_assoc();
 			extract($line);
 			echo $sectionVals;
@@ -140,9 +186,11 @@ if ($REQUEST_METHOD == 'POST')
 			$updated_by = $values->{'updated_by'};
 		}
 		$query = "UPDATE newCustomerForm SET committed=1, userID='$updated_by' WHERE keyCode = '$KEY_CODE' LIMIT 1";
-		executeQuery($query);
+		executeQuery($query, "UPDATE");
 		$KEY_CODE = '';
-		unset($KEY_CODE);	
+        $_SESSION['KEY_CODE'] = '';
+		unset($KEY_CODE);
+		unset($_SESSION['KEY_CODE']);
 		logAction("New Customer From Created");
 	}
 	elseif ($action == 'mapToCOMS')
@@ -203,7 +251,6 @@ if ($REQUEST_METHOD == 'POST')
 			$site_address = fixSingleQuotes($site_address);
 			$siteQuery = "INSERT INTO site (siteLocationName, address, city, state, zip, contact, contactPhone, contactEmail) VALUES 
 					('$customer_name_formal', '$site_address', '$site_city', '$sel_site_state', '$site_zipcode', '$cust_contact_primary', '$cust_contact_primary_phone', '$cust_contact_primary_email')";
-			error_log($siteQuery);
 
 			$siteID = executeQuery($siteQuery, 'INSERT');
 
@@ -212,7 +259,7 @@ if ($REQUEST_METHOD == 'POST')
 			$monitorQuery = "INSERT INTO monitor (monitorID, siteID, startDate, status) values
 			('$monitorID', $siteID, NOW(), 'Inactive')";
 			error_log($monitorQuery);
-			executeQuery($monitorQuery);
+			executeQuery($monitorQuery, 'INSERT');
 
 			$supplierID = $sel_site_info_supplier_1; 
 			$tank_details_tank_total_capacity = empty($tank_details_tank_total_capacity) ? 0 : $tank_details_tank_total_capacity;
@@ -247,8 +294,8 @@ if ($REQUEST_METHOD == 'POST')
 								$tank_details_tank_total_capacity,
 								'$deliveryNote', NOW())";
 
-			executeQuery($tankQuery);
-			executeQuery("UPDATE newCustomerForm SET complete = 1 WHERE keyCode='$KEY_CODE'");
+			executeQuery($tankQuery, 'INSERT');
+			executeQuery("UPDATE newCustomerForm SET complete = 1 WHERE keyCode='$KEY_CODE'", "UPDATE");
 
 			$htmlOut = "<h3>New Customer Form Submitted</h3>";
 			$htmlOut .= "<br/><strong>Site Name:</strong> $customer_name_formal";
@@ -269,15 +316,16 @@ if ($REQUEST_METHOD == 'POST')
 
 		if (checkResult($res))
 		{
+
 			$query = "UPDATE newCustomerForm SET section$CURRENT_PAGE='$allvals', userID='$updated_by' WHERE keyCode = '$KEY_CODE' LIMIT 1";
+			executeQuery($query, 'UPDATE');
 		}
 		else
 		{
 			$query = "INSERT INTO newCustomerForm (keyCode, userID, section$CURRENT_PAGE, creationDate) VALUES ('$KEY_CODE', '$updated_by', '$allvals', NOW())";
+            executeQuery($query, 'INSERT');
 		}
 	
-		error_log($query);
-		executeQuery($query);
 		//logAction("New Customer Form Progress Saved (keyCode: $KEY_CODE)");
 
 		echo $allvals;

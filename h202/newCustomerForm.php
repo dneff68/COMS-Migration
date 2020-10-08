@@ -1,20 +1,19 @@
 <?php
 session_start();
-if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
+
+include_once '../lib/db_mysql.php';
+include_once '../lib/chtFunctions.php';
+include_once 'GlobalConfig.php';
+include_once 'h202Functions.php';
+
+if (!isset($comsContacts)){$comsContacts = "";}
+if (!isset($productList)){$productList = "";}
+if (!isset($productList)){$productList = "";}
+if (!isset($CUSTOMER_EMAIL))
 {
-	include_once 'GlobalConfig.php';
-	include_once 'h202Functions.php';
-	include_once '../lib/db_mysql.php';
-	include_once '../lib/chtFunctions.php';	
+    $CUSTOMER_EMAIL = $_SESSION["USERID"];
 }
-else
-{
-	die("NOT LOCAL DEVELOPMENT: multiTankDetails: 13");
-	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-	include_once '/var/www/html/CHT/h202/h202Functions.php';
-	include_once 'chtFunctions.php';
-	include_once 'db_mysql.php';
-}
+
 
 if (isLoggedIn())
 {
@@ -33,6 +32,14 @@ if (isset($_GET['st']))
 	$st = $_GET['st'];
 }
 //if (!empty($key))
+if (!isset($update_date)) $update_date = '';
+if (!isset($comsContact)) $comsContact = '';
+if (!isset($prodID)) $prodID = '';
+if (!isset($prodDesc)) $prodDesc = '';
+if (!isset($supplierID)) $supplierID = '';
+if (!isset($supplierName)) $supplierName = '';
+if (!isset($committed)) $committed = '';
+if (!isset($complete)) $complete = '';
 if (isset($_GET['key']))
 {
 	// if (!isset( $_SESSION['KEY_CODE'] ))
@@ -74,10 +81,10 @@ $_SESSION['CURRENT_PAGE'] = 1;
 <title>COMS - New Customer Form</title>
 <link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
 <link rel="stylesheet" TYPE="text/css" href="planning.css" >
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/helper.js'></SCRIPT>
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/admin.js'></SCRIPT>
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/newCustomer.js'></SCRIPT>
-<script src="<?php echo $_SESSION['LIB_URL']?>/jquery.js" type="text/javascript"></script>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='js/helper.js'></SCRIPT>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='js/admin.js'></SCRIPT>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='js/newCustomer.js'></SCRIPT>
+<script src="js/jquery.js" type="text/javascript"></script>
 <link rel="stylesheet" href="ui_theme/themes/base/jquery.ui.all.css">
 <script src="ui_theme/ui/jquery.ui.core.js"></script>
 <script src="ui_theme/ui/jquery.ui.widget.js"></script>
@@ -98,7 +105,6 @@ $(document).ready(function() {
 		$("#thank_you").show();
 		return;
 <?php endif; ?>
-	
 	<?php if (empty($key)) : ?>
 	window.onbeforeunload = function() 
 	{
@@ -191,7 +197,7 @@ $(document).ready(function() {
 			}
 		});
 	});	
-	
+
 	getSection( 1 );
 	getSection( 2 );
 	getSection( 3 );
@@ -209,7 +215,7 @@ $(document).ready(function() {
 	
 	</script>
 <script type="text/javascript">
-<?php include_once "newCustomer.php"; ?>
+<?php include_once "js/newCustomer.js"; ?>
 </script>
 <style>
 .newCustomerDiv {

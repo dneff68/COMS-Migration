@@ -27,7 +27,7 @@ if (!empty($id))
 	}	
 	$_SESSION['DELIVERY_COMMITTED'] = '';
 	$_SESSION['DELIVERY_NOTES'] = '';
-	$TANK_NOTES = false;
+	$_SESSION['TANK_NOTES'] = false;
 	$_SESSION['DELIVERY_TANKS'] = false;
 	$TANK_DETAILS = false;
 	$DELIVERY_DATA = false;

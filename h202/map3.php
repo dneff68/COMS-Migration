@@ -13,7 +13,8 @@
     <div align="center" id="map" style="width: 100pct; height: 300px">
 	<script type="text/javascript">
     //<![CDATA[
-  if (GBrowserIsCompatible()) {
+    // GBrowserIsCompatible()
+  if (true) {
 
       function createMarker(point,html) {
         var marker = new GMarker(point);

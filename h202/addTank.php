@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 include_once '../lib/chtFunctions.php';
 include_once '../lib/db_mysql.php';
@@ -9,6 +9,12 @@ if ( !isLoggedIn() )
 {
 	header("location:/");
 	die;
+}
+
+if (!isset($init)) $init = 'yes';
+if (isset($_GET['init']))
+{
+    $init = $_GET['init'];
 }
 
 if ($init=='yes')
@@ -47,8 +53,10 @@ if (!empty($mon))
 }
 
 //bigecho($_SESSION['editMonitor']);
+$REQUEST_METHOD = $_SERVER['REQUEST_METHOD'];
 if ($REQUEST_METHOD == 'POST')
 {
+    extract($_POST);
 	// store values in an array
 	if ($page == 1)
 	{
@@ -113,7 +121,7 @@ if ($REQUEST_METHOD == 'POST')
 		$addTankAction .= "&zipcode=$zipcode";
 	}
 	$lnkMod = empty($addTankAction) ? '' : "&addTankAction=$addTankAction";
-	header("location:/addTank.php?page=$page$lnkMod" . $addTankError);
+	header("location:addTank.php?page=$page$lnkMod" . $addTankError);
 }
 
 
@@ -208,8 +216,8 @@ elseif ($addTankAction == 'lookupCarrier')
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>New Tank</title>
-<link rel="stylesheet" TYPE="text/css" href="http://h202.customhostingtools.com/main.css" >
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='http://www.customhostingtools.com/lib/admin.js'></SCRIPT>
+    <link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
+    <SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='js/admin.js'></SCRIPT>
 <script language="javascript">
 function gotopage(pageno)
 {
@@ -228,6 +236,7 @@ function lookupZip(zip)
 
 function lookupSite(siteid)
 {
+
 	document.addTankForm.addTankAction.value='lookupSite';
 	document.addTankForm.submit();
 }
@@ -301,8 +310,8 @@ function clearCarrierVals(val)
 </script>
 
 </head>
-<body onload="<?=$js?>">
-<?
+<body onload="<?php echo $js?>">
+<?php
 include 'banner.php';
 
 $popframe = getPopupFrame();
@@ -319,10 +328,10 @@ echo $popframe;
 <?php if (empty( $_SESSION['editMonitor'] )) : ?>
 	<p align="center" class="spinLargeTitle style1">Add New Tank</p>
 <? else : ?>
-	<p align="center" class="spinLargeTitle style1">Edit Tank: <?=$_SESSION['editMonitor']?></p>
+	<p align="center" class="spinLargeTitle style1">Edit Tank: <? echo $_SESSION['editMonitor']?></p>
 <?php endif; ?>
-<p align="center" class="spinAlert style1"><?=empty($addTankError) ? '&nbsp;' : $addTankError?></p>
-<?
+<p align="center" class="spinAlert style1"><? echo empty($addTankError) ? '&nbsp;' : $addTankError?></p>
+<?php
 if ($page == 1 || empty($page))
 {
 	include "addTank1.php";

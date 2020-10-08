@@ -15,38 +15,54 @@ will return the ID of the newly inserted row.
 --------------------------------------*/
 function executeQuery($query, $type="")
 {
-	global $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
+    global $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass;
+    $result = false;
+    $database = $_SESSION['DATABASE'];
+    // connect and execute query
+    if (isRemote())
+    {
 
-	// connect and execute query
-	$connection = mysqli_connect("127.0.0.1", $dbuser, $dbpass) or die ("Unable to connect!");
-	//mysql_select_db($database, $connection) or die ("Couldn't select database");
-	$database = mysqli_select_db($connection, "h2o2");
-	// $result = mysql_query($query, $connection);
-	//$result = $connection->query($query);
-	$result = mysqli_query($connection, $query);
+        $connection = new mysqli($hostname, $dbuser, $dbpass, $database);
+        if ($connection->connect_errno) {
+            bigEcho("Connect failed: %s\n", $connection->connect_error);
+            exit();
+        }
+    }
+    else
+    {
+        $connection = mysqli_connect("127.0.0.1", $dbuser, $dbpass) or die ("Unable to connect!");
+    }
+    $connection->query($query);
 
+    if ($type == "CREATE")
+    {
+        return 1;
+    }
+    if ($type == 'UPDATE' || $type == 'DELETE')
+    {
+        return 1;
+    }
+    if ($type == "INSERT")
+    {
+        $ID = $connection->insert_id;
+        return $ID;
+    }
 
-//	$connection = mysqli_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
-//	mysql_select_db($database, $connection) or die ("Couldn't select database");
-//	$result = mysql_unbuffered_query($query, $connection);
-	if ($type == "CREATE")
-	{
-		return $result;
-	}
-	if (!$result)
-	{
-		error_log("Error in query: $query\n$HTTP_HOST$REQUEST_URI", 1, "dneff@CustomHostingTools.com");
-		if (david() || jim())
-			die($query);
-		else
-			die ("We're sorry, there was problem with the last operation.  Please try again.<br>");
-	}
-	if ($type == "INSERT")
-	{
-		$ID = $result->insert_id;
-		return $ID;
-	}
-	return 1;
+    if (!$result) // most likely a select statement
+    {
+//        bigEcho($query);
+//        bigEcho($result->error);
+//        die;
+
+        if (david())
+        {
+            bigEcho("Error in query: $query\n$HTTP_HOST$REQUEST_URI", 1, "dneff@CustomHostingTools.com");
+            die($query);
+        }
+        else
+            die ("We're sorry, there was problem with the last operation.  Please try again.<br>");
+    }
+    return 1;
 }
 
 
@@ -60,19 +76,32 @@ function getResult($query, $handleError=false)
 {
 	global $dbhitcount, $david_debug, $queryArray, $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
 	$david_debug = false; //david();
+    $result = false;
+
+
+	//die("$REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;");
+
 	if ($david_debug === true)
 	{
 		$stime = microtime(true);
 	}
 
 	// connect and execute query
-	$connection = mysqli_connect("127.0.0.1", $dbuser, $dbpass) or die ("Unable to connect!");
-	//mysql_select_db($database, $connection) or die ("Couldn't select database");
-	$database = mysqli_select_db($connection, "h2o2");
-	// $result = mysql_query($query, $connection);
-//	$result = $connection->query($query);
-	$result = mysqli_query($connection, $query);
+	if (isRemote())
+	{
+		$connection = mysqli_connect($hostname, $dbuser, $dbpass) or die ("Unable to connect!");
+	}
+	else
+	{
+		$connection = mysqli_connect("127.0.0.1", $dbuser, $dbpass) or die ("Unable to connect!");
+	}
 
+	$database = mysqli_select_db($connection, $_SESSION['DATABASE']);
+	//$result = mysqli_query($connection, $query);
+
+    $result = mysqli_query($connection, $query) or trigger_error("Query Failed! SQL: $query - Error: ".mysqli_error($connection), E_USER_ERROR);
+
+//bigEcho("result: " . $result);
 
 	if (!$result)
 	{
@@ -118,6 +147,31 @@ function checkResult($result)
 		}
 	}
 	return false;
+}
+
+function executeAndSelect($query1, $query2)
+{
+    global $REQUEST_URI, $HTTP_HOST, $hostname, $dbuser, $dbpass, $database;
+    $result = false;
+
+    // connect and execute query
+    if (isRemote())
+    {
+        $connection = new mysqli($hostname, $dbuser, $dbpass, "h202");
+        if ($connection->connect_errno) {
+            bigEcho("Connect failed: %s\n", $connection->connect_error);
+            exit();
+        }
+    }
+    else
+    {
+        $connection = mysqli_connect("127.0.0.1", $dbuser, $dbpass) or die ("Unable to connect!");
+    }
+    $database = mysqli_select_db($connection, $_SESSION['DATABASE']);
+    $connection->query($query1);
+    $result = mysqli_query($connection, $query2) or trigger_error("Query Failed! SQL: $query2 - Error: ".mysqli_error($connection), E_USER_ERROR);
+    return $result;
+
 }
 
 ?>

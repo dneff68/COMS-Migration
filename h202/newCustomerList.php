@@ -1,19 +1,19 @@
 <?php
 session_start();
-if ($_SESSION['LOCAL_DEVELOPMENT']=='yes')
+
+
+include_once '../lib/db_mysql.php';
+include_once 'GlobalConfig.php';
+include_once 'h202Functions.php';
+include_once '../lib/chtFunctions.php';
+
+if (isRemote())
 {
-	include_once 'GlobalConfig.php';
-	include_once 'h202Functions.php';
-	include_once '../lib/db_mysql.php';
-	include_once '../lib/chtFunctions.php';	
+    bigEcho("Remote Page");
 }
 else
 {
-	die("NOT LOCAL DEVELOPMENT: multiTankDetails: 13");
-	include_once '/var/www/html/CHT/h202/GlobalConfig.php';
-	include_once '/var/www/html/CHT/h202/h202Functions.php';
-	include_once 'chtFunctions.php';
-	include_once 'db_mysql.php';
+    bigEcho("Local Page");
 }
 
 if (david())
@@ -43,9 +43,9 @@ if (empty($_SESSION["USERID"]))
 <link rel="stylesheet" TYPE="text/css" href="<?php echo $_SESSION['ROOT_URL']?>main.css" >
 <link rel="stylesheet" TYPE="text/css" href="planning.css" >
 <link rel="stylesheet" href="/ui_theme/themes/base/jquery.ui.all.css">
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/helper.js'></SCRIPT>
-<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='<?php echo $_SESSION['LIB_URL']?>/admin.js'></SCRIPT>
-<script src="<?php echo $_SESSION['LIB_URL']?>/jquery.js" type="text/javascript"></script>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='js/helper.js'></SCRIPT>
+<SCRIPT LANGUAGE="javascript" TYPE="text/javascript" SRC='js/admin.js'></SCRIPT>
+<script src="<?php echo $_SESSION['LIB_URL']?>js/jquery.js" type="text/javascript"></script>
 <script src="ui_theme/ui/jquery.ui.core.js"></script>
 <script src="ui_theme/ui/jquery.ui.widget.js"></script>
 <script src="ui_theme/ui/jquery.ui.datepicker.js"></script>
@@ -169,15 +169,27 @@ a {
 <?php
 	$query = "SELECT keyCode, section1, DATE_FORMAT(creationDate, '%m/%d/%Y') as creationDate FROM newCustomerForm WHERE complete=0 ORDER BY creationDate"; 
 	$res = getResult($query);
+	//bigEcho($query);
 	if (checkResult($res))
 	{
+	    $section1 = '';
+	    $keyCode = '';
+        $customer_name_formal = '';
+        $creationDate = '';
+        $updated_by = '';
 		while ($line = $res->fetch_assoc())
 		{
+		    //showArray($line);
 			extract($line);
+			//bigEcho($section1);
 			$section1 = fixString($section1);
 			$values = json_decode($section1, true);
-			
-			extract($values);
+			//showArray($values);
+            if (gettype($values) == "NULL")
+            {
+                continue;
+            }
+ 			extract($values);
 			$editLink = "<a href='javascript:surfDialog(\"newCustomerForm.php?key=$keyCode&st=2\", 900, 700, window, false)'>edit</a>";
 
 			$emailLink = '';
@@ -234,8 +246,16 @@ a {
 				$emailLink = "&nbsp;<a id='emailLink_$keyCode' href=\"javascript:showEmailEdit('$keyCode')\">email</a><div id='emailDiv_$keyCode'></div>";
 			}
 			
-			$values = json_decode($section1);
+			$values = json_decode($section1, true);
+			//showArray($values);
+            //bigEcho(gettype($values));
+            if (gettype($values) != "object")
+            {
+                //bigEcho("Not Array");
+                continue;
+            }
 			$updated_by = $values->{'updated_by'};
+            showArray($values);
 			$customer_name_formal = $values->{'customer_name_formal'};
 			echo(" <tr class='TitleRow'>
 			 <td>$customer_name_formal</td>

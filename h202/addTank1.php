@@ -1,4 +1,4 @@
-<script language="javascript">
+<script>
 function checkPage()
 {
 	// validate fields
@@ -58,7 +58,21 @@ function checkPage()
 -->
 </style>
 
-<?
+<?php
+
+    $selCustomerSite = '';
+    $siteID = '';
+    $customerSite = '';
+    $regionid = '';
+    $region = '';
+    $value = '';
+    $zipcode = '';
+    $address = '';
+    $city = '';
+    $contact = '';
+    $phone = '';
+    $email = '';
+
 	if (empty($ADDTANK1) && !empty($editMonitor))
 	{
 		$query = "SELECT s.siteID as selCustomerSite, s.siteLocationName as customerSite, s.regionID, s.address, s.city, s.state, s.zip as zipcode, s.contact, s.contactPhone as phone, 
@@ -78,11 +92,10 @@ function checkPage()
 <input type="hidden" name="addTankAction" value='' />
 <input type="hidden" name="page" value='1' />
 <input type="hidden" name="gotopage" value='' />
-<input type="hidden" name="editMonitor" value='<?=$editMonitor?>' />
-<?
-//showArray($ADDTANK1);
-?>
-<table width="600" border="1" align="center" cellpadding="5" cellspacing="1" class="spinTableBarOdd">
+<input type="hidden" name="editMonitor" value='<?php echo  $editMonitor?>' />
+
+
+<table width="600px" border="1" align="center" cellpadding="5" cellspacing="1" class="spinTableBarOdd">
   <tr valign="top" class="spinMedTitle">
     <td colspan="3" class="spinTableTitle style1"><span class="style2">Step One:</span> Set Customer Site </td>
   </tr>
@@ -92,7 +105,7 @@ function checkPage()
     <td width="210" valign="top">    <div align="left">choose existing sites:<br />
           <select name="selCustomerSite" id="selCustomerSite" onchange="lookupSite(this.value)">
             <option value="--none--">--- choose customer site ---</option>
-          <?
+              <?php
 // Site Information
 // ----------------------------------	
 	if (!empty($selCustomerSite) && $selCustomerSite != '--none--')
@@ -139,7 +152,7 @@ function checkPage()
         create new customer site: <br />
         </div>      <label>
           <div align="left">
-            <input name="customerSite" type="text" id="customerSite" size="35" maxlength="40" value="<?= $clearNew ? '' : stripslashes($customerSite)?>" 
+            <input name="customerSite" type="text" id="customerSite" size="35" maxlength="40" value="<?php echo $clearNew ? '' : stripslashes($customerSite)?>"
 			onkeydown="clearSiteVals(this.value)" />
             </div>
         </label>    </td>
@@ -149,15 +162,15 @@ function checkPage()
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Customer:</div></td>
 	  <td>
-	  <input type='hidden' name="selCustomerSite" value="<?=$selCustomerSite?>" />
-	  <input name="customerSite" type="text" id="customerSite" size="35" maxlength="40" value="<?=$customerSite ?>"  />
+	  <input type='hidden' name="selCustomerSite" value="<?php echo $selCustomerSite?>" />
+	  <input name="customerSite" type="text" id="customerSite" size="35" maxlength="40" value="<?php echo $customerSite ?>"  />
 	  </td>
 	  <td>&nbsp;</td>
   </tr>
   <?php endif; ?>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Region:</div></td>
-    <td valign="top"><select name="region" id="region" <?= $clearNew ? 'disabled="disabled"' : ''?>>
+    <td valign="top"><select name="region" id="region" <?php echo  $clearNew ? 'disabled="disabled"' : ''?>>
       <option value="--none--">--- choose region ---</option>
 <?
 	$res = getResult("SELECT regionID as regionid, value FROM region order by value");
@@ -180,40 +193,40 @@ function checkPage()
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Zip Code:</div></td>
     <td valign="top"><div align="left">
-      <input name="zipcode" type="text" id="zipcode" size="12" maxlength="12" value="<?=$zipcode?>" <?= $clearNew ? 'disabled="disabled"' : ''?> onblur="lookupZip(this.value)"  />
+      <input name="zipcode" type="text" id="zipcode" size="12" maxlength="12" value="<?php echo $zipcode?>" <?php echo  $clearNew ? 'disabled="disabled"' : ''?> onblur="lookupZip(this.value)"  />
     </div></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Address:</div></td>
-    <td valign="top"><input name="address" type="text" id="address" size="35" maxlength="40" value="<?=$address?>" <?= $clearNew ? 'disabled="disabled"' : ''?>/></td>
+    <td valign="top"><input name="address" type="text" id="address" size="35" maxlength="40" value="<?php echo $address?>" <?php echo  $clearNew ? 'disabled="disabled"' : ''?>/></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">City:</div></td>
-    <td valign="top"><input name="city" type="text" id="city" size="35" maxlength="40" value="<?=$city?>" <?= $clearNew ? 'disabled="disabled"' : ''?>/></td>
+    <td valign="top"><input name="city" type="text" id="city" size="35" maxlength="40" value="<?php echo $city?>" <?php echo  $clearNew ? 'disabled="disabled"' : ''?>/></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">State:</div></td>
-    <td valign="top"><div align="left"><select name="state" <?= $clearNew ? 'disabled="disabled"' : ''?>><? include 'stateOptions.php' ?></select></div></td>
+    <td valign="top"><div align="left"><select name="state" <?php echo  $clearNew ? 'disabled="disabled"' : ''?>><? include 'stateOptions.php' ?></select></div></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Contact:</div></td>
     <td valign="top"><div align="left">
-      <input name="contact" type="text" id="contact" size="35" maxlength="40" value="<?=$contact?>" <?= $clearNew ? 'disabled="disabled"' : ''?> />
+      <input name="contact" type="text" id="contact" size="35" maxlength="40" value="<?php echo $contact?>" <?php echo  $clearNew ? 'disabled="disabled"' : ''?> />
     </div></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Contact Phone: </div></td>
-    <td valign="top"><input name="phone" type="text" id="phone" size="15" maxlength="14" value="<?=$phone?>" <?= $clearNew ? 'disabled="disabled"' : ''?>  onkeypress="return addPhone(this, event)"/></td>
+    <td valign="top"><input name="phone" type="text" id="phone" size="15" maxlength="14" value="<?php echo $phone?>" <?php echo  $clearNew ? 'disabled="disabled"' : ''?>  onkeypress="return addPhone(this, event)"/></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
     <td valign="top" nowrap="nowrap" class="spinTableTitle"><div align="right">Contact Email: </div></td>
-    <td valign="top"><input name="email" type="text" id="email" size="35" maxlength="40" value="<?=$email?>" <?= $clearNew ? 'disabled="disabled"' : ''?> /></td>
+    <td valign="top"><input name="email" type="text" id="email" size="35" maxlength="40" value="<?php echo $email?>" <?php echo  $clearNew ? 'disabled="disabled"' : ''?> /></td>
     <td>&nbsp;</td>
   </tr>
 <tr>

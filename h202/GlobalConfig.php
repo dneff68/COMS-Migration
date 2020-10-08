@@ -10,43 +10,37 @@ else
 	include_once "../lib/chtFunctions.php";
 
 
-$_SESSION['LOCAL_DEVELOPMENT'] 	= 'yes';
-$_SESSION['ROOT_URL'] 			= "";  			
-//$_SESSION['SYSTEM_ROOT_PATH']	= '/Library/WebServer/Documents/COMS-Migration/h202/';
-
+$_SESSION['ROOT_URL'] 			= "";
 $_SESSION['LIB_URL']			= '../lib';
-$_SESSION['SYSTEM_LIB_PATH']	= '/Library/WebServer/Documents/lib/';
-
 $_SESSION['CUSTOMER_EMAIL'] 	= '';
 $_SESSION['JUMP'] = '';
 $_SESSION['DELIVERY_COMMITTED'] = '';
 $_SESSION['USED_PO_CODES'] = '';
 $_SESSION['ZIPCOLLECTION'] = array();
 $_SESSION['CONVERTED_QUANTITIES'] = array();
-//include_once $_SESSION['SYSTEM_LIB_PATH'] . "chtFunctions.php";
-
-
 //$_SESSION['sendInvoices'] == 'yes';
-
-
 //$_SESSION['ROOT_URL'] = "http://h202.customhostingtools.com/";
 
-if (david())
+ini_set('memory_limit', '1G');
+if (isRemote())
 {
-
+	$david_debug = false;
+	$hostname= 'localhost'; //'127.0.0.1'; // localhost
+	$dbuser = 'DevUser';
+	$dbpass = 'QsTTeVfn';
+	$_SESSION['DATABASE'] = 'h202';
+    $_SESSION['LOCAL_DEVELOPMENT'] 	= 'no';
+    $_SESSION['SYSTEM_LIB_PATH']	= '/var/www/html/COMS-Migration/lib/';
+}
+else
+{
 	$david_debug = true;
 	$hostname="127.0.0.1";
 	$dbuser = 'root';
 	$dbpass = 'smap0tCfl';
-	$database = 'h202';
-}
-else
-{
-	$david_debug = false;
-	$hostname='localhost';
-	$dbuser = 'phpuser';
-	$dbpass = 'fog9stOol';
-	$database = 'h202';
+	$_SESSION['DATABASE'] = 'h2o2';
+    $_SESSION['SYSTEM_LIB_PATH']	= '/Library/WebServer/Documents/lib/';
+    $_SESSION['LOCAL_DEVELOPMENT'] 	= 'yes';
 }
 
 if (david())
